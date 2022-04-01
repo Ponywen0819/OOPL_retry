@@ -39,7 +39,7 @@ namespace game_framework {
 	}
 
 	void skillsContainer::onMove() {
-		TRACE("%d\n", numOfSkills);
+		//TRACE("%d\n", numOfSkills);
 		for (auto i = 0; i < numOfSkills; i++) {
 			//TRACE("%d \t %d\n ", skills.at(i),i);
 			skills.at(i)->onMove();
@@ -47,7 +47,7 @@ namespace game_framework {
 	}
 
 	void skillsContainer::onShow() {
-		TRACE("%d\n", numOfSkills);
+		//TRACE("%d\n", numOfSkills);
 		for (auto i = 0; i < numOfSkills; i++) {
 			skills.at(i)->onShow();
 		}
@@ -171,10 +171,8 @@ namespace game_framework {
 		setLastTime(15);
 	}
 
-	void punch::init(Bitmaplib *l) {
-		lib = l;
-		_ani.init(l);
-		addBitmap(0);
+	void punch::init( bool f) {
+		setDir(f);
 	}
 
 	void punch::onMove() {

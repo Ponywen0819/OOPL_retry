@@ -378,7 +378,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 }
 
 void CGameStateRun::OnShow(){ 
-	man1.onShow();
+	man1.onShow();	
 	man2.onShow();
 	skills.onShow();
 	bar.OnShowBar(player1, player2);

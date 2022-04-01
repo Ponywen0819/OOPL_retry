@@ -72,6 +72,7 @@ namespace game_framework {
 		void resetCountDown();					//連點倒數歸零
 
 	private:
+		int body_x, body_y, body_w, body_h;
 		int charector;							//選擇之腳色
 		int _x, _y,_z;							//人物位置
 		bool flag[7];							//keyboard input flag

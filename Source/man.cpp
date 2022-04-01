@@ -32,6 +32,10 @@ namespace game_framework {
 		stonkcount = 6;
 		punch_fall = 2;
 		isStonk = false;
+		body_x = 25;
+		body_y = 15;
+		body_w = 25;
+		body_h = 64;
 	}
 
 	man::man(int x, int y) {
@@ -354,8 +358,8 @@ namespace game_framework {
 			if (con.getskills(j)->getowner() == this) {
 				j++; continue;
 			}
-			int x = con.getskills(j)->getx() - _x;
-			int y = con.getskills(j)->gety() - _y;
+			int x = con.getskills(j)->getx() - _x - body_x;
+			int y = con.getskills(j)->gety() - _y - body_y;
 			int z = con.getskills(j)->getz();
 			int w = con.getskills(j)->getw();
 			int h = con.getskills(j)->geth();
@@ -367,7 +371,7 @@ namespace game_framework {
 				if (point_x[i] < 0 || point_y[i] < 0) {
 					continue;
 				}
-				else if(point_x[i] > 79 || point_y[i] > 79){
+				else if(point_x[i] > body_w || point_y[i] > body_h){
 					continue;
 				}
 				else{
@@ -380,12 +384,12 @@ namespace game_framework {
 				Skills* temp = con.getskills(j);
 				stonkcount -= temp->getdizzy();					// 計算被打到的暈眩值
 																// 計算被打到的傷害
-				//TRACE("stonk count %d\n", stonkcount);
+				TRACE(" %d\n", temp->getDir());
 				_outofctrl = true;
 				int mid = x + (w / 2);
 				setbeattenCount(5);
 				if (stonkcount > 3) {
-					if (mid <= 40) {
+					if (!temp->getDir()) {
 						_mode = 112;				// 被打第一下左	
 					}
 					else {
@@ -393,7 +397,7 @@ namespace game_framework {
 					}
 				}
 				else if (stonkcount > 0) {
-					if (mid <= 40) {
+					if (!temp->getDir()) {
 						_mode = 116;				// 被打第二下左	
 					}
 					else {
@@ -406,7 +410,7 @@ namespace game_framework {
 					isStonk = true;
 				}
 				else{
-					if ( mid <= 40 ) {
+					if (!temp->getDir()) {
 						_mode = 200;				// 擊飛左
 					}
 					else{
@@ -427,7 +431,7 @@ namespace game_framework {
 	//人物狀態更新
 
 	void man::OnMove() {
-		TRACE("dizzy %d  %d \n", stonkcount, recoverGap);
+		//TRACE("dizzy %d  %d \n", stonkcount, recoverGap);
 		//倒數
 		now = nullptr;
 		if(_Double_Tap_Gap>=0) _Double_Tap_Gap--;
@@ -482,6 +486,7 @@ namespace game_framework {
 				setattCount();
 				punch *temp = new punch(_x, _y, _z, Face_to_Left, first_att_animation, lib, (void*)this);
 				temp->setdizzy(punch_fall);
+				temp->init(Face_to_Left);
 				now = temp;
 			}
 			break;
@@ -856,7 +861,7 @@ namespace game_framework {
 	void man::recoverCount() {
 		if (stonkcount < 0) stonkcount = 6;
 		if (recoverGap == 0) {
-			recoverGap = 40;
+			recoverGap = 80;
 			stonkcount = 6;
 		}
 		else{

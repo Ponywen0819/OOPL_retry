@@ -19,7 +19,9 @@ namespace game_framework {
 		void setdizzy(int dizzy);
 		void setcost(int cost);
 		void setLastTime(int t);
-
+		void setDir(bool f) {
+			FaceToLeft = f;
+		}
 		//getter
 		int	 getx();
 		int  gety();
@@ -34,6 +36,9 @@ namespace game_framework {
 		int geth() {
 			return _h;
 		}
+		bool getDir() {
+			return FaceToLeft;
+		}
 		
 		void *  getowner();
 	private:
@@ -44,13 +49,14 @@ namespace game_framework {
 		int _cost;				// 耗費
 		int LastTime;			// 持續時間
 		void * _owner;
+		bool FaceToLeft;
 	};
 
 	class punch :public Skills {
 	public:
 		punch();
 		punch(int x, int y, int z,bool FacetoLeft,bool LeftPunch, Bitmaplib *l,void *owner);
-		void init(Bitmaplib *l);
+		void init(bool f);
 		void onMove();
 		void addBitmap(int i);
 		void onShow();
