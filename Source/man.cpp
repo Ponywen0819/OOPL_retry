@@ -12,16 +12,7 @@
 
 namespace game_framework {
 
-	// 狀態判定
-	bool man::nearby(man* other) {
-		int delx = _x - other->_x;
-		int dely = _y - other->_y;
-
-		if ((abs(dely) < 20) && (abs(delx) < 79)) {
-
-		}
-	}
-	// 初始化
+	//初始化
 	
 	man::man() {
 		charector = 0;

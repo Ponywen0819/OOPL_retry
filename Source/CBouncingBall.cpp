@@ -55,8 +55,7 @@ namespace game_framework {
 		animation.OnMove();		// 執行一次animation.OnMove()，animation才會換圖
 	}
 
-	void CBouncingBall::OnShow()
-	{
+	void CBouncingBall::OnShow(){
 		animation.SetTopLeft(x, y);
 		animation.OnShow();
 	}

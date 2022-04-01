@@ -18,7 +18,6 @@ namespace game_framework {
 		void onShow();								// 顯示
 		void checkbeenatt(skillsContainer &con);	// 被攻擊偵測
 		Skills* usingSkill();						// 在此偵有無使用招式
-		bool nearby(man*other);								// 偵測人物是否在附近
 	protected:
 		virtual void otherCommand(int n);
 		virtual void readOtherList();

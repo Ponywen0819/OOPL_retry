@@ -41,6 +41,11 @@
 #include "CEraser.h"
 #include "CBall.h"
 #include "CBouncingBall.h"
+#include "Cchose.h"
+#include "man.h"
+#include "skills.h"
+#include "Bitmaplib.h"
+
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
@@ -68,7 +73,19 @@ namespace game_framework {
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		CMovingBitmap logo;								// csie的logo
+		
+		Cchose menu;
+		int chose;										//目前選擇之選項
+		int windows;
+		int checkin_1;
+		int checkin_2;
+		int player1_index;
+		int player2_index;
+		int lock_1;
+		int lock_2;
+		bool CountDown;
+		bool start;
+
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -101,6 +118,10 @@ namespace game_framework {
 		CEraser			eraser;		// 拍子
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
+		man				man1;		// 人物1
+		man				man2;		// 人物2
+		skillsContainer skills;
+		Bitmaplib		lib;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

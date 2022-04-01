@@ -16,9 +16,20 @@ namespace game_framework {
 		cma_ani.SetDelayCount(5);
 		CountDown.SetDelayCount(10);
 		for (int i = 0; i < 3; i++) {
-			name[i].SetDelayCount(8);
+			name[i].SetDelayCount(2);
+
 		}
+
+
+		const int cma_init_x[4] = {153,307,461,615};
+		const int cma_init_y[2] = {95,300};
 		
+		for (int i = 0; i < 4; i++)
+			cma_x[i] = cma_init_x[i];
+		for (int i = 0; i < 2; i++)
+			cma_y[i] = cma_init_y[i];
+		
+		is_end = FALSE;
 	}
 
 	Cchose::~Cchose()
@@ -35,15 +46,10 @@ namespace game_framework {
 		logo.LoadBitmap("./Bitmaps/MENU_BACK1.bmp", RGB(0, 0, 0));
 		back.LoadBitmap("./Bitmaps/start_background.bmp");
 		title.LoadBitmap("./Bitmaps/title.bmp", RGB(17, 34, 101));
-		team.LoadBitmap("./Bitmaps/team.bmp");
 		option[0].LoadBitmap("./Bitmaps/menu_start.bmp", RGB(255, 255, 255));
 		option[1].LoadBitmap("./Bitmaps/menu_start_r.bmp", RGB(90, 119, 216));
 		option[2].LoadBitmap("./Bitmaps/menu_quit.bmp", RGB(255, 255, 255));
 		option[3].LoadBitmap("./Bitmaps/menu_quit_r.bmp", RGB(90, 119, 216));
-		lock[0].LoadBitmap("./Bitmaps/deep_1.bmp");
-		lock[1].LoadBitmap("./Bitmaps/Freeze_1.bmp");
-		lock[2].LoadBitmap("./Bitmaps/Fizen_1.bmp");
-
 		char *filename[2] = { ".\\Bitmaps\\CMA.bmp", ".\\Bitmaps\\CMA2.bmp" };
 
 		for (int i = 0; i < 2; i++) {
@@ -51,7 +57,7 @@ namespace game_framework {
 		}
 		char *filename_CountDown[6] = { ".\\Bitmaps\\CM5.bmp", ".\\Bitmaps\\CM4.bmp",".\\Bitmaps\\CM3.bmp",".\\Bitmaps\\CM2.bmp",".\\Bitmaps\\CM1.bmp",".\\Bitmaps\\CM0.bmp" };
 		for (int i = 0; i < 6; i++) {
-			CountDown.AddBitmap(filename_CountDown[i]);
+			CountDown.AddBitmap(filename_CountDown[i], RGB(0, 0, 0));
 		}
 		char *filename_deep[4] = { ".\\Bitmaps\\deep_1.bmp", ".\\Bitmaps\\deep_2.bmp",".\\Bitmaps\\deep_3.bmp",".\\Bitmaps\\deep_4.bmp" };
 		for (int i = 0; i < 4; i++) {
@@ -80,6 +86,8 @@ namespace game_framework {
 
 			title.SetTopLeft((SIZE_X - title.Width()) / 2, SIZE_Y / 9);
 			title.ShowBitmap();
+
+
 		}
 		else if (index == 2) {
 			charmenu.SetTopLeft((SIZE_X - charmenu.Width()) / 2, (SIZE_Y - charmenu.Height())/2);
@@ -116,61 +124,31 @@ namespace game_framework {
 		character[index].ShowBitmap();
 		player[0].SetTopLeft(224, 318);
 		player[0].ShowBitmap();
-		OnShowCharAni(1, index);
+		name[index].SetTopLeft(224,340);
+		name[index].OnShow();
+		name[index].OnMove();
 	}
-
 	void Cchose::OnShowChar2(int index) {
 		character[index].SetTopLeft(458, 195);
 		character[index].ShowBitmap();
 		player[1].SetTopLeft(458, 318);
 		player[1].ShowBitmap();
-		OnShowCharAni(2, index);
-	}
-
-	void Cchose::OnShowCharAni(int player,int index) {
-		player == 1 ? name[index].SetTopLeft(224, 340) :name[index].SetTopLeft(458, 340);
+		name[index].SetTopLeft(458, 340);
 		name[index].OnShow();
-		if (player1 == player2) {
-			if (player == 1) {
-				name[index].OnMove();
+		name[index].OnMove();
+	}
+
+
+
+
+	bool Cchose::OnShowCountDown(int player2) {
+		charmenu.ShowBitmap();
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 4; j++) {
+				if ((player2 == 1 && i == 0 && j == 1) || (i == 0 && j == 0))continue;
+				CountDown.SetTopLeft(cma_x[j]+33, cma_y[i]);
+				CountDown.OnShow();
 			}
-		}
-		else {
-			name[index].OnMove();
-		}
-	}
-
-	void Cchose::OnShowCharLock(int player1_lock, int player2_lock) {
-
-		if (player1_lock == 1) {
-			lock[player1].SetTopLeft(224, 340);
-			lock[player1].ShowBitmap();
-			team.SetTopLeft(224, 362);
-			team.ShowBitmap();
-		}
-		if (player2_lock == 1) {
-			lock[player2].SetTopLeft(458, 340);
-			lock[player2].ShowBitmap();
-			team.SetTopLeft(458, 362);
-			team.ShowBitmap();
-		}
-	}
-
-	bool Cchose::OnShowCountDown(int player1_lock,int player2_lock) {
-		if (player1_lock == 1 && player2_lock == 1) {
-			CountDown.SetTopLeft(224, 195);
-			CountDown.OnShow();
-			CountDown.SetTopLeft(458, 195);
-			CountDown.OnShow();
-			
-		}
-		else if (player1_lock == 1) {
-			CountDown.SetTopLeft(458, 195);
-			CountDown.OnShow();
-		}
-		else {
-			CountDown.SetTopLeft(224, 195);
-			CountDown.OnShow();
 		}
 		CountDown.OnMove();
 		if (CountDown.GetCurrentBitmapNumber()  == 5) {
@@ -179,13 +157,26 @@ namespace game_framework {
 		return FALSE;
 	}
 
-	int Cchose::Get_player1(int player1_index) {
-
-		return player1 = abs(player1_index % 3);
+	void Cchose::cal_1(int player1_index) {
+		player1 = abs(player1_index % 3);
 	}
 
-	int Cchose::Get_player2(int player2_index) {
-
-		return player2 = abs(player2_index % 3);
+	void Cchose::cal_2(int player2_index) {
+		player2 = abs(player2_index % 3);
 	}
+
+	int Cchose::Get_player1() {
+		return player1;
+	}
+	int Cchose::Get_player2() {
+		return player2;
+	}
+
+
+	bool Cchose::IsEnd()
+	{
+		return is_end;
+	}
+
+
 }
