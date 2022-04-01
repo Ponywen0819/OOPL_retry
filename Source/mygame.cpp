@@ -66,7 +66,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-
+	int player1 = -1, player2 = -1;
 CGameStateInit::CGameStateInit(CGame *g)
 : CGameState(g)
 {
@@ -122,9 +122,11 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	else if (windows == 1 && CountDown == FALSE) {
 		if (nChar == KEY_S && checkin_1 == 0) {
 			checkin_1 = 1;
+			player1 = 0;
 		}
 		if (nChar == KEY_K && checkin_2 == 0) {
 			checkin_2 = 1;
+			player2 = 0;
 		}
 
 		if (checkin_1 == 1 && lock_1 < 1) {
@@ -137,9 +139,8 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			if (nChar == KEY_S) {
 				lock_1++;
 			}
-			menu.cal_1(player1_index);
+			player1 = menu.Get_player1(player1_index);
 		}
-
 		if (checkin_2 == 1 && lock_2 < 1) {
 			if (nChar == KEY_LEFT) {
 				player2_index--;
@@ -150,9 +151,9 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			if (nChar == KEY_K) {
 				lock_2++;
 			}
-			menu.cal_2(player2_index);
+			player2 = menu.Get_player2(player2_index);
 		}
-		//TRACE("%d", lock_1);
+
 		if ((lock_1 == 1 && lock_2 == 1) || (lock_1 == 1 && lock_2 == -1) || (lock_1 == -1 && lock_2 == 1)) {
 			CountDown = TRUE;
 		}
@@ -174,29 +175,19 @@ void CGameStateInit::OnShow()
 	else if (windows == 1) {
 		menu.OnShowMenu(2);
 		if (checkin_1 == 1) {
-			menu.OnShowChar1(menu.Get_player1());
+			menu.OnShowChar1(player1);
 		}
 		if (checkin_2 == 1) {
-			menu.OnShowChar2(menu.Get_player2());
+			menu.OnShowChar2(player2);
 		}
-	
+		menu.OnShowCharLock(lock_1, lock_2);
 		if (CountDown) {
-			start = menu.OnShowCountDown(lock_2);
-			if (checkin_1 == 1) {
-				menu.OnShowChar1(menu.Get_player1());
-			}
-			if (checkin_2 == 1) {
-				menu.OnShowChar2(menu.Get_player2());
-			}
+			start = menu.OnShowCountDown(lock_1, lock_2);
 			if (start) {
 				GotoGameState(GAME_STATE_RUN);
 			}
 		}
-		
 	}
-
-	
-	
 }								
 
 /////////////////////////////////////////////////////////////////////////////
