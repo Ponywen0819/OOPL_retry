@@ -16,7 +16,7 @@ namespace game_framework {
 		cma_ani.SetDelayCount(5);
 		CountDown.SetDelayCount(10);
 		for (int i = 0; i < 3; i++) {
-			name[i].SetDelayCount(8);
+			name[i].SetDelayCount(4);
 		}
 
 	}

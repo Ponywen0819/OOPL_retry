@@ -277,6 +277,8 @@ void CGameStateRun::OnMove(){
 
 void CGameStateRun::OnInit(){
 	//
+	bar.LoadBitmap();
+
 	ShowInitProgress(33);	
 	lib.LoadBitmap();
 
@@ -348,6 +350,8 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
+	bar.Player1HPState(20, 10);
+	bar.Player1MPState(90);
 	eraser.SetMovingLeft(true);
 }
 
@@ -363,6 +367,8 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
+	bar.Player2HPState(20, 10);
+	bar.Player2MPState(90);
 	eraser.SetMovingRight(true);
 }
 
@@ -375,6 +381,7 @@ void CGameStateRun::OnShow(){
 	man1.onShow();
 	man2.onShow();
 	skills.onShow();
+	bar.OnShowBar(player1, player2);
 }
 
 }

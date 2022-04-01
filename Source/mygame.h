@@ -42,6 +42,7 @@
 #include "CBall.h"
 #include "CBouncingBall.h"
 #include "Cchose.h"
+#include "CStateBar.h"
 #include "man.h"
 #include "skills.h"
 #include "Bitmaplib.h"
@@ -122,6 +123,7 @@ namespace game_framework {
 		man				man2;		// дHкл2
 		skillsContainer skills;
 		Bitmaplib		lib;
+		CStateBar       bar;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
