@@ -257,6 +257,7 @@
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Area.cpp" />
     <ClCompile Include="Source\Bitmaplib.cpp" />
     <ClCompile Include="Source\Cchose.cpp" />
     <ClCompile Include="Source\audio.cpp" />
@@ -308,6 +309,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Area.h" />
     <ClInclude Include="Source\Bitmaplib.h" />
     <ClInclude Include="Source\Cchose.h" />
     <ClInclude Include="Source\audio.h" />

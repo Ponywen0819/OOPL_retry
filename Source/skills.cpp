@@ -7,6 +7,7 @@
 #include "skills.h"
 #include "Bitmaplib.h"
 #include "man.h"
+#include "Area.h"
 
 namespace game_framework {
 	skillsContainer::skillsContainer():
@@ -89,7 +90,7 @@ namespace game_framework {
 	Skills::Skills(int w, int h, void * owner) :_dizzy{ 0 }, _cost{ 0 }, _danmage{ 0 }, _x{ 0 }, _y{ 0 }, _z{ 0 }, _w{ w }, _h{ h }, _owner{owner}{
 		_dizzy = 2;
 	}
-	
+
 	void Skills::LoadBitmap() {
 		
 	}
@@ -102,68 +103,20 @@ namespace game_framework {
 		TRACE("basic Skill show\n");
 	}
 
-	void Skills::last() {
-		LastTime--;
-	}
-
-	//setter
-	void Skills::setXY(int x,int y,int z) {
-		_x = x; _y = y; _z = z;
-	}
-	void Skills::setDanmage(int danmage) {
-		_danmage = danmage;
-	}
-	void Skills::setdizzy(int dizzy) {
-		_dizzy = dizzy;
-	}
-	void Skills::setcost(int cost) {
-		_cost = cost;
-	}
-	void Skills::setLastTime(int t) {
-		LastTime = t;
-	}
-
-	//getter
-	int Skills::getx() {
-		return _x;
-	}
-	int Skills::gety() {
-		return _y;
-	}
-	int Skills::getz() {
-		return _z;
-	}
-	int Skills::getDanmage() {
-		return _danmage;
-	}
-	int Skills::getdizzy() {
-		return _dizzy;
-	}
-	int Skills::getcost() {
-		return _cost;
-	}
-
-	int Skills::getLastTime() {
-		return LastTime;
-	}
-	void * Skills::getowner() {
-		return _owner;
-	}
-
 	/*------------------------------------------------------------------------------------------------------------------------*/
 	
 	punch::punch() :Skills(25,15,nullptr){
-		setXY(0, 0, 0);
+		setPostion(0, 0, 0);
 	}
 	
 	punch::punch(int x, int y, int z, bool FacetoLeft, bool LeftPunch, Bitmaplib *l,void *owner) : Skills(25, 15,owner) {
 		if (FacetoLeft) {
-			if (LeftPunch) setXY(x, y + 35, z);
-			else setXY(x,y+35,z);
+			if (LeftPunch) setPostion(x, y + 35, z);
+			else setPostion(x,y+35,z);
 		}
 		else{
-			if (LeftPunch) setXY(x + 54, y + 35, z);
-			else setXY(x + 59, y + 35, z);
+			if (LeftPunch) setPostion(x + 54, y + 35, z);
+			else setPostion(x + 59, y + 35, z);
 		}
 		lib = l;
 		_ani.init(l);
@@ -173,24 +126,21 @@ namespace game_framework {
 
 	void punch::init( bool f) {
 		setDir(f);
+		initPostion(_x, _y, 20, 15);
 	}
 
 	void punch::onMove() {
-		TRACE("normal punch\n");
 		last();
 		_ani.onMove();
+		setPostion(_x, _y, _z);
 	}
 	
 	void punch::addBitmap(int i) {
-		TRACE("normal punch load bitmap\n");
 		_ani.addBitmap(i);
 	}
 
 	void punch::onShow() {
-		TRACE("normal punch show\n");
-		_ani.setTopLeft(getx(), gety());
+		_ani.setTopLeft(_x, _y);
 		_ani.onShow();
 	}
-
-
 }

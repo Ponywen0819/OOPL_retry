@@ -6,37 +6,13 @@
 #include "gamelib.h"
 #include "man.h"
 #include "skills.h"
-
+#include "Area.h"
 
 #define height 28
 
 namespace game_framework {
 
 	//初始化
-	
-	man::man() {
-		charector = 0;
-		_x = _y = _z = 0;
-		_mode = 0;
-		for (int i = 0; i < 7; i++)	flag[i] = false;
-		for (int i = 0; i < 4; i++)	_dir[i] = false;
-		jumpAnimationGap = 0;
-		attAnimationGap = 0;
-		recoverGap = 50;
-		_Double_Tap_Gap = 30;
-		initG = height;
-		commandBuffer = "";
-		setJumpCount();
-		_outofctrl = false;
-		first_att_animation = true;
-		stonkcount = 6;
-		punch_fall = 2;
-		isStonk = false;
-		body_x = 25;
-		body_y = 15;
-		body_w = 25;
-		body_h = 64;
-	}
 
 	man::man(int x, int y) {
 		charector = 0;
@@ -57,14 +33,18 @@ namespace game_framework {
 		now = nullptr;
 	}
 
-	void man::init(Bitmaplib *l) {
+	void man::init(Bitmaplib *l,man *m,int n) {
 		lib = l;
+		mans = m;
+		NumOfMan = n;
 	}
 
 	void man::LoadBitmap() {
-		
+
+		test.LoadBitmap(".\\Bitmaps\\temp\\body.bmp");
+
 		//站立動畫
-		
+
 		char *standLf[4] = { ".\\Bitmaps\\temp\\stand\\L\\0.bmp",".\\Bitmaps\\temp\\stand\\L\\1.bmp",".\\Bitmaps\\temp\\stand\\L\\2.bmp",".\\Bitmaps\\temp\\stand\\L\\3.bmp" };
 		for (int i = 0; i < 4; i++)	stand[0].AddBitmap(standLf[i], RGB(0, 0, 0));
 		char *standRf[4] = { ".\\Bitmaps\\temp\\stand\\R\\0.bmp",".\\Bitmaps\\temp\\stand\\R\\1.bmp",".\\Bitmaps\\temp\\stand\\R\\2.bmp",".\\Bitmaps\\temp\\stand\\R\\3.bmp" };
@@ -154,8 +134,31 @@ namespace game_framework {
 	void man::setInitPosotion(int x, int y) {
 		_x = x;
 		_y = y;
+		Body.setPosetion(_x + 25, _y + 15);
+	}
+
+	// 人物狀態確認
+
+	bool man::NearBy(const man &other) {
+		area temp,temp2;
+		temp.init(_x+13, _y, 54, 64);
+		temp2.init(other._x+13, other._y,54,64);
+		if (temp.touch(temp2)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
+	bool man::FaceTo(const man &other) {
+		if (Face_to_Left) {
+			return _x > other._x;
+		}
+		else{
+			return _x < other._x;
+		}
+	}
 	//這是留給子類別操控的func
 
 	void man::otherCommand(int n) {
@@ -285,10 +288,21 @@ namespace game_framework {
 				setattCount();
 			}
 			else{
-				_mode = 101;
-				_outofctrl = true;
-				first_att_animation = !first_att_animation;
-				setattCount();
+				bool finish=false;
+				for (int i = 0; i < NumOfMan; i++) {
+					if ( NearBy(*(mans + i)) && FaceTo(*(mans + i)) && (mans+i)->isDizzy() ) {
+						finish = true;
+						_outofctrl = true;
+
+						_mode = 0;
+					}
+				}
+				if (!finish) {
+					_mode = 101;
+					_outofctrl = true;
+					first_att_animation = !first_att_animation;
+					setattCount();
+				}
 			}
 		}
 
@@ -355,38 +369,16 @@ namespace game_framework {
 	void man::checkbeenatt(skillsContainer &con) {
 		int j = 0;
 		while(j < con.getnum()) {
+			TRACE("body		%d \t %d\n", Body.get_x(),_x);
+
 			if (con.getskills(j)->getowner() == this) {
 				j++; continue;
 			}
-			int x = con.getskills(j)->getx() - _x - body_x;
-			int y = con.getskills(j)->gety() - _y - body_y;
-			int z = con.getskills(j)->getz();
-			int w = con.getskills(j)->getw();
-			int h = con.getskills(j)->geth();
-			bool touch=false;
-			int point_x[4] = {x,x+w,x,x+w};
-			int point_y[4] = {y,y,y+h,y+h};
-			for (int i = 0; i < 4; i++) {
-				if (abs(z - _z) > 10) 	break;
-				if (point_x[i] < 0 || point_y[i] < 0) {
-					continue;
-				}
-				else if(point_x[i] > body_w || point_y[i] > body_h){
-					continue;
-				}
-				else{
-					touch = true;
-					break;
-				}
-			}
-			if (touch) {
-				recoverGap = 40;
+			if (con.getskills(j)->touch(Body)) {
 				Skills* temp = con.getskills(j);
-				stonkcount -= temp->getdizzy();					// 計算被打到的暈眩值
-																// 計算被打到的傷害
-				TRACE(" %d\n", temp->getDir());
+				stonkcount -= temp->getdizzy();					
+
 				_outofctrl = true;
-				int mid = x + (w / 2);
 				setbeattenCount(5);
 				if (stonkcount > 3) {
 					if (!temp->getDir()) {
@@ -404,7 +396,7 @@ namespace game_framework {
 						_mode = 118;				// 被打第二下右
 					}
 				}
-				else if(stonkcount ==0){
+				else if(stonkcount > -1){
 					_mode = 115;						// 暈眩
 					setdizzyCount(100);
 					isStonk = true;
@@ -418,7 +410,6 @@ namespace game_framework {
 					}
 				}
 				con.dleteSkills(j);
-
 			}		
 			j++;
 		}
@@ -649,6 +640,7 @@ namespace game_framework {
 		default:
 			break;
 		}
+		Body.setPosetion(_x+25, _y+15);
 	}
 	
 	//人物顯示
@@ -780,6 +772,9 @@ namespace game_framework {
 		default:
 			break;
 		}	
+
+		//test.SetTopLeft(Body.get_x(), Body.get_y());
+		//test.ShowBitmap();
 	}
 
 	//處理指令輸入時間間隔

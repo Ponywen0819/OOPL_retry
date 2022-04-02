@@ -119,8 +119,7 @@ namespace game_framework {
 		CEraser			eraser;		// 拍子
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
-		man				man1;		// 人物1
-		man				man2;		// 人物2
+		man				Man[2];		// 人物1
 		skillsContainer skills;
 		Bitmaplib		lib;
 		CStateBar       bar;

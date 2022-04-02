@@ -259,20 +259,22 @@ CGameStateRun::~CGameStateRun()
 }
 
 void CGameStateRun::OnBeginState(){
-	man1.setInitPosotion(200, 200);
-	man2.setInitPosotion(150, 200);
+	Man[0].setInitPosotion(200, 200);
+	Man[1].setInitPosotion(150, 200);
+	Man[0].init(&lib, Man,2);
+	Man[1].init(&lib, Man,2);
 }	
 
 void CGameStateRun::OnMove(){
 	skills.check();
-	man1.checkbeenatt(skills);
-	man2.checkbeenatt(skills);
-	man1.OnMove();
-	man2.OnMove();
-	skills.addSkills(man1.usingSkill());
-	skills.addSkills(man2.usingSkill());
+	Man[0].checkbeenatt(skills);
+	Man[1].checkbeenatt(skills);
+	Man[0].OnMove();
+	Man[1].OnMove();
+	skills.addSkills(Man[0].usingSkill());
+	skills.addSkills(Man[1].usingSkill());
 	skills.onMove();
-
+	//TRACE("man1 and man2 nearby %d\n", man1.NearBy(man2))
 }
 
 void CGameStateRun::OnInit(){
@@ -283,12 +285,12 @@ void CGameStateRun::OnInit(){
 	lib.LoadBitmap();
 
 	ShowInitProgress(50);
-	man1.LoadBitmap();
-	man1.init(&lib);
+	Man[0].LoadBitmap();
+	
 
 	ShowInitProgress(75);
-	man2.LoadBitmap();
-	man2.init(&lib);
+	Man[1].LoadBitmap();
+	
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -301,22 +303,22 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_Z = 90;			// keyboard Z
 
 	if (nChar == KEY_LEFT) {
-		man1.setComm(1);
+		Man[0].setComm(1);
 	}
 	else if (nChar == KEY_RIGHT) {
-		man1.setComm(2);
+		Man[0].setComm(2);
 	}
 	else if (nChar == KEY_UP) {
-		man1.setComm(3);
+		Man[0].setComm(3);
 	}
 	else if (nChar == KEY_DOWN) {
-		man1.setComm(4);
+		Man[0].setComm(4);
 	}
 	else if (nChar == KEY_SPACE) {
-		man1.setComm(5);
+		Man[0].setComm(5);
 	}
 	else if (nChar == KEY_Z) {
-		man1.setComm(6);
+		Man[0].setComm(6);
 	}
 }
 
@@ -329,22 +331,22 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_Z = 90;			// keyboard Z
 
 	if (nChar == KEY_LEFT) {
-		man1.cComm(1);
+		Man[0].cComm(1);
 	}
 	else if (nChar == KEY_RIGHT) {
-		man1.cComm(2);
+		Man[0].cComm(2);
 	}
 	else if (nChar == KEY_UP) {
-		man1.cComm(3);
+		Man[0].cComm(3);
 	}
 	else if (nChar == KEY_DOWN) {
-		man1.cComm(4);
+		Man[0].cComm(4);
 	}
 	else if (nChar == KEY_SPACE) {
-		man1.cComm(5);
+		Man[0].cComm(5);
 	}
 	else if (nChar == KEY_Z) {
-		man1.cComm(6);
+		Man[0].cComm(6);
 	}
 }
 
@@ -378,8 +380,8 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 }
 
 void CGameStateRun::OnShow(){ 
-	man1.onShow();	
-	man2.onShow();
+	Man[0].onShow();
+	Man[1].onShow();
 	skills.onShow();
 	bar.OnShowBar(player1, player2);
 }
