@@ -14,13 +14,17 @@ namespace game_framework {
 		void setbeatenTopLeft(int step, bool FaceToLeft, int index,int x,int y);
 		void showBeaten(int step, bool FaceToLeft, int index);
 
+		void setSuper_attTopLeft(int f, int index, int x, int y);
+		void showSuper_att(int f, int index);
+
+
 	private:
 		CMovingBitmap punch;
 		CMovingBitmap beaten1[2][2];
 		CMovingBitmap beatenL2[2][2];
 		CMovingBitmap beatenR2[2][2];
 		CMovingBitmap dizzy[2];
-
+		CMovingBitmap super_att[2][3];
 	};
 
 	class PAnimation{

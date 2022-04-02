@@ -291,10 +291,11 @@ namespace game_framework {
 				bool finish=false;
 				for (int i = 0; i < NumOfMan; i++) {
 					if ( NearBy(*(mans + i)) && FaceTo(*(mans + i)) && (mans+i)->isDizzy() ) {
+						setTimmer(10);
 						finish = true;
 						_outofctrl = true;
-
-						_mode = 0;
+						_mode = 70;
+						break;
 					}
 				}
 				if (!finish) {
@@ -306,7 +307,7 @@ namespace game_framework {
 			}
 		}
 
-		if (_mode < 90) {
+		if (_mode < 5) {
 			for (int i = 0; i < 4; i++) {
 				if (flag[i]) {
 					_mode = 1;
@@ -426,6 +427,7 @@ namespace game_framework {
 		//≠Àº∆
 		now = nullptr;
 		if(_Double_Tap_Gap>=0) _Double_Tap_Gap--;
+		Count();
 		JumpCount();
 		attCount();
 		beattenCount();
@@ -436,11 +438,31 @@ namespace game_framework {
 		checkFlag();
 		checkBuff();
 		specialEvent();
-	
-
 		switch (_mode){
 		case 1:
 			setPosotion(1);
+			break;
+		case 70:
+			if(Face_to_Left) setInitPosotion(_x - 1, _y);
+			else setInitPosotion(_x + 1, _y);
+			if (isTime()) {
+				setTimmer(6);
+				_mode = 71;
+			}
+			break;
+		case 71:
+			if (Face_to_Left) setInitPosotion(_x - 1, _y);
+			else setInitPosotion(_x + 1, _y);
+			if (isTime()) {
+				setTimmer(12);
+				_mode = 72;
+			}
+			break;
+		case 72:
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
 			break;
 		case 90:
 			if (JumpCountisZero()) {
@@ -659,6 +681,18 @@ namespace game_framework {
 			walk[index].OnMove();
 			walk[index].SetTopLeft(_x, _y);
 			walk[index].OnShow();
+			break;
+		case 70:
+			lib->setSuper_attTopLeft(index, 0, _x, _y);
+			lib->showSuper_att(index,0);
+			break;
+		case 71:
+			lib->setSuper_attTopLeft(index, 1, _x, _y);
+			lib->showSuper_att(index, 1);
+			break;
+		case 72:
+			lib->setSuper_attTopLeft(index, 2, _x, _y);
+			lib->showSuper_att(index, 2);
 			break;
 		case 90:									//∏ı≈D√€§U
 			squat[index].SetTopLeft(_x, _y);

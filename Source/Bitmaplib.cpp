@@ -33,7 +33,15 @@ namespace game_framework {
 		
 		beatenL2[0][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\6.bmp", RGB(0, 0, 0));
 		beatenL2[1][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\6.bmp", RGB(0, 0, 0));
-;
+		
+		super_att[0][0].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\0.bmp", RGB(0, 0, 0));
+		super_att[1][0].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\0.bmp", RGB(0, 0, 0));
+
+		super_att[0][1].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\1.bmp", RGB(0, 0, 0));
+		super_att[1][1].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\1.bmp", RGB(0, 0, 0));
+
+		super_att[0][2].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\2.bmp", RGB(0, 0, 0));
+		super_att[1][2].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\2.bmp", RGB(0, 0, 0));
 	}
 
 	void Bitmaplib::showBynumber(int i, int x, int y) {
@@ -75,8 +83,7 @@ namespace game_framework {
 			break;
 		}
 	}
-
-	void Bitmaplib::showBeaten(int step, bool FaceToLeft, int index) {
+	void Bitmaplib::showBeaten(int step,bool FaceToLeft, int index) {
 		int f;
 		if (FaceToLeft) f = 0;
 		else f = 0;
@@ -96,6 +103,16 @@ namespace game_framework {
 			break;
 		}
 	}
+
+	void Bitmaplib::setSuper_attTopLeft(int f, int index, int x, int y){
+		super_att[f][index].SetTopLeft(x, y);
+	}
+	void Bitmaplib::showSuper_att(int f, int index) {
+		super_att[f][index].ShowBitmap();
+	}
+
+
+
 
 	PAnimation::PAnimation(Bitmaplib *l) :num{ 0 }, index{ 0 }, lib{ l }{}
 
