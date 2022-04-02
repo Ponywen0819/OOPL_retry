@@ -370,8 +370,6 @@ namespace game_framework {
 	void man::checkbeenatt(skillsContainer &con) {
 		int j = 0;
 		while(j < con.getnum()) {
-			TRACE("body		%d \t %d\n", Body.get_x(),_x);
-
 			if (con.getskills(j)->getowner() == this) {
 				j++; continue;
 			}
