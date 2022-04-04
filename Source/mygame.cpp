@@ -267,7 +267,9 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	skills.check();
-	Man[0].checkbeenatt(skills);
+	//TRACE("man1\n");
+	//Man[0].checkbeenatt(skills);
+	//TRACE("man2\n");
 	Man[1].checkbeenatt(skills);
 	Man[0].OnMove();
 	Man[1].OnMove();

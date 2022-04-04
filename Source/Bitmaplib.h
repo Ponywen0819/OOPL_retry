@@ -17,6 +17,7 @@ namespace game_framework {
 		void setSuper_attTopLeft(int f, int index, int x, int y);
 		void showSuper_att(int f, int index);
 
+		void Falling(int step, int FaceToLeft, int index, int x, int y);
 
 	private:
 		CMovingBitmap punch;
@@ -25,6 +26,7 @@ namespace game_framework {
 		CMovingBitmap beatenR2[2][2];
 		CMovingBitmap dizzy[2];
 		CMovingBitmap super_att[2][3];
+		CMovingBitmap falling[2][12];
 	};
 
 	class PAnimation{

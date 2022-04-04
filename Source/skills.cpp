@@ -40,15 +40,13 @@ namespace game_framework {
 	}
 
 	void skillsContainer::onMove() {
-		//TRACE("%d\n", numOfSkills);
+		//TRACE("numOf skills %d\n", numOfSkills);
 		for (auto i = 0; i < numOfSkills; i++) {
-			//TRACE("%d \t %d\n ", skills.at(i),i);
 			skills.at(i)->onMove();
 		}
 	}
 
 	void skillsContainer::onShow() {
-		//TRACE("%d\n", numOfSkills);
 		for (auto i = 0; i < numOfSkills; i++) {
 			skills.at(i)->onShow();
 		}
@@ -142,5 +140,36 @@ namespace game_framework {
 	void punch::onShow() {
 		_ani.setTopLeft(_x, _y);
 		_ani.onShow();
+	}
+
+	super_att::super_att(int x, int y, int z, bool FacetoLeft, Bitmaplib *l, void *owner) : Skills(41,51, owner) {
+		if (!FaceToLeft) {
+			setPostion(x + 40, y - 2, z);
+			TRACE("qqqqq\n");
+		}
+		else {
+			TRACE("aaaaa\n");
+			setPostion(x - 2, y - 2, z);
+		}
+		TRACE("x = %d %d y = %d %d\n", _x, x, _y, y);
+		setLastTime(12);
+	}
+
+	void super_att::onMove() {
+		last();
+		setPostion(_x, _y, _z);
+	}
+
+	void super_att::onShow() {
+	CDC *pDC = CDDraw::GetBackCDC();
+	CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+	pp = pDC->SelectObject(&p);
+
+	CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+	pb = pDC->SelectObject(&b);
+	pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+	pDC->SelectObject(pp);						// 釋放 pen
+	pDC->SelectObject(pb);						// 釋放 brush
+	CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
 	}
 }

@@ -18,12 +18,10 @@ namespace game_framework {
 		virtual void onShow();
 		bool touch(const area &other) {
 			return Area.touch(other);
-		}
-		
+		}		
 		void	last() {
 			LastTime--;
 		}
-
 		//setter
 		void	setPostion(int x, int y, int z) {
 			_x = x; _y = y; _z = z;
@@ -107,6 +105,14 @@ namespace game_framework {
 		Bitmaplib *lib;
 	};
 
+	class super_att :public Skills {
+	public:
+		super_att(int x, int y, int z, bool FacetoLeft, Bitmaplib *l, void *owner);
+		void onMove();
+		void onShow();
+	private:
+
+	};
 	class skillsContainer {
 	public:
 		skillsContainer();

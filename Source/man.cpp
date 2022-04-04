@@ -370,13 +370,15 @@ namespace game_framework {
 	void man::checkbeenatt(skillsContainer &con) {
 		int j = 0;
 		while(j < con.getnum()) {
+			//TRACE("%d %d\n", con.getskills(j)->touch(Body), con.getskills(j)->getowner());
+			//TRACE("%d %d\n", con.getskills(j)->getx(), _x);
 			if (con.getskills(j)->getowner() == this) {
+				//TRACE("SKIP \n");
 				j++; continue;
 			}
 			if (con.getskills(j)->touch(Body)) {
 				Skills* temp = con.getskills(j);
-				stonkcount -= temp->getdizzy();					
-
+				stonkcount -= temp->getdizzy();	
 				_outofctrl = true;
 				setbeattenCount(5);
 				if (stonkcount > 3) {
@@ -401,11 +403,12 @@ namespace game_framework {
 					isStonk = true;
 				}
 				else{
+					setTimmer(9);
 					if (!temp->getDir()) {
-						_mode = 200;				// 擊飛左
+						_mode = 180;				// 擊飛左
 					}
 					else{
-						_mode = 200;				// 擊飛右
+						_mode = 186;				// 擊飛右
 					}
 				}
 				con.dleteSkills(j);
@@ -451,9 +454,14 @@ namespace game_framework {
 		case 71:
 			if (Face_to_Left) setInitPosotion(_x - 1, _y);
 			else setInitPosotion(_x + 1, _y);
+
 			if (isTime()) {
 				setTimmer(12);
 				_mode = 72;
+				super_att *temp = new super_att(_x, _y, _z, false, lib, (void*)this);
+				temp->setdizzy(7);
+				temp->setDir(Face_to_Left);
+				now = temp;
 			}
 			break;
 		case 72:
@@ -496,7 +504,7 @@ namespace game_framework {
 				_mode = 102;
 				setattCount();
 				punch *temp = new punch(_x, _y, _z, Face_to_Left, first_att_animation, lib, (void*)this);
-				temp->setdizzy(punch_fall);
+				temp->setdizzy(2);
 				temp->init(Face_to_Left);
 				now = temp;
 			}
@@ -651,11 +659,68 @@ namespace game_framework {
 				_mode = 115;
 			}
 			break;
-		case 121:						// 飛走左
-
+		case 180:						// 左飛走
+			if (isTime()) {
+				setTimmer(9);
+			}
 			break;
-		case 122:						// 飛走右
-			
+		case 181:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 182:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 183:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 184:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 185:
+			if (isTime()) {
+
+			}
+			break;
+
+			// 背後擊飛
+
+		case 186:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 187:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 188:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 189:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 190:
+			if (isTime()) {
+				setTimmer(9);
+			}
+			break;
+		case 191:
+			if (isTime()) {
+
+			}
 			break;
 		default:
 			break;
@@ -798,15 +863,53 @@ namespace game_framework {
 			lib->setbeatenTopLeft(3, Face_to_Left, 0, _x, _y + _z);
 			lib->showBeaten(3, Face_to_Left, 0);
 			break;
-		case 121:
-		case 122:
+		// falling
 
+		case 180:
+			lib->Falling(0, index, 0, _x, _y + _z);
+			break;
+		case 181:
+			lib->Falling(0, index, 1, _x, _y + _z);
+			break;
+		case 182:
+			lib->Falling(0, index, 2, _x, _y + _z);
+			break;
+		case 183:
+			lib->Falling(0, index, 3, _x, _y + _z);
+			break;
+		case 184:
+			lib->Falling(0, index, 4, _x, _y + _z);
+			break;
+		case 185:
+			lib->Falling(0, index, 5, _x, _y + _z);
+			break;
+
+		// 背後擊飛
+
+		case 186:
+			lib->Falling(1, index, 0, _x, _y + _z);
+			break;
+		case 187:
+			lib->Falling(1, index, 1, _x, _y + _z);
+			break;
+		case 188:
+			lib->Falling(1, index, 2, _x, _y + _z);
+			break;
+		case 189:
+			lib->Falling(1, index, 3, _x, _y + _z);
+			break;
+		case 190:
+			lib->Falling(1, index, 4, _x, _y + _z);
+			break;
+		case 191:
+			lib->Falling(1, index, 5, _x, _y + _z);
+			break;
 		default:
 			break;
 		}	
 
-		//test.SetTopLeft(Body.get_x(), Body.get_y());
-		//test.ShowBitmap();
+		test.SetTopLeft(Body.get_x(), Body.get_y());
+		test.ShowBitmap();
 	}
 
 	//處理指令輸入時間間隔

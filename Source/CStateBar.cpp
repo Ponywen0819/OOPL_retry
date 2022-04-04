@@ -130,7 +130,7 @@ namespace game_framework {
 
 
 	void CStateBar::p1regen_hp() {
-		TRACE("%d\n",delay1_hp);
+		//TRACE("%d\n",delay1_hp);
 		if (--delay1_hp < 0 ) {
 			if (p1_hp1 < p1_hp2 && p1_hp1 > 0) {
 				p1_hp1+=3;
@@ -153,7 +153,7 @@ namespace game_framework {
 		}
 	}
 	void CStateBar::p2regen_hp() {
-		TRACE("%d\n", delay2_hp);
+		//TRACE("%d\n", delay2_hp);
 		if (--delay2_hp < 0) {
 			if (p2_hp1 < p2_hp2 && p2_hp1 > 0) {
 				p2_hp1 += 3;
