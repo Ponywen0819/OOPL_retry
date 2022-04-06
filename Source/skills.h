@@ -11,12 +11,13 @@ namespace game_framework {
 		Skills(int w,int h,void *owner);
 		void initPostion(int x, int y, int w, int h) {
 			_x = x; _y = y;
-			Area.init(_x, _y, w, h);
+			Area.init(x, y, w, h);
 		}
 		virtual void LoadBitmap();
 		virtual void onMove();
 		virtual void onShow();
 		bool touch(const area &other) {
+			//TRACE("%d %d\n",_x,_y);
 			return Area.touch(other);
 		}		
 		void	last() {
@@ -85,8 +86,8 @@ namespace game_framework {
 		int		_danmage;			// 傷害
 		int		_cost;				// 耗費
 		int		LastTime;			// 持續時間
-		void*	_owner;
-		bool	FaceToLeft;
+		void*	_owner;				// 放出技能的人
+		bool	FaceToLeft;			// 面向的方向
 		area	Area;				// 技能作用範圍
 	};
 
@@ -107,12 +108,14 @@ namespace game_framework {
 
 	class super_att :public Skills {
 	public:
-		super_att(int x, int y, int z, bool FacetoLeft, Bitmaplib *l, void *owner);
+		super_att(int x, int y, int z, bool FacetoLeft, void *owner);
+		void init(bool f);
 		void onMove();
 		void onShow();
 	private:
 
 	};
+	
 	class skillsContainer {
 	public:
 		skillsContainer();
@@ -131,6 +134,5 @@ namespace game_framework {
 		int numOfSkills;
 		std::vector<Skills*> skills;
 	};
-
 }
 

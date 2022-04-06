@@ -57,7 +57,10 @@ namespace game_framework {
 		bool _outofctrl;					
 	
 		void setPosotion(int n);
-			
+		void caculateZ(int frame,int x,int z);
+		void setZ();
+
+
 		void checkFlag();
 		void checkBuff();
 		void specialEvent();
@@ -107,8 +110,6 @@ namespace game_framework {
 		bool dizzyCountisZero();
 		// 擊飛動作
 
-		bool fly();
-
 		// 指令輸入間隔
 
 		void setCountDwon();					//連點倒數
@@ -128,6 +129,11 @@ namespace game_framework {
 		int		dizzyGap;
 		int		NumOfMan;						// 在場上的人
 		int		time;							// 計數
+		int		tempf;								
+
+		float	a1, a2, a3,a4;						// 曲線方程項
+		float	tempx;
+		float	FrameCount;						// 曲線方城參數
 
 		bool	isStonk;
 		bool	Face_to_Left;					// 面相方向

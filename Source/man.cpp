@@ -404,7 +404,7 @@ namespace game_framework {
 				}
 				else{
 					setTimmer(9);
-					if (!temp->getDir()) {
+					if (temp->getDir()) {
 						_mode = 180;				// 擊飛左
 					}
 					else{
@@ -415,6 +415,27 @@ namespace game_framework {
 			}		
 			j++;
 		}
+	}
+
+	void man::caculateZ(int f, int x, int z) {
+		tempf = f;
+		float temp = float(f) / 2;
+		a1 =- z / (temp*temp);
+		a2 = temp;
+		a3 = float(z);
+		a4 = float(x) / f;
+		FrameCount = 0;
+		_z = 0;
+		tempx = float(_x);
+		//TRACE("init %f %f %f", a1, a2, a3);
+	}
+
+	void man::setZ() {
+		FrameCount++;
+		_z = int(a1 * ((FrameCount-a2) *(FrameCount-a2)) + a3);
+		_x = int(tempx+a4);
+		tempx += a4;
+		TRACE("%d %f\n", _z, FrameCount);
 	}
 
 	Skills* man::usingSkill(){
@@ -458,9 +479,9 @@ namespace game_framework {
 			if (isTime()) {
 				setTimmer(12);
 				_mode = 72;
-				super_att *temp = new super_att(_x, _y, _z, false, lib, (void*)this);
+				super_att *temp = new super_att(_x, _y, _z, !Face_to_Left, (void*)this);
 				temp->setdizzy(7);
-				temp->setDir(Face_to_Left);
+				temp->init(Face_to_Left);
 				now = temp;
 			}
 			break;
@@ -661,32 +682,43 @@ namespace game_framework {
 			break;
 		case 180:						// 左飛走
 			if (isTime()) {
+				caculateZ(45, -50, -120);
 				setTimmer(9);
+				_mode = 181;
 			}
 			break;
 		case 181:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 182;
 			}
 			break;
 		case 182:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 183;
 			}
 			break;
 		case 183:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 184;
 			}
 			break;
 		case 184:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 185;
 			}
 			break;
 		case 185:
+			setZ();
 			if (isTime()) {
-
+				_mode = 0;
 			}
 			break;
 
@@ -694,32 +726,43 @@ namespace game_framework {
 
 		case 186:
 			if (isTime()) {
+				caculateZ(45, 50, -12);
 				setTimmer(9);
+				_mode = 187;
 			}
 			break;
 		case 187:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 188;
 			}
 			break;
 		case 188:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 189;
 			}
 			break;
 		case 189:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 190;
 			}
 			break;
 		case 190:
+			setZ();
 			if (isTime()) {
 				setTimmer(9);
+				_mode = 191;
 			}
 			break;
 		case 191:
+			setZ();
 			if (isTime()) {
-
+				_mode = 0;
 			}
 			break;
 		default:
@@ -737,32 +780,32 @@ namespace game_framework {
 		switch (_mode){
 		case 0:
 			stand[index].OnMove();
-			stand[index].SetTopLeft(_x, _y);
+			stand[index].SetTopLeft(_x, _y+_z);
 			stand[index].OnShow();
 			break;
 		case 1:
 			walk[index].OnMove();
-			walk[index].SetTopLeft(_x, _y);
+			walk[index].SetTopLeft(_x, _y + _z);
 			walk[index].OnShow();
 			break;
 		case 70:
-			lib->setSuper_attTopLeft(index, 0, _x, _y);
+			lib->setSuper_attTopLeft(index, 0, _x, _y + _z);
 			lib->showSuper_att(index,0);
 			break;
 		case 71:
-			lib->setSuper_attTopLeft(index, 1, _x, _y);
+			lib->setSuper_attTopLeft(index, 1, _x, _y + _z);
 			lib->showSuper_att(index, 1);
 			break;
 		case 72:
-			lib->setSuper_attTopLeft(index, 2, _x, _y);
+			lib->setSuper_attTopLeft(index, 2, _x, _y + _z);
 			lib->showSuper_att(index, 2);
 			break;
 		case 90:									//跳躍蹲下
-			squat[index].SetTopLeft(_x, _y);
+			squat[index].SetTopLeft(_x, _y+_z);
 			squat[index].ShowBitmap();
 			break;
 		case 91:									//跳躍準備
-			readyJump[index].SetTopLeft(_x, _y);
+			readyJump[index].SetTopLeft(_x, _y+_z);
 			readyJump[index].ShowBitmap();
 			break;
 		case 92:									//跳躍小跳
@@ -779,7 +822,7 @@ namespace game_framework {
 			break;
 		case 100:									//奔跑
 			run[index].OnMove();
-			run[index].SetTopLeft(_x, _y);
+			run[index].SetTopLeft(_x, _y+_z);
 			run[index].OnShow();
 			break;
 		case 101:									//攻擊動作預備
@@ -908,8 +951,8 @@ namespace game_framework {
 			break;
 		}	
 
-		test.SetTopLeft(Body.get_x(), Body.get_y());
-		test.ShowBitmap();
+		// test.SetTopLeft(Body.get_x(), Body.get_y());
+		// test.ShowBitmap();
 	}
 
 	//處理指令輸入時間間隔

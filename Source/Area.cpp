@@ -11,7 +11,8 @@ namespace game_framework {
 		int min_x = other._Lx > _Lx ? other._Lx : _Lx;
 		int min_y = other._Ly > _Ly ? other._Ly : _Ly;
 		int max_x = other._Rx < _Rx ? other._Rx : _Rx;
-		int max_y = other._Ry < _Ry ? other._Ry : _Ly;
+		int max_y = other._Ry < _Ry ? other._Ry : _Ry;
+		//TRACE("%d %d %d %d\n", min_x, min_y, max_x, max_y);
 		if (min_x > max_x || min_y > max_y) {
 			return false;
 		}

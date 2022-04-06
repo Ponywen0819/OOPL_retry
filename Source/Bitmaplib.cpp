@@ -153,7 +153,7 @@ namespace game_framework {
 	PAnimation::PAnimation(Bitmaplib *l) :num{ 0 }, index{ 0 }, lib{ l }{}
 
 	void PAnimation::addBitmap(int i) {
-		TRACE("skills add %d\n", i);
+		//TRACE("skills add %d\n", i);
 		bitmapnumbers.push_back(i);
 		num++;
 		index = 0;
