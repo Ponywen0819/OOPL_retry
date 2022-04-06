@@ -682,7 +682,7 @@ namespace game_framework {
 			break;
 		case 180:						// екн╕ил
 			if (isTime()) {
-				caculateZ(45, -50, -120);
+				caculateZ(45, -50, -12);
 				setTimmer(9);
 				_mode = 181;
 			}
@@ -718,7 +718,8 @@ namespace game_framework {
 		case 185:
 			setZ();
 			if (isTime()) {
-				_mode = 0;
+				setTimmer(90);
+				_mode = 230;
 			}
 			break;
 
@@ -761,6 +762,18 @@ namespace game_framework {
 			break;
 		case 191:
 			setZ();
+			if (isTime()) {
+				setTimmer(90);
+				_mode = 231;
+			}
+			break;
+
+		case 230:
+			if (isTime()) {
+				_mode = 0;
+			}
+			break;
+		case 231:
 			if (isTime()) {
 				_mode = 0;
 			}
@@ -942,9 +955,15 @@ namespace game_framework {
 			lib->Falling(1, index, 3, _x, _y + _z);
 			break;
 		case 190:
-			lib->Falling(1, index, 4, _x, _y + _z);
+			lib->Falling(1, index, 5, _x, _y + _z);
 			break;
 		case 191:
+			lib->Falling(1, index, 4, _x, _y + _z);
+			break;
+		case 230:
+			lib->Falling(0, index, 5, _x, _y + _z);
+			break;
+		case 231:
 			lib->Falling(1, index, 5, _x, _y + _z);
 			break;
 		default:
