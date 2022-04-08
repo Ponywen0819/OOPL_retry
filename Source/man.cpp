@@ -356,6 +356,9 @@ namespace game_framework {
 				_dir[2] = _dir[3] = false;
 				setattCount();
 			}
+			if (_mode == 120 || _mode == 121) {
+
+			}
 			else{
 				bool finish=false;
 				for (int i = 0; i < NumOfMan; i++) {
@@ -539,18 +542,21 @@ namespace game_framework {
 
 		setZ();
 		switch (_mode){
-		case 1:
+		case 1: {
 			setPosotion(1);
 			break;
-		case 70:
-			if(Face_to_Left) setInitPosotion(_x - 1, _y);
+		}
+		case 70: {
+			if (Face_to_Left) setInitPosotion(_x - 1, _y);
 			else setInitPosotion(_x + 1, _y);
 			if (isTime()) {
 				setTimmer(6);
 				_mode = 71;
 			}
 			break;
-		case 71:
+		}
+			
+		case 71: {
 			if (Face_to_Left) setInitPosotion(_x - 1, _y);
 			else setInitPosotion(_x + 1, _y);
 
@@ -563,42 +569,48 @@ namespace game_framework {
 				now = temp;
 			}
 			break;
-		case 72:
+		}
+		case 72: {
 			if (isTime()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-		case 90:
+		}
+		case 90: {
 			if (JumpCountisZero()) {
 				_mode = 91; setJumpCount();
 			}
 			break;
-		case 91:
+		}
+		case 91: {
 			if (JumpCountisZero()) {
-				_mode = 92; 
+				_mode = 92;
 			}
 			break;
-		case 92:
+		}
+		case 92: {
 			setPosotion(2);
 			if (jumping()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
+		}
 		case 93:
-		case 94:
+		case 94: {
 			setPosotion(4);
 			if (jumping()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-		case 100:						//衝刺動作
+		}
+		case 100: {						//衝刺動作
 			setPosotion(2);
 			break;
-
-		case 101:
+		}
+		case 101: {
 			if (attCountisZero()) {		// 準備攻擊
 				_mode = 102;
 				setattCount();
@@ -608,34 +620,39 @@ namespace game_framework {
 				now = temp;
 			}
 			break;
-		case 102:						
+		}
+		case 102: {
 			if (attCountisZero()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-		case 103:
+		}
+		case 103: {
 			setPosotion(2);
 			if (attCountisZero()) {
 				_mode = 104;
 				setattCount();
 			}
 			break;
-		case 104:
+		}
+		case 104: {
 			setPosotion(2);
 			if (attCountisZero()) {
 				_mode = 105;
 				setattCount();
 			}
 			break;
-		case 105:
+		}
+		case 105: {
 			setPosotion(2);
 			if (attCountisZero()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-		case 106:
+		}
+		case 106: {
 			if (attCountisZero()) {
 				_mode = 107;
 				setattCount();
@@ -646,7 +663,8 @@ namespace game_framework {
 				_outofctrl = false;
 			}
 			break;
-		case 107:
+		}
+		case 107: {
 			if (attCountisZero()) {
 				_mode = 92;
 			}
@@ -656,10 +674,11 @@ namespace game_framework {
 				_outofctrl = false;
 			}
 			break;
+		}
 
 		// 飛踢
 
-		case 108:
+		case 108: {
 			if (attCountisZero()) {
 				_mode = 110;
 				setattCount();
@@ -670,7 +689,8 @@ namespace game_framework {
 				_outofctrl = false;
 			}
 			break;
-		case 109:
+		}
+		case 109: {
 			if (attCountisZero()) {
 				_mode = 111;
 				setattCount();
@@ -681,31 +701,35 @@ namespace game_framework {
 				_outofctrl = false;
 			}
 			break;
-		case 110:
+		}
+		case 110: {
 			setPosotion(4);
 			if (jumping()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-		case 111:								
+		}
+		case 111: {
 			setPosotion(4);
 			if (jumping()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
-
+		}
+			
 		// 捉住人的動作
 
-		case 120:
+		case 120: {
 			dizzyCount -= -7;
 			if (isTime()) {
 				gotCatch->_mode = 130;
 				_mode = 121;
 			}
 			break;
-		case 121:
+		}
+		case 121: {
 			dizzyCount -= 7;
 			if (dizzyCount <= 0) {
 				gotCatch->_mode = 133;
@@ -715,270 +739,350 @@ namespace game_framework {
 				_mode = 0;
 			}
 			break;
+		}
+			
 
 		// 捉住人攻擊
-
-		case 122:
+		
+		case 122: {
 			break;
-		case 123:
-			break;
+		}
 
+		
+		case 123: {
+			break;
+		}
 		// 被捉住
 
-		case 130:
+		case 130: {
 			break;
-		case 131:
+		}
+		case 131: {
 			break;
-		case 132:
+		}
+		case 132: {
 			break;
+		}
 
 		// 被捉結束
 
-		case 133:
+		case 133: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 134;
 			}
 			break;
-		case 134:
+		}
+			
+		case 134: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 135;
 			}
 			break;
-		case 135:
+		}
+			
+		case 135: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 136;
 			}
 			break;
-		case 136:
+		}
+			
+		case 136: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 137;
 			}
 			break;
-		case 137:
+		}
+			
+		case 137: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 138;
 			}
 			break;
-		case 138:
+		}
+			
+		case 138: {
 			if (isTime()) {
 				setTimmer(90);
 				_mode = 230;
 			}
 			break;
-		case 139:
+		}
+			
+		case 139: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 140;
 			}
 			break;
-		case 140:
+		}
+			
+		case 140: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 141;
 			}
 			break;
-		case 141:
+		}
+			
+		case 141: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 142;
 			}
 			break;
-		case 142:
+		}
+			
+		case 142: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 143;
 			}
 			break;
-		case 143:
+		}
+			
+		case 143: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 144;
 			}
 			break;
-		case 144:if (isTime()) {
-			setTimmer(90);
-			_mode = 231;
 		}
-			break;
+			
+		case 144: {
+			if (isTime()) {
+				setTimmer(90);
+				_mode = 231;
+				break;
+			}
+		}
 
 		// 正面飛走
 
-		case 180:						
+		case 180: {
 			if (isTime()) {
 				caculateZ(45, -50, -12);
 				setTimmer(9);
 				_mode = 181;
 			}
 			break;
-		case 181:
+		}
+			
+		case 181: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 182;
 			}
 			break;
-		case 182:
+		}
+			
+		case 182: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 183;
 			}
 			break;
-		case 183:
+		}
+			
+		case 183: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 184;
 			}
 			break;
-		case 184:
+		}
+			
+		case 184: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 185;
 			}
 			break;
-		case 185:
+		}
+			
+		case 185: {
 			if (isTime()) {
 				setTimmer(90);
 				_mode = 230;
 			}
 			break;
+		}
+			
 
 		// 背後擊飛
 
-		case 186:
+		case 186: {
 			if (isTime()) {
 				caculateZ(45, 50, -12);
 				setTimmer(9);
 				_mode = 187;
 			}
 			break;
-		case 187:
+		}
+			
+		case 187: {
 			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 188;
 			}
 			break;
-		case 188:
+		}
+			
+		case 188: {
 			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 189;
 			}
 			break;
-		case 189:
+		}
+			
+		case 189: {
 			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 190;
 			}
 			break;
-		case 190:
+		}
+			
+		case 190: {
 			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 191;
 			}
 			break;
-		case 191:
+		}
+			
+		case 191: {
 			setZ();
 			if (isTime()) {
 				setTimmer(90);
 				_mode = 231;
 			}
 			break;
+		}
+			
 
 		// 打到向後退的動作
 
-		case 220:
+		case 220: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 221;
 			}
 			break;
-		case 221:
+		}
+			
+		case 221: {
 			if (isTime()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
+		}
+			
 
 		// 打到向前移的動作
 
-		case 222:
+		case 222: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 223;
 			}
 			break;
-		case 223:
+		}
+			
+		case 223: {
 			if (isTime()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
+		}
+			
 		
 		// 打到第二個動作
 		
-		case 224:
+		case 224: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 225;
 			}
 			break;
-		case 225:
+		}
+			
+		case 225: {
 			if (isTime()) {
 				_mode = 0;
 				_outofctrl = false;
 			}
 			break;
+		}
+			
 		
 		// 暈眩
 		
-		case 226:
+		case 226: {
 			if (isTime()) {
 				setTimmer(18);
 				_mode = 227;
 			}
 			break;
-		case 227:
+		}
+			
+		case 227: {
 			if (isTime()) {
 				setTimmer(18);
 				_mode = 228;
 			}
 			break;
-		case 228:
+		}
+			
+		case 228: {
 			if (isTime()) {
 				setTimmer(18);
 				_mode = 229;
 			}
 			break;
-		case 229:
+		}
+			
+		case 229: {
 			if (isTime()) {
 				_mode = 0;
 				_outofctrl = false;
 				_isDizzy = false;
 			}
 			break;
+		}
+			
 
 		// 躺著倒地
 
-		case 230:
+		case 230: {
 			if (isTime()) {
 				_mode = 0;
 			}
 			break;
+		}
+			
 		
 		// 趴著倒地
 		
-		case 231:
+		case 231: {
 			if (isTime()) {
 				_mode = 0;
 			}
 			break;
+		}
+			
 
 
 		default:
