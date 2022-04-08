@@ -4,10 +4,10 @@
 #include "skills.h"
 #include "Area.h"
 
-#define height 28
-
 namespace game_framework {
 
+	#define height 28
+	#define MAN_DIZZY 903
 	class man{
 	public:
 		man() {
@@ -27,7 +27,7 @@ namespace game_framework {
 			first_att_animation = true;
 			stonkcount = 6;
 			punch_fall = 2;
-			isStonk = false;
+			_isDizzy = false;
 			Body.init(_x+25, _y+15, 25, 64);
 		}
 		man(int x, int y);
@@ -47,7 +47,7 @@ namespace game_framework {
 		bool NearBy(const man &other);				// 在旁邊
 		bool FaceTo(const man &other);
 		bool isDizzy() {								
-			return isStonk;
+			return _isDizzy;
 		}						
 	protected:
 		virtual void otherCommand(int n);
@@ -65,6 +65,11 @@ namespace game_framework {
 		void checkBuff();
 		void specialEvent();
 		void readCommand();
+
+		void setDizzyCount() {
+			dizzyCount = MAN_DIZZY;
+		}
+
 
 		// 計數器
 
@@ -103,11 +108,6 @@ namespace game_framework {
 		void beattenCount();
 		bool beattenCountisZero();
 
-		// 處理暈眩計數
-
-		void setdizzyCount(int t);
-		void dizzyCount();
-		bool dizzyCountisZero();
 		// 擊飛動作
 
 		// 指令輸入間隔
@@ -129,20 +129,26 @@ namespace game_framework {
 		int		dizzyGap;
 		int		NumOfMan;						// 在場上的人
 		int		time;							// 計數
-		int		tempf;								
+		int		tempf;							//
+		int		dizzyCount;						//
+
 
 		float	a1, a2, a3,a4;						// 曲線方程項
 		float	tempx;
 		float	FrameCount;						// 曲線方城參數
 
-		bool	isStonk;
 		bool	Face_to_Left;					// 面相方向
 		bool	_dir[4];						// 方向
 		bool	first_att_animation;
 		bool	is_jumping;						// 是否在跳躍
 		bool	flag[7];						// keyboard input flag
 		bool	Alive;							// 是否活著
-		
+		bool	Fset;							// 是否要計算方城
+		bool	_catching;						// 抓住別人
+		bool	_Catch;							// 被抓住的狀態
+		bool	_isDizzy;						// 暈眩狀態
+
+
 		area	Body;							// 身體HitBox
 		
 		std::string commandBuffer;				// input command buffer
@@ -165,5 +171,6 @@ namespace game_framework {
 		Skills*		now;						// 現在的招式
 		Bitmaplib *	lib;
 		man *		mans;						// 在場上的人	
+		man *		gotCatch;					// 被抓的人
 	};
 }

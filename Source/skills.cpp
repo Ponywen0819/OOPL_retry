@@ -138,8 +138,8 @@ namespace game_framework {
 	}
 
 	void punch::onShow() {
-		_ani.setTopLeft(_x, _y);
-		_ani.onShow();
+		/*_ani.setTopLeft(_x, _y);
+		_ani.onShow();*/
 	}
 
 	super_att::super_att(int x, int y, int z, bool f, void *owner) : Skills(41,51, owner) {
@@ -163,15 +163,15 @@ namespace game_framework {
 	}
 
 	void super_att::onShow() {
-		CDC *pDC = CDDraw::GetBackCDC();
-		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
-		pp = pDC->SelectObject(&p);
+		//CDC *pDC = CDDraw::GetBackCDC();
+		//CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+		//pp = pDC->SelectObject(&p);
 
-		CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
-		pb = pDC->SelectObject(&b);
-		pDC->Rectangle(_x, _y, _x + _w, _y + _h);
-		pDC->SelectObject(pp);						// 釋放 pen
-		pDC->SelectObject(pb);						// 釋放 brush
-		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+		//CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+		//pb = pDC->SelectObject(&b);
+		//pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+		//pDC->SelectObject(pp);						// 釋放 pen
+		//pDC->SelectObject(pb);						// 釋放 brush
+		//CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
 	}
 }

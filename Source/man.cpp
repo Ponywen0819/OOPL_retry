@@ -31,12 +31,18 @@ namespace game_framework {
 		_x = x;
 		_y = y;
 		now = nullptr;
+		Fset = false;
+		_Catch = false;
 	}
 
 	void man::init(Bitmaplib *l,man *m,int n) {
 		lib = l;
 		mans = m;
 		NumOfMan = n;
+		Fset = false;
+		_isDizzy = false;
+		_Catch = false;
+		_catching = false;
 	}
 
 	void man::LoadBitmap() {
@@ -141,8 +147,8 @@ namespace game_framework {
 
 	bool man::NearBy(const man &other) {
 		area temp,temp2;
-		temp.init(_x+13, _y, 54, 64);
-		temp2.init(other._x+13, other._y,54,64);
+		temp.init(_x, _y, 79, 79);
+		temp2.init(other._x, other._y,79,79);
 		if (temp.touch(temp2)) {
 			return true;
 		}
@@ -201,7 +207,7 @@ namespace game_framework {
 			commandBuffer += '7';
 		}
 		
-		if (_mode <  100) {
+		if (_mode <  5) {
 			if (comm == 1 && Face_to_Left == false)	Face_to_Left = true;
 			else if (comm == 2 && Face_to_Left)	Face_to_Left = false;
 		}
@@ -222,18 +228,50 @@ namespace game_framework {
 
 	void man::checkFlag() {
 		//TRACE("%d", _outofctrl);
-		if (_outofctrl) {
-			return;
-		}
+		//TRACE("check flag %d %d %d\n", _outofctrl, _isDizzy, _Catch);
+		if (_outofctrl) return;
+		//if (_isDizzy) return;
+		//if (_Catch) return;
 
 		if (flag[0]) {
 			if ((!Face_to_Left) && (_mode == 100)) {
 				_mode = 0;
 			}
+			else if ((_mode == 120 || _mode == 121) && !Face_to_Left) {
+				gotCatch->_mode = 133;
+				gotCatch->_Catch = false;
+				setTimmer(9);
+				_catching = false;
+				_mode = 0;
+			}
 			else if(_mode!=100) {
-				Face_to_Left = true;
-				_dir[0] = true;
-				_dir[1] = false;
+				bool finish = false;
+				for (int i = 0; i < NumOfMan; i++) {
+					//TRACE("qwe %d %d\n", NearBy(*(mans + i)), (mans + i)->isDizzy());
+					if (NearBy(*(mans + i)) && (mans + i)->isDizzy()) {
+						gotCatch = (mans + i);
+						gotCatch->_mode = 131;
+						gotCatch->_isDizzy = false;
+						gotCatch->_Catch = true;
+						gotCatch->Face_to_Left = !Face_to_Left;
+						if (Face_to_Left) {
+							gotCatch->_x = _x - 29;
+						}
+						else {
+							gotCatch->_x = _x + 29;
+						}
+						_mode = 120;
+						finish = true;
+						_catching = true;
+						setDizzyCount();
+						break;
+					}
+				}
+				if (!finish) {
+					Face_to_Left = true;
+					_dir[0] = true;
+					_dir[1] = false;
+				}
 			}
 		}
 
@@ -241,10 +279,40 @@ namespace game_framework {
 			if ((Face_to_Left) && (_mode == 100)) {
 				_mode = 0;
 			}
+			else if ((_mode == 120 || _mode == 121) && Face_to_Left) {
+				gotCatch->_mode = 133;
+				gotCatch->_Catch = false;
+				setTimmer(9);
+				_catching = false;
+				_mode = 0;
+			}
 			else if (_mode != 100) {
-				Face_to_Left = false;
-				_dir[0] = false;
-				_dir[1] = true;
+				bool finish = false;
+				for (int i = 0; i < NumOfMan; i++) {
+					//TRACE("qwe %d %d\n", NearBy(*(mans + i)) , (mans + i)->isDizzy());
+					if (NearBy(*(mans + i)) && (mans + i)->isDizzy()) {
+						gotCatch = (mans + i);
+						gotCatch->_mode = 131;
+						if (Face_to_Left) {
+							gotCatch->_x = _x - 29;
+						}
+						else {
+							gotCatch->_x = _x + 29;
+						}
+						gotCatch->Face_to_Left = !Face_to_Left;
+						_mode = 120;
+						setTimmer(15);
+						finish = true;
+						_catching = true;
+						setDizzyCount();
+						break;
+					}
+				}
+				if (!finish) {
+					Face_to_Left = false;
+					_dir[0] = false;
+					_dir[1] = true;
+				}
 			}
 		}
 
@@ -290,6 +358,7 @@ namespace game_framework {
 			else{
 				bool finish=false;
 				for (int i = 0; i < NumOfMan; i++) {
+					//TRACE("finish skills %d %d %d\n", NearBy(*(mans + i)) , FaceTo(*(mans + i)) , (mans + i)->isDizzy());
 					if ( NearBy(*(mans + i)) && FaceTo(*(mans + i)) && (mans+i)->isDizzy() ) {
 						setTimmer(10);
 						finish = true;
@@ -323,7 +392,9 @@ namespace game_framework {
 
 	void man::checkBuff() {
 		if (_outofctrl) return;
-
+		if (_isDizzy) return;
+		if (_Catch) return;
+		if (_catching) return;
 		if (_Double_Tap_Gap <= 0) {
 			setCountDwon();
 			commandBuffer = "";
@@ -350,6 +421,9 @@ namespace game_framework {
 
 	void man::specialEvent() {
 		if (!_outofctrl) return;
+		if (_isDizzy) return;
+		if (_Catch) return;
+		if (_catching) return;
 		//TRACE("%d %d \n", flag[4], flag[5]);
 		if (flag[5]) {
 			if (_mode == 92) {
@@ -370,39 +444,36 @@ namespace game_framework {
 	void man::checkbeenatt(skillsContainer &con) {
 		int j = 0;
 		while(j < con.getnum()) {
-			//TRACE("%d %d\n", con.getskills(j)->touch(Body), con.getskills(j)->getowner());
-			//TRACE("%d %d\n", con.getskills(j)->getx(), _x);
 			if (con.getskills(j)->getowner() == this) {
-				//TRACE("SKIP \n");
 				j++; continue;
 			}
 			if (con.getskills(j)->touch(Body)) {
 				Skills* temp = con.getskills(j);
 				stonkcount -= temp->getdizzy();	
 				_outofctrl = true;
-				setbeattenCount(5);
+				TRACE("%d\n", stonkcount);
 				if (stonkcount > 3) {
-					if (!temp->getDir()) {
-						_mode = 112;				// 被打第一下左	
-					}
-					else {
-						_mode = 114;				// 被打第一下右
-					}
+					_mode = 220;
+					setTimmer(6);
 				}
 				else if (stonkcount > 0) {
-					if (!temp->getDir()) {
-						_mode = 116;				// 被打第二下左	
+					if(temp->getDir() != Face_to_Left){
+						_mode = 224;
+						setTimmer(6);
 					}
-					else {
-						_mode = 118;				// 被打第二下右
+					else{
+						setTimmer(6);
+						_mode = 222;
 					}
 				}
-				else if(stonkcount > -1){
-					_mode = 115;						// 暈眩
-					setdizzyCount(100);
-					isStonk = true;
+				else if(stonkcount == 0){
+					TRACE("dizzy \n");
+					_isDizzy = true;
+					_mode = 226;							
+					setTimmer(18);
 				}
 				else{
+					_isDizzy = false;
 					setTimmer(9);
 					if (temp->getDir()) {
 						_mode = 180;				// 擊飛左
@@ -428,14 +499,18 @@ namespace game_framework {
 		_z = 0;
 		tempx = float(_x);
 		//TRACE("init %f %f %f", a1, a2, a3);
+		Fset = true;
 	}
 
 	void man::setZ() {
-		FrameCount++;
-		_z = int(a1 * ((FrameCount-a2) *(FrameCount-a2)) + a3);
-		_x = int(tempx+a4);
-		tempx += a4;
-		TRACE("%d %f\n", _z, FrameCount);
+		if (Fset) {
+			FrameCount++;
+			_z = int(a1 * ((FrameCount - a2) *(FrameCount - a2)) + a3);
+			_x = int(tempx + a4);
+			tempx += a4;
+			//TRACE("%d %f\n", _z, FrameCount);
+			if (FrameCount == (2*a2)) Fset = false;
+		}
 	}
 
 	Skills* man::usingSkill(){
@@ -450,16 +525,18 @@ namespace game_framework {
 		now = nullptr;
 		if(_Double_Tap_Gap>=0) _Double_Tap_Gap--;
 		Count();
+
 		JumpCount();
 		attCount();
 		beattenCount();
 		recoverCount();
-		dizzyCount();
 
 		//查看按鍵與輸入指令
 		checkFlag();
 		checkBuff();
 		specialEvent();
+
+		setZ();
 		switch (_mode){
 		case 1:
 			setPosotion(1);
@@ -618,69 +695,119 @@ namespace game_framework {
 			}
 			break;
 
-		// 受到攻擊
+		// 捉住人的動作
 
-		case 112:						// 被打第一下左-1
-			setInitPosotion(_x + 1, _y);
-			if (beattenCountisZero()) {
-				setbeattenCount(10);
-				_mode = 115;
+		case 120:
+			dizzyCount -= -7;
+			if (isTime()) {
+				gotCatch->_mode = 130;
+				_mode = 121;
 			}
 			break;
-		case 114:						// 被打第一下右-1
-			setInitPosotion(_x - 1, _y);
-			if (beattenCountisZero()) {
-				setbeattenCount(10);
-				_mode = 115;
-			}
-			break;
-		case 115:						// 被打第一下右-2
-			if (beattenCountisZero()) {
-				if (isStonk) {
-					_mode = 120;
-					setbeattenCount(10);
-				}
-				else{
-					_mode = 0;
-					_outofctrl = false;
-				}
-				
-			}
-			break;
-		case 116:						// 被打第二下左-1
-			setInitPosotion(_x + 1, _y);
-			if (beattenCountisZero()) {
-				setbeattenCount(10);
-				_mode = 117;
-			}
-			break;
-		case 117:						// 被打第二下左-2
-			if (beattenCountisZero()) {
+		case 121:
+			dizzyCount -= 7;
+			if (dizzyCount <= 0) {
+				gotCatch->_mode = 133;
+				gotCatch->_Catch = false;
+				setTimmer(9);
+				_catching = false;
 				_mode = 0;
-				_outofctrl = false;
 			}
 			break;
 
-		case 118:						// 被打第二下右-1
-			setInitPosotion(_x - 1, _y);
-			if (beattenCountisZero()) {
-				setbeattenCount(10);
-				_mode = 119;
+		// 捉住人攻擊
+
+		case 122:
+			break;
+		case 123:
+			break;
+
+		// 被捉住
+
+		case 130:
+			break;
+		case 131:
+			break;
+		case 132:
+			break;
+
+		// 被捉結束
+
+		case 133:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 134;
 			}
 			break;
-		case 119:						// 被打第二下右-2
-			if (beattenCountisZero()) {
-				_mode = 0;
-				_outofctrl = false;
+		case 134:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 135;
 			}
 			break;
-		case 120:						// 暈眩
-			if (beattenCountisZero()) {
-				setbeattenCount(10);
-				_mode = 115;
+		case 135:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 136;
 			}
 			break;
-		case 180:						// 左飛走
+		case 136:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 137;
+			}
+			break;
+		case 137:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 138;
+			}
+			break;
+		case 138:
+			if (isTime()) {
+				setTimmer(90);
+				_mode = 230;
+			}
+			break;
+		case 139:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 140;
+			}
+			break;
+		case 140:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 141;
+			}
+			break;
+		case 141:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 142;
+			}
+			break;
+		case 142:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 143;
+			}
+			break;
+		case 143:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 144;
+			}
+			break;
+		case 144:if (isTime()) {
+			setTimmer(90);
+			_mode = 231;
+		}
+			break;
+
+		// 正面飛走
+
+		case 180:						
 			if (isTime()) {
 				caculateZ(45, -50, -12);
 				setTimmer(9);
@@ -688,42 +815,37 @@ namespace game_framework {
 			}
 			break;
 		case 181:
-			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 182;
 			}
 			break;
 		case 182:
-			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 183;
 			}
 			break;
 		case 183:
-			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 184;
 			}
 			break;
 		case 184:
-			setZ();
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 185;
 			}
 			break;
 		case 185:
-			setZ();
 			if (isTime()) {
 				setTimmer(90);
 				_mode = 230;
 			}
 			break;
 
-			// 背後擊飛
+		// 背後擊飛
 
 		case 186:
 			if (isTime()) {
@@ -768,16 +890,96 @@ namespace game_framework {
 			}
 			break;
 
+		// 打到向後退的動作
+
+		case 220:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 221;
+			}
+			break;
+		case 221:
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+
+		// 打到向前移的動作
+
+		case 222:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 223;
+			}
+			break;
+		case 223:
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+		
+		// 打到第二個動作
+		
+		case 224:
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 225;
+			}
+			break;
+		case 225:
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+		
+		// 暈眩
+		
+		case 226:
+			if (isTime()) {
+				setTimmer(18);
+				_mode = 227;
+			}
+			break;
+		case 227:
+			if (isTime()) {
+				setTimmer(18);
+				_mode = 228;
+			}
+			break;
+		case 228:
+			if (isTime()) {
+				setTimmer(18);
+				_mode = 229;
+			}
+			break;
+		case 229:
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+				_isDizzy = false;
+			}
+			break;
+
+		// 躺著倒地
+
 		case 230:
 			if (isTime()) {
 				_mode = 0;
 			}
 			break;
+		
+		// 趴著倒地
+		
 		case 231:
 			if (isTime()) {
 				_mode = 0;
 			}
 			break;
+
+
 		default:
 			break;
 		}
@@ -887,38 +1089,102 @@ namespace game_framework {
 		case 111:
 			flykick[index][1].SetTopLeft(_x, _y + _z);
 			flykick[index][1].ShowBitmap();
+			// 捉住人的動作
 
-		// 受到傷害動作
-
-		case 112:
-		case 114:
-			lib->setbeatenTopLeft(0,Face_to_Left,0,_x,_y+_z);
-			lib->showBeaten(0, Face_to_Left, 0);
-			break;
-		case 115:
-			lib->setbeatenTopLeft(0, Face_to_Left, 1, _x, _y + _z);
-			lib->showBeaten(0, Face_to_Left, 1);
-			break;
-		case 116:
-			lib->setbeatenTopLeft(2, Face_to_Left, 0, _x, _y + _z);
-			lib->showBeaten(2, Face_to_Left, 0);
-			break;
-		case 117:
-			lib->setbeatenTopLeft(2, Face_to_Left, 1, _x, _y + _z);
-			lib->showBeaten(2, Face_to_Left, 1);
-			break;
-		case 118:
-			lib->setbeatenTopLeft(1, Face_to_Left, 0, _x, _y + _z);
-			lib->showBeaten(1, Face_to_Left, 0);
-			break;
-		case 119:
-			lib->setbeatenTopLeft(1, Face_to_Left, 1, _x, _y + _z);
-			lib->showBeaten(1, Face_to_Left, 1);
-			break;
 		case 120:
-			lib->setbeatenTopLeft(3, Face_to_Left, 0, _x, _y + _z);
-			lib->showBeaten(3, Face_to_Left, 0);
+			lib->selectByNum(135,index,_x,_y+_z);
 			break;
+		case 121:
+			lib->selectByNum(50, index, _x, _y + _z);
+			break;
+
+			// 捉住人攻擊
+
+		case 122:
+			lib->selectByNum(51, index, _x, _y + _z);
+			break;
+		case 123:
+			lib->selectByNum(52, index, _x, _y + _z);
+			break;
+
+			// 被捉住
+
+		case 130:
+			lib->selectByNum(53, index, _x, _y + _z);
+			break;
+		case 131:
+			lib->selectByNum(54, index, _x, _y + _z);
+			break;
+
+			// 被捉住打
+
+		case 132:
+			lib->selectByNum(55, index, _x, _y + _z);
+			break;
+		case 133:
+			lib->selectByNum(30, index, _x, _y + _z);
+			break;
+		case 134:
+			lib->selectByNum(31, index, _x, _y + _z);
+			break;
+		case 135:
+			lib->selectByNum(32, index, _x, _y + _z);
+			break;
+		case 136:
+			lib->selectByNum(33, index, _x, _y + _z);
+			break;
+		case 137:
+			lib->selectByNum(34, index, _x, _y + _z);
+			break;
+		case 138:
+			lib->selectByNum(35, index, _x, _y + _z);
+			break;
+		case 139:
+			lib->selectByNum(40, index, _x, _y + _z);
+			break;
+		case 140:
+			lib->selectByNum(41, index, _x, _y + _z);
+			break;
+		case 141:
+			lib->selectByNum(42, index, _x, _y + _z);
+			break;
+		case 142:
+			lib->selectByNum(43, index, _x, _y + _z);
+			break;
+		case 143:
+			lib->selectByNum(44, index, _x, _y + _z);
+			break;
+		case 144:
+			lib->selectByNum(45, index, _x, _y + _z);
+			break;
+
+		// 被打到向後退
+
+		case 220:
+			lib->selectByNum(120, index, _x, _y + _z);
+			break;
+		case 221:
+			lib->selectByNum(121, index, _x, _y + _z);
+			break;
+
+		// 被打到向前移
+
+		case 222:
+			lib->selectByNum(123, index, _x, _y + _z);
+			break;
+		case 223:
+			lib->selectByNum(124, index, _x, _y + _z);
+			break;
+
+		// 被打到向前移的第二個動作
+
+		case 224:
+			lib->selectByNum(130, index, _x, _y + _z);
+			break;
+		case 225:
+			lib->selectByNum(131, index, _x, _y + _z);
+			break;
+
 		// falling
 
 		case 180:
@@ -960,9 +1226,30 @@ namespace game_framework {
 		case 191:
 			lib->Falling(1, index, 4, _x, _y + _z);
 			break;
+
+		// 暈眩
+
+		case 226:
+			lib->selectByNum(120, index, _x, _y + _z);
+			break;
+		case 227:
+			lib->selectByNum(122, index, _x, _y + _z);
+			break;
+		case 228:
+			lib->selectByNum(121, index, _x, _y + _z);
+			break;
+		case 229:
+			lib->selectByNum(122, index, _x, _y + _z);
+			break;
+
+		// 躺下
+
 		case 230:
 			lib->Falling(0, index, 5, _x, _y + _z);
 			break;
+		
+		// 趴下
+		
 		case 231:
 			lib->Falling(1, index, 5, _x, _y + _z);
 			break;
@@ -1034,19 +1321,6 @@ namespace game_framework {
 	}
 	bool man::beattenCountisZero() {
 		return beatenMotionGap == 0;
-	}
-
-	void man::setdizzyCount(int t) {
-		dizzyGap = t;
-	}
-	void man::dizzyCount() {
-		if (dizzyGap > 0)dizzyGap--;
-		else{
-			isStonk = false;
-		}
-	}
-	bool man::dizzyCountisZero() {
-		return dizzyGap == 0;
 	}
 
 

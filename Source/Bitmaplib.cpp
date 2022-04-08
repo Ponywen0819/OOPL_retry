@@ -5,7 +5,7 @@
 #include "audio.h"
 #include "gamelib.h"
 #include "Bitmaplib.h"
-
+#include <string>
 
 namespace game_framework {
 
@@ -68,6 +68,21 @@ namespace game_framework {
 		falling[1][ 9].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\9.bmp", RGB(0, 0, 0));
 		falling[1][10].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\10.bmp", RGB(0, 0, 0));
 		falling[1][11].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\11.bmp", RGB(0, 0, 0));
+		
+		std::string path;
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(i) + ".bmp";
+			pic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(140+i) + ".bmp";
+			pic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+	}
+
+	void Bitmaplib::selectByNum(int n, int index, int x, int y) {
+		pic[index][n].SetTopLeft(x, y);
+		pic[index][n].ShowBitmap();
 	}
 
 	void Bitmaplib::showBynumber(int i, int x, int y) {

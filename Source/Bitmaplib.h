@@ -5,6 +5,8 @@ namespace game_framework {
 		Bitmaplib();
 		void LoadBitmap();
 
+		void selectByNum(int n,int index,int x, int y);
+
 		void showBynumber(int i,int x,int y);
 		// getter
 		//CMovingBitmap *getpunch();
@@ -27,6 +29,7 @@ namespace game_framework {
 		CMovingBitmap dizzy[2];
 		CMovingBitmap super_att[2][3];
 		CMovingBitmap falling[2][12];
+		CMovingBitmap pic[2][140];
 	};
 
 	class PAnimation{
