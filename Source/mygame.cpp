@@ -381,11 +381,30 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	eraser.SetMovingRight(false);
 }
 
-void CGameStateRun::OnShow(){ 
+void CGameStateRun::OnShow() {
+
+					// 放掉 Back Plain 的 CDC
+	
 	Man[0].onShow();
 	Man[1].onShow();
 	skills.onShow();
 	bar.OnShowBar(player1, player2);
+
+	CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
+	CFont f, *fp;
+	f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
+	fp = pDC->SelectObject(&f);					// 選用 font f
+	pDC->SetBkColor(RGB(0, 0, 0));
+	pDC->SetTextColor(RGB(255, 255, 0));
+	char str[500];								// Demo 數字對字串的轉換
+	sprintf(str, "MAN1 _out:%d _dizz:%d _catch:%d _got:%d "
+		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc());
+	pDC->TextOut(0, 50, str);
+	sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d "
+		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc());
+	pDC->TextOut(0, 100, str);
+	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
+	CDDraw::ReleaseBackCDC();
 }
 
 }

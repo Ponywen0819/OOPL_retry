@@ -228,11 +228,7 @@ namespace game_framework {
 	}
 
 	void man::checkFlag() {
-		//TRACE("%d", _outofctrl);
-		//TRACE("check flag %d %d %d\n", _outofctrl, _isDizzy, _Catch);
 		if (_outofctrl) return;
-		//if (_isDizzy) return;
-		//if (_Catch) return;
 
 		if (flag[0]) {
 			if ((!Face_to_Left) && (_mode == 100)) {
@@ -262,6 +258,7 @@ namespace game_framework {
 							gotCatch->_x = _x + 29;
 						}
 						_mode = 120;
+						setTimmer(15);
 						finish = true;
 						_catching = true;
 						setDizzyCount();
@@ -294,6 +291,7 @@ namespace game_framework {
 					if (NearBy(*(mans + i)) && (mans + i)->isDizzy()) {
 						gotCatch = (mans + i);
 						gotCatch->_mode = 131;
+						gotCatch->_isDizzy = false;
 						if (Face_to_Left) {
 							gotCatch->_x = _x - 29;
 						}
@@ -356,8 +354,13 @@ namespace game_framework {
 				_dir[2] = _dir[3] = false;
 				setattCount();
 			}
-			if (_mode == 120 || _mode == 121) {
-
+			else if (_mode == 120 || _mode == 121) {
+				_mode = 122;
+				gotCatch->_mode = 130;
+				setTimmer(15);
+			}
+			else if (_mode == 122 || _mode == 123) {
+				
 			}
 			else{
 				bool finish=false;
@@ -392,6 +395,7 @@ namespace game_framework {
 				}
 			}
 		}
+	
 	}
 
 	void man::checkBuff() {
@@ -455,23 +459,21 @@ namespace game_framework {
 				Skills* temp = con.getskills(j);
 				stonkcount -= temp->getdizzy();	
 				_outofctrl = true;
-				TRACE("%d\n", stonkcount);
 				if (stonkcount > 3) {
 					_mode = 220;
 					setTimmer(6);
 				}
 				else if (stonkcount > 0) {
 					if(temp->getDir() != Face_to_Left){
-						_mode = 224;
+						_mode = 222;
 						setTimmer(6);
 					}
 					else{
+						_mode = 224;
 						setTimmer(6);
-						_mode = 222;
 					}
 				}
 				else if(stonkcount == 0){
-					TRACE("dizzy \n");
 					_isDizzy = true;
 					_mode = 226;							
 					setTimmer(18);
@@ -745,11 +747,21 @@ namespace game_framework {
 		// 捉住人攻擊
 		
 		case 122: {
+			dizzyCount -= 7;
+			if (isTime()) {
+				gotCatch->_mode = 132;
+				_mode = 123;
+				setTimmer(9);
+			}
 			break;
 		}
 
-		
 		case 123: {
+			dizzyCount -= 3;
+			if (isTime()) {
+				_mode = 121;
+													// 補上受傷
+			}
 			break;
 		}
 		// 被捉住
@@ -1069,6 +1081,7 @@ namespace game_framework {
 		case 230: {
 			if (isTime()) {
 				_mode = 0;
+				_outofctrl = false;
 			}
 			break;
 		}
@@ -1079,6 +1092,7 @@ namespace game_framework {
 		case 231: {
 			if (isTime()) {
 				_mode = 0;
+				_outofctrl = false;
 			}
 			break;
 		}

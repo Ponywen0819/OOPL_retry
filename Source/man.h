@@ -46,9 +46,19 @@ namespace game_framework {
 		Skills* usingSkill();						// 有無使用招式
 		bool NearBy(const man &other);				// 在旁邊
 		bool FaceTo(const man &other);
+		bool out() {
+			return _outofctrl;
+		}
 		bool isDizzy() {								
 			return _isDizzy;
-		}						
+		}		
+		bool iscatch() {
+			return _catching;
+		}
+		bool gotc() {
+			return _Catch;
+		}
+
 	protected:
 		virtual void otherCommand(int n);
 		virtual void readOtherList();
