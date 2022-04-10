@@ -261,8 +261,8 @@ CGameStateRun::~CGameStateRun()
 void CGameStateRun::OnBeginState(){
 	Man[0].setInitPosotion(200, 200);
 	Man[1].setInitPosotion(150, 200);
-	Man[0].init(&lib, Man,2);
-	Man[1].init(&lib, Man,2);
+	Man[0].init(&lib, Man,2,&bar);
+	Man[1].init(&lib, Man,2,&bar);
 }	
 
 void CGameStateRun::OnMove(){
@@ -356,12 +356,10 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 	bar.Player1HPState(20, 10);
 	bar.Player1MPState(90);
-	eraser.SetMovingLeft(true);
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
-	eraser.SetMovingLeft(false);
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -373,7 +371,6 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 	bar.Player2HPState(20, 10);
 	bar.Player2MPState(90);
-	eraser.SetMovingRight(true);
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -397,11 +394,11 @@ void CGameStateRun::OnShow() {
 	pDC->SetBkColor(RGB(0, 0, 0));
 	pDC->SetTextColor(RGB(255, 255, 0));
 	char str[500];								// Demo 數字對字串的轉換
-	sprintf(str, "MAN1 _out:%d _dizz:%d _catch:%d _got:%d "
-		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc());
+	sprintf(str, "MAN1 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
+		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc(),Man[0].gotMode());
 	pDC->TextOut(0, 50, str);
-	sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d "
-		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc());
+	sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
+		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());
 	pDC->TextOut(0, 100, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();

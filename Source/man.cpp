@@ -7,7 +7,7 @@
 #include "man.h"
 #include "skills.h"
 #include "Area.h"
-
+#include "CStateBar.h"
 
 #define height 28
 
@@ -36,7 +36,7 @@ namespace game_framework {
 		_Catch = false;
 	}
 
-	void man::init(Bitmaplib *l,man *m,int n) {
+	void man::init(Bitmaplib *l,man *m,int n,CStateBar *state) {
 		lib = l;
 		mans = m;
 		NumOfMan = n;
@@ -44,6 +44,7 @@ namespace game_framework {
 		_isDizzy = false;
 		_Catch = false;
 		_catching = false;
+		_s = state;
 	}
 
 	void man::LoadBitmap() {
@@ -229,19 +230,24 @@ namespace game_framework {
 
 	void man::checkFlag() {
 		if (_outofctrl) return;
+		if (_isDizzy) return;
+		if (_Catch) return;
 
 		if (flag[0]) {
-			if ((!Face_to_Left) && (_mode == 100)) {
-				_mode = 0;
+			if (_mode == 100) {
+				if(!Face_to_Left) _mode = 0;
 			}
-			else if ((_mode == 120 || _mode == 121) && !Face_to_Left) {
-				gotCatch->_mode = 133;
-				gotCatch->_Catch = false;
-				setTimmer(9);
-				_catching = false;
-				_mode = 0;
+			else if (_mode == 120 || _mode == 121) {
+				if (!Face_to_Left) {
+					gotCatch->_mode = 133;
+					gotCatch->_Catch = false;
+					setTimmer(9);
+					_catching = false;
+					_mode = 0;
+				}
 			}
-			else if(_mode!=100) {
+			
+			else if (_mode != 100) {
 				bool finish = false;
 				for (int i = 0; i < NumOfMan; i++) {
 					//TRACE("qwe %d %d\n", NearBy(*(mans + i)), (mans + i)->isDizzy());
@@ -274,15 +280,19 @@ namespace game_framework {
 		}
 
 		if (flag[1]) {
-			if ((Face_to_Left) && (_mode == 100)) {
-				_mode = 0;
+			if (_mode == 100) {
+				if (Face_to_Left) {
+					_mode = 0;
+				}
 			}
-			else if ((_mode == 120 || _mode == 121) && Face_to_Left) {
-				gotCatch->_mode = 133;
-				gotCatch->_Catch = false;
-				setTimmer(9);
-				_catching = false;
-				_mode = 0;
+			else if (_mode == 120 || _mode == 121) {
+				if (Face_to_Left) {
+					gotCatch->_mode = 133;
+					gotCatch->_Catch = false;
+					setTimmer(9);
+					_catching = false;
+					_mode = 0;
+				}
 			}
 			else if (_mode != 100) {
 				bool finish = false;
@@ -337,11 +347,25 @@ namespace game_framework {
 		if (flag[4]) {
 			flag[4] = false;
 			if (_mode == 100) {
-				if(Face_to_Left) _mode = 94;
-				else _mode = 93;
+				_mode = 213;
+				setTimmer(24);
+				if (flag[2]) {
+					if (Face_to_Left) caculateZ(33, -270, -60, -55);
+					else caculateZ(33, 270, -60, -55);
+				}
+				else if (flag[3]) {
+					if (Face_to_Left) caculateZ(33, -270, 60, -55);
+					else caculateZ(33, 270, 60, -55);
+				}
+				else{
+					if (Face_to_Left) caculateZ(33, -165, 0, -55);
+					else caculateZ(33, 165, 0, -55);
+				}
 			}
 			else {
-				_mode = 90;
+				_mode = 210;
+				setTimmer(3);
+				jumpType = (_mode == 0);
 			}
 			_outofctrl = true;
 		}
@@ -403,6 +427,7 @@ namespace game_framework {
 		if (_isDizzy) return;
 		if (_Catch) return;
 		if (_catching) return;
+
 		if (_Double_Tap_Gap <= 0) {
 			setCountDwon();
 			commandBuffer = "";
@@ -432,6 +457,38 @@ namespace game_framework {
 		if (_isDizzy) return;
 		if (_Catch) return;
 		if (_catching) return;
+
+		if (flag[0]) {
+			flag[0] = false;
+			if (_mode == 213) {
+				if (!Face_to_Left) {
+					Face_to_Left = !Face_to_Left;
+					_mode = 214;
+				}
+			}
+			else if (_mode == 214) {
+				if (!Face_to_Left) {
+					Face_to_Left = !Face_to_Left;
+					_mode = 213;
+				}
+			}
+		}
+		if (flag[1]) {
+			flag[1] = false;
+			if (_mode == 213) {
+				if (Face_to_Left) {
+					Face_to_Left = !Face_to_Left;
+					_mode = 214;
+				}
+			}
+			else if (_mode == 214) {
+				if (Face_to_Left) {
+					Face_to_Left = !Face_to_Left;
+					_mode = 213;
+				}
+			}
+		}
+
 		//TRACE("%d %d \n", flag[4], flag[5]);
 		if (flag[5]) {
 			if (_mode == 92) {
@@ -494,16 +551,18 @@ namespace game_framework {
 		}
 	}
 
-	void man::caculateZ(int f, int x, int z) {
+	void man::caculateZ(int f, int x,int y, int z) {
 		tempf = f;
 		float temp = float(f) / 2;
 		a1 =- z / (temp*temp);
 		a2 = temp;
 		a3 = float(z);
 		a4 = float(x) / f;
+		a5 = float(y) / f;
 		FrameCount = 0;
 		_z = 0;
 		tempx = float(_x);
+		tempy = float(_y);
 		//TRACE("init %f %f %f", a1, a2, a3);
 		Fset = true;
 	}
@@ -514,6 +573,8 @@ namespace game_framework {
 			_z = int(a1 * ((FrameCount - a2) *(FrameCount - a2)) + a3);
 			_x = int(tempx + a4);
 			tempx += a4;
+			_y = int(tempy + a5);
+			tempy += a5;
 			//TRACE("%d %f\n", _z, FrameCount);
 			if (FrameCount == (2*a2)) Fset = false;
 		}
@@ -544,10 +605,210 @@ namespace game_framework {
 
 		setZ();
 		switch (_mode){
+		// 站立
+
+		case 0: {
+			break;
+		}
 		case 1: {
 			setPosotion(1);
 			break;
 		}
+		case 2: {
+			break;
+		}
+		case 3: {
+			break;
+		}
+
+		// 走路
+
+		case 5: {
+			break;
+		}
+		case 6: {
+			break;
+		}
+		case 7: {
+			break;
+		}
+		case 8: {
+			break;
+		}
+
+		// 跑步
+
+		case 9: {
+			break;
+		}
+		case 10: {
+			break;
+		}
+		case 11: {
+			break;
+		}
+
+		// 拿重物走路
+
+		case 12: {
+			break;
+		}
+		case 13: {
+			break;
+		}
+		case 14: {
+			break;
+		}
+		case 15: {
+			break;
+		}
+
+				 // 拿重物跑步
+
+		case 16: {
+			break;
+		}
+		case 17: {
+			break;
+		}
+		case 18: {
+			break;
+		}
+
+				 // 拿重物跑步停止
+
+		case 19: {
+			break;
+		}
+
+				 // 普通武器攻擊
+
+		case 20: {
+			break;
+		}
+		case 21: {
+			break;
+		}
+		case 22: {
+			break;
+		}
+		case 23: {
+			break;
+		}
+
+		case 25: {
+			break;
+		}
+		case 26: {
+			break;
+		}
+		case 27: {
+			break;
+		}
+		case 28: {
+			break;
+		}
+
+		// 跳躍武器攻擊
+
+		case 30: {
+			break;
+		}
+		case 31: {
+			break;
+		}
+
+		// 拿武器跑步
+
+		case 35: {
+			break;
+		}
+		case 36: {
+			break;
+		}
+		case 37: {
+			break;
+		}
+
+		// 武器衝攻
+
+		case 40: {
+			break;
+		}
+		case 41: {
+			break;
+		}
+
+		// 丟輕武器
+
+		case 45: {
+			break;
+		}
+		case 46: {
+			break;
+		}
+		case 47: {
+			break;
+		}
+
+		// 丟重武器
+
+		case 50: {
+			break;
+		}
+		case 51: {
+			break;
+		}
+
+		// 跳時丟出輕武器
+
+		case 52: {
+			break;
+		}
+		case 53: {
+			break;
+		}
+		case 54: {
+			break;
+		}
+
+		// 喝東西 
+
+		case 55: {
+			break;
+		}
+		case 56: {
+			break;
+		}
+		case 57: {
+			break;
+		}
+		case 58: {
+			break;
+		}
+
+		// 普通攻擊
+
+		case 60: {
+
+			break;
+		}
+		case 61: {
+
+			break;
+		}
+
+		case 65: {
+
+			break;
+		}
+		case 66: {
+
+			break;
+		}
+		
+		// 終結季
+
 		case 70: {
 			if (Face_to_Left) setInitPosotion(_x - 1, _y);
 			else setInitPosotion(_x + 1, _y);
@@ -755,7 +1016,6 @@ namespace game_framework {
 			}
 			break;
 		}
-
 		case 123: {
 			dizzyCount -= 3;
 			if (isTime()) {
@@ -785,7 +1045,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 134: {
 			if (isTime()) {
 				setTimmer(9);
@@ -793,7 +1052,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 135: {
 			if (isTime()) {
 				setTimmer(9);
@@ -801,7 +1059,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 136: {
 			if (isTime()) {
 				setTimmer(9);
@@ -809,23 +1066,20 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 137: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 138;
 			}
 			break;
-		}
-			
+		}	
 		case 138: {
 			if (isTime()) {
 				setTimmer(90);
 				_mode = 230;
 			}
 			break;
-		}
-			
+		}	
 		case 139: {
 			if (isTime()) {
 				setTimmer(9);
@@ -833,7 +1087,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 140: {
 			if (isTime()) {
 				setTimmer(9);
@@ -841,7 +1094,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 141: {
 			if (isTime()) {
 				setTimmer(9);
@@ -849,7 +1101,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 142: {
 			if (isTime()) {
 				setTimmer(9);
@@ -857,15 +1108,13 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 143: {
 			if (isTime()) {
 				setTimmer(9);
 				_mode = 144;
 			}
 			break;
-		}
-			
+		}	
 		case 144: {
 			if (isTime()) {
 				setTimmer(90);
@@ -878,13 +1127,12 @@ namespace game_framework {
 
 		case 180: {
 			if (isTime()) {
-				caculateZ(45, -50, -12);
+				caculateZ(45, -50, 0, -12);
 				setTimmer(9);
 				_mode = 181;
 			}
 			break;
 		}
-			
 		case 181: {
 			if (isTime()) {
 				setTimmer(9);
@@ -892,7 +1140,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 182: {
 			if (isTime()) {
 				setTimmer(9);
@@ -900,7 +1147,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 183: {
 			if (isTime()) {
 				setTimmer(9);
@@ -908,7 +1154,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 184: {
 			if (isTime()) {
 				setTimmer(9);
@@ -916,7 +1161,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 185: {
 			if (isTime()) {
 				setTimmer(90);
@@ -924,19 +1168,17 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 
 		// 背後擊飛
 
 		case 186: {
 			if (isTime()) {
-				caculateZ(45, 50, -12);
+				caculateZ(45, 50, 0, -12);
 				setTimmer(9);
 				_mode = 187;
 			}
 			break;
 		}
-			
 		case 187: {
 			setZ();
 			if (isTime()) {
@@ -945,7 +1187,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 188: {
 			setZ();
 			if (isTime()) {
@@ -954,7 +1195,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 189: {
 			setZ();
 			if (isTime()) {
@@ -963,7 +1203,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 190: {
 			setZ();
 			if (isTime()) {
@@ -972,7 +1211,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 191: {
 			setZ();
 			if (isTime()) {
@@ -981,7 +1219,84 @@ namespace game_framework {
 			}
 			break;
 		}
-			
+
+		// 跳躍
+
+		case 210: {
+			if (isTime()) {
+				setTimmer(3);
+				_mode = 211;
+			}
+			break;
+		}
+		case 211: {
+			if (isTime()) {
+				setTimmer(3);
+				_mode = 212;
+				if (Face_to_Left) {
+					if (jumpType) {
+						if (flag[2]) {
+							caculateZ(40, -144, -40, -80);
+						}
+						else if (flag[3]) {
+							caculateZ(40, -144, 40, -80);
+						}
+						else
+						{
+							caculateZ(40, -144, 0, -80);
+						}
+					}
+					else
+						caculateZ(40, 0, 0, -80);
+				}
+				else {
+					if (jumpType)
+						caculateZ(40, 144, 0, -80);
+					else
+						caculateZ(40, 0, 0, -80);
+				}
+			}
+			break;
+		}
+		case 212: {
+			if (!Fset) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+		}
+		
+		// 衝跳
+
+		case 213: {
+			if (isTime()) {
+				_mode = 216;
+				setTimmer(6);
+			}
+			break;
+		}
+		case 214: {
+			if (isTime()) {
+				_mode = 217;
+				setTimmer(6);
+			}
+			break;
+		}
+
+		case 216: {
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+		}
+		case 217: {
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
+			break;
+		}
 
 		// 打到向後退的動作
 
@@ -992,7 +1307,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 221: {
 			if (isTime()) {
 				_mode = 0;
@@ -1000,7 +1314,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 
 		// 打到向前移的動作
 
@@ -1011,7 +1324,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 223: {
 			if (isTime()) {
 				_mode = 0;
@@ -1019,7 +1331,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		
 		// 打到第二個動作
 		
@@ -1030,7 +1341,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 225: {
 			if (isTime()) {
 				_mode = 0;
@@ -1038,7 +1348,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		
 		// 暈眩
 		
@@ -1049,7 +1358,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 227: {
 			if (isTime()) {
 				setTimmer(18);
@@ -1057,7 +1365,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 228: {
 			if (isTime()) {
 				setTimmer(18);
@@ -1065,7 +1372,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 229: {
 			if (isTime()) {
 				_mode = 0;
@@ -1074,7 +1380,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 
 		// 躺著倒地
 
@@ -1085,7 +1390,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		
 		// 趴著倒地
 		
@@ -1096,7 +1400,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 
 
 		default:
@@ -1112,28 +1415,304 @@ namespace game_framework {
 		if (Face_to_Left) index = 0;
 		else index = 1;
 		switch (_mode){
-		case 0:
+
+		// 站立
+
+		case 0: {
+			lib->selectByNum(0, index, _x, _y + _z);
 			stand[index].OnMove();
-			stand[index].SetTopLeft(_x, _y+_z);
+			stand[index].SetTopLeft(_x, _y + _z);
 			stand[index].OnShow();
 			break;
-		case 1:
+		}	
+		case 1: {
+			lib->selectByNum(1, index, _x, _y + _z);
 			walk[index].OnMove();
 			walk[index].SetTopLeft(_x, _y + _z);
 			walk[index].OnShow();
 			break;
-		case 70:
-			lib->setSuper_attTopLeft(index, 0, _x, _y + _z);
-			lib->showSuper_att(index,0);
+		}
+		case 2: {
+			lib->selectByNum(2, index, _x, _y + _z);
 			break;
-		case 71:
-			lib->setSuper_attTopLeft(index, 1, _x, _y + _z);
-			lib->showSuper_att(index, 1);
+		}
+		case 3: {
+			lib->selectByNum(3, index, _x, _y + _z);
 			break;
-		case 72:
-			lib->setSuper_attTopLeft(index, 2, _x, _y + _z);
-			lib->showSuper_att(index, 2);
+		}
+		
+		// 走路
+		
+		case 5: {
+			lib->selectByNum(4, index, _x, _y + _z);
 			break;
+		}
+		case 6: {
+			lib->selectByNum(5, index, _x, _y + _z);
+			break;
+		}
+		case 7: {
+			lib->selectByNum(6, index, _x, _y + _z);
+			break;
+		}
+		case 8: {
+			lib->selectByNum(7, index, _x, _y + _z);
+			break;
+		}
+
+		// 跑步
+
+		case 9: {
+			lib->selectByNum(20, index, _x, _y + _z);
+			break;
+		}
+		case 10: {
+			lib->selectByNum(21, index, _x, _y + _z);
+			break;
+		}
+		case 11: {
+			lib->selectByNum(22, index, _x, _y + _z);
+			break;
+		}
+
+		// 拿重物走路
+
+		case 12: {
+			lib->selectByNum(23, index, _x, _y + _z);
+			break;
+		}
+		case 13: {
+			lib->selectByNum(24, index, _x, _y + _z);
+			break;
+		}
+		case 14: {
+			lib->selectByNum(25, index, _x, _y + _z);
+			break;
+		}
+		case 15: {
+			lib->selectByNum(26, index, _x, _y + _z);
+			break;
+		}
+
+		// 拿重物跑步
+
+		case 16: {
+			lib->selectByNum(125, index, _x, _y + _z);
+			break;
+		}
+		case 17: {
+			lib->selectByNum(126, index, _x, _y + _z);
+			break;
+		}
+		case 18: {
+			lib->selectByNum(127, index, _x, _y + _z);
+			break;
+		}
+
+		// 拿重物跑步停止
+
+		case 19: {
+			lib->selectByNum(128, index, _x, _y + _z);
+			break;
+		}
+
+		// 普通武器攻擊
+
+		case 20: {
+			lib->selectByNum(70, index, _x, _y + _z);
+			break;
+		}
+		case 21: {
+			lib->selectByNum(71, index, _x, _y + _z);
+			break;
+		}
+		case 22: {
+			lib->selectByNum(72, index, _x, _y + _z);
+			break;
+		}
+		case 23: {
+			lib->selectByNum(73, index, _x, _y + _z);
+			break;
+		}
+
+		case 25: {
+			lib->selectByNum(74, index, _x, _y + _z);
+			break;
+		}
+		case 26: {
+			lib->selectByNum(75, index, _x, _y + _z);
+			break;
+		}
+		case 27: {
+			lib->selectByNum(76, index, _x, _y + _z);
+			break;
+		}
+		case 28: {
+			lib->selectByNum(77, index, _x, _y + _z);
+			break;
+		}
+
+		// 跳躍武器攻擊
+
+		case 30: {
+			lib->selectByNum(80, index, _x, _y + _z);
+			break;
+		}
+		case 31: {
+			lib->selectByNum(81, index, _x, _y + _z);
+			break;
+		}
+
+		// 拿武器跑步
+
+		case 35: {
+			lib->selectByNum(84, index, _x, _y + _z);
+			break;
+		}
+		case 36: {
+			lib->selectByNum(85, index, _x, _y + _z);
+			break;
+		}
+		case 37: {
+			lib->selectByNum(86, index, _x, _y + _z);
+			break;
+		}
+
+		// 武器衝攻
+
+		case 40: {
+			lib->selectByNum(90, index, _x, _y + _z);
+			break;
+		}
+		case 41: {
+			lib->selectByNum(92, index, _x, _y + _z);
+			break;
+		}
+
+		// 丟輕武器
+
+		case 45: {
+			lib->selectByNum(94, index, _x, _y + _z);
+			break;
+		}
+		case 46: {
+			lib->selectByNum(95, index, _x, _y + _z);
+			break;
+		}
+		case 47: {
+			lib->selectByNum(96, index, _x, _y + _z);
+			break;
+		}
+
+		// 丟重武器
+
+		case 50: {
+			lib->selectByNum(27, index, _x, _y + _z);
+			break;
+		}
+		case 51: {
+			lib->selectByNum(28, index, _x, _y + _z);
+			break;
+		}
+
+		// 跳時丟出輕武器
+
+		case 52: {
+			lib->selectByNum(97, index, _x, _y + _z);
+			break;
+		}
+		case 53: {
+			lib->selectByNum(98, index, _x, _y + _z);
+			break;
+		}
+		case 54: {
+			lib->selectByNum(99, index, _x, _y + _z);
+			break;
+		}
+
+		// 喝東西 
+
+		case 55: {
+			lib->selectByNum(132, index, _x, _y + _z);
+			break;
+		}
+		case 56: {
+			lib->selectByNum(133, index, _x, _y + _z);
+			break;
+		}
+		case 57: {
+			lib->selectByNum(134, index, _x, _y + _z);
+			break;
+		}
+		case 58: {
+			lib->selectByNum(133, index, _x, _y + _z);
+			break;
+		}
+
+		// 普通攻擊
+
+		case 60: {
+			lib->selectByNum(10, index, _x, _y + _z);
+			break;
+		}
+		case 61: {
+			lib->selectByNum(11, index, _x, _y + _z);
+			break;
+		}
+
+		case 65: {
+			lib->selectByNum(12, index, _x, _y + _z);
+			break;
+		}
+		case 66: {
+			lib->selectByNum(13, index, _x, _y + _z);
+			break;
+		}
+
+		// 終結季
+
+		case 70: {
+			lib->selectByNum(37, index, _x, _y + _z);
+			break;
+		}
+		case 71:{
+			lib->selectByNum(38, index, _x, _y + _z);
+			break;
+		}
+		case 72: {
+			lib->selectByNum(39, index, _x, _y + _z);
+			break;
+		}
+
+		// 跳攻擊
+
+		case 80: {
+			lib->selectByNum(14, index, _x, _y + _z);
+			break;
+		}
+		case 81: {
+			lib->selectByNum(15, index, _x, _y + _z);
+			break;
+		}
+
+		// 衝攻
+
+		case 85: {
+			lib->selectByNum(102, index, _x, _y + _z);
+			break;
+		}
+		case 86: {
+			lib->selectByNum(103, index, _x, _y + _z);
+			break;
+		}
+		case 87: {
+			lib->selectByNum(104, index, _x, _y + _z);
+			break;
+		}
+				 
+		// 跑跳攻擊
+
+
 		case 90:									//跳躍蹲下
 			squat[index].SetTopLeft(_x, _y+_z);
 			squat[index].ShowBitmap();
@@ -1210,168 +1789,247 @@ namespace game_framework {
 			flykick[index][1].ShowBitmap();
 			// 捉住人的動作
 
-		case 120:
-			lib->selectByNum(135,index,_x,_y+_z);
+		case 120: {
+			lib->selectByNum(135, index, _x, _y + _z);
 			break;
-		case 121:
+		}
+		case 121: {
 			lib->selectByNum(50, index, _x, _y + _z);
 			break;
+		}
 
 			// 捉住人攻擊
 
-		case 122:
+		case 122: {
 			lib->selectByNum(51, index, _x, _y + _z);
 			break;
-		case 123:
+		}
+		case 123: {
 			lib->selectByNum(52, index, _x, _y + _z);
 			break;
+		}
 
 			// 被捉住
 
-		case 130:
+		case 130: {
 			lib->selectByNum(53, index, _x, _y + _z);
 			break;
-		case 131:
+		}
+		case 131: {
 			lib->selectByNum(54, index, _x, _y + _z);
 			break;
+		}
 
 			// 被捉住打
 
-		case 132:
+		case 132: {
 			lib->selectByNum(55, index, _x, _y + _z);
 			break;
-		case 133:
+		}
+		case 133: {
 			lib->selectByNum(30, index, _x, _y + _z);
 			break;
-		case 134:
+		}
+		case 134: {
 			lib->selectByNum(31, index, _x, _y + _z);
 			break;
-		case 135:
+		}
+		case 135: {
 			lib->selectByNum(32, index, _x, _y + _z);
 			break;
-		case 136:
+		}
+		case 136: {
 			lib->selectByNum(33, index, _x, _y + _z);
 			break;
-		case 137:
+		}
+		case 137: {
 			lib->selectByNum(34, index, _x, _y + _z);
 			break;
-		case 138:
+		}
+		case 138: {
 			lib->selectByNum(35, index, _x, _y + _z);
 			break;
-		case 139:
+		}
+		case 139: {
 			lib->selectByNum(40, index, _x, _y + _z);
 			break;
-		case 140:
+		}
+		case 140: {
 			lib->selectByNum(41, index, _x, _y + _z);
 			break;
-		case 141:
+		}
+		case 141: {
 			lib->selectByNum(42, index, _x, _y + _z);
 			break;
-		case 142:
+		}
+		case 142: {
 			lib->selectByNum(43, index, _x, _y + _z);
 			break;
-		case 143:
+		}
+		case 143: {
 			lib->selectByNum(44, index, _x, _y + _z);
 			break;
-		case 144:
+		}
+		case 144: {
 			lib->selectByNum(45, index, _x, _y + _z);
 			break;
-
-		// 被打到向後退
-
-		case 220:
-			lib->selectByNum(120, index, _x, _y + _z);
-			break;
-		case 221:
-			lib->selectByNum(121, index, _x, _y + _z);
-			break;
-
-		// 被打到向前移
-
-		case 222:
-			lib->selectByNum(123, index, _x, _y + _z);
-			break;
-		case 223:
-			lib->selectByNum(124, index, _x, _y + _z);
-			break;
-
-		// 被打到向前移的第二個動作
-
-		case 224:
-			lib->selectByNum(130, index, _x, _y + _z);
-			break;
-		case 225:
-			lib->selectByNum(131, index, _x, _y + _z);
-			break;
+		}
 
 		// falling
 
-		case 180:
+		case 180: {
 			lib->Falling(0, index, 0, _x, _y + _z);
 			break;
-		case 181:
+		}
+		case 181: {
 			lib->Falling(0, index, 1, _x, _y + _z);
 			break;
-		case 182:
+		}
+		case 182: {
 			lib->Falling(0, index, 2, _x, _y + _z);
 			break;
-		case 183:
+		}
+		case 183: {
 			lib->Falling(0, index, 3, _x, _y + _z);
 			break;
-		case 184:
+		}
+		case 184: {
 			lib->Falling(0, index, 4, _x, _y + _z);
 			break;
-		case 185:
+		}
+		case 185: {
 			lib->Falling(0, index, 5, _x, _y + _z);
 			break;
+		}
 
 		// 背後擊飛
 
-		case 186:
+		case 186: {
 			lib->Falling(1, index, 0, _x, _y + _z);
 			break;
-		case 187:
+		}
+		case 187: {
 			lib->Falling(1, index, 1, _x, _y + _z);
 			break;
-		case 188:
+		}
+		case 188: {
 			lib->Falling(1, index, 2, _x, _y + _z);
 			break;
-		case 189:
+		}
+		case 189: {
 			lib->Falling(1, index, 3, _x, _y + _z);
 			break;
-		case 190:
+		}
+		case 190: {
 			lib->Falling(1, index, 5, _x, _y + _z);
 			break;
-		case 191:
+		}
+		case 191: {
 			lib->Falling(1, index, 4, _x, _y + _z);
 			break;
+		}
+
+		// 跳躍
+
+		case 210: {
+			lib->selectByNum(60, index, _x, _y + _z);
+			break;
+		}
+		case 211: {
+			lib->selectByNum(61, index, _x, _y + _z);
+			break;
+		}
+		case 212: {
+			lib->selectByNum(62, index, _x, _y + _z);
+			break;
+		}
+
+		// 衝跳
+
+		case 213: {
+			lib->selectByNum(63, index, _x, _y+_z);
+			break;
+		}
+		case 214: {
+			lib->selectByNum(64, index, _x, _y+_z);
+			break;
+		}
+
+		case 216: {
+			lib->selectByNum(112, index, _x, _y + _z);
+			break;
+		}
+		case 217: {
+			lib->selectByNum(113, index, _x, _y + _z);
+			break;
+		}
+		
+		// 被打到向後退
+
+		case 220: {
+			lib->selectByNum(120, index, _x, _y + _z);
+			break;
+		}
+		case 221: {
+			lib->selectByNum(121, index, _x, _y + _z);
+			break;
+		}
+
+		// 被打到向前移
+
+		case 222: {
+			lib->selectByNum(123, index, _x, _y + _z);
+			break;
+		}
+		case 223: {
+			lib->selectByNum(124, index, _x, _y + _z);
+			break;
+		}
+
+		// 被打到向前移的第二個動作
+
+		case 224: {
+			lib->selectByNum(130, index, _x, _y + _z);
+			break;
+		}
+		case 225: {
+			lib->selectByNum(131, index, _x, _y + _z);
+			break;
+		}
 
 		// 暈眩
 
-		case 226:
+		case 226: {
 			lib->selectByNum(120, index, _x, _y + _z);
 			break;
-		case 227:
+		}
+		case 227: {
 			lib->selectByNum(122, index, _x, _y + _z);
 			break;
-		case 228:
+		}
+		case 228: {
 			lib->selectByNum(121, index, _x, _y + _z);
 			break;
-		case 229:
+		}
+		case 229: {
 			lib->selectByNum(122, index, _x, _y + _z);
 			break;
+		}
 
 		// 躺下
 
-		case 230:
+		case 230: {
 			lib->Falling(0, index, 5, _x, _y + _z);
 			break;
-		
+		}
+			
 		// 趴下
 		
-		case 231:
+		case 231: {
 			lib->Falling(1, index, 5, _x, _y + _z);
 			break;
+		}
+			
 		default:
 			break;
 		}	

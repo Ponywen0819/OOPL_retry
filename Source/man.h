@@ -3,6 +3,7 @@
 #include "Bitmaplib.h"
 #include "skills.h"
 #include "Area.h"
+#include "CStateBar.h"
 
 namespace game_framework {
 
@@ -11,27 +12,30 @@ namespace game_framework {
 	class man{
 	public:
 		man() {
+			Body.init(_x+25, _y+15, 25, 64);
 			charector = 0;
 			_x = _y = _z = 0;
 			_mode = 0;
-			for (int i = 0; i < 7; i++)	flag[i] = false;
-			for (int i = 0; i < 4; i++)	_dir[i] = false;
 			jumpAnimationGap = 0;
 			attAnimationGap = 0;
 			recoverGap = 50;
 			_Double_Tap_Gap = 30;
-			initG = height;
-			commandBuffer = "";
-			setJumpCount();
-			_outofctrl = false;
-			first_att_animation = true;
 			stonkcount = 6;
 			punch_fall = 2;
+			initG = height;
+			
+			commandBuffer = "";
+			setJumpCount();
+
+			for (int i = 0; i < 7; i++)	flag[i] = false;
+			for (int i = 0; i < 4; i++)	_dir[i] = false;
+			first_att_animation = true;
+			_outofctrl = false;
 			_isDizzy = false;
-			Body.init(_x+25, _y+15, 25, 64);
+			jumpType = false;
 		}
 		man(int x, int y);
-		void init(Bitmaplib *l, man *m, int n);		// 設定初始庫
+		void init(Bitmaplib *l, man *m, int n,CStateBar *state);		// 設定初始庫
 		void setInitPosotion(int x, int y);			// 設定初始位置
 
 		void LoadBitmap();							// 載入圖形
@@ -58,6 +62,9 @@ namespace game_framework {
 		bool gotc() {
 			return _Catch;
 		}
+		int gotMode() {
+			return _mode;
+		}
 
 	protected:
 		virtual void otherCommand(int n);
@@ -67,7 +74,7 @@ namespace game_framework {
 		bool _outofctrl;					
 	
 		void setPosotion(int n);
-		void caculateZ(int frame,int x,int z);
+		void caculateZ(int f, int x, int y, int z);
 		void setZ();
 
 
@@ -126,7 +133,6 @@ namespace game_framework {
 		void resetCountDown();					//連點倒數歸零
 
 	private:
-		int		body_x, body_y, body_w, body_h;
 		int		charector;						// 選擇之腳色
 		int		_x, _y,_z;						// 人物位置
 		int		_Double_Tap_Gap;				// 連點間隔
@@ -142,11 +148,11 @@ namespace game_framework {
 		int		tempf;							//
 		int		dizzyCount;						//
 
-
-		float	a1, a2, a3,a4;						// 曲線方程項
-		float	tempx;
+		float	a1, a2, a3,a4,a5;						// 曲線方程項
+		float	tempx, tempy;
 		float	FrameCount;						// 曲線方城參數
 
+		bool	jumpType;
 		bool	Face_to_Left;					// 面相方向
 		bool	_dir[4];						// 方向
 		bool	first_att_animation;
@@ -157,7 +163,7 @@ namespace game_framework {
 		bool	_catching;						// 抓住別人
 		bool	_Catch;							// 被抓住的狀態
 		bool	_isDizzy;						// 暈眩狀態
-
+		bool	_untouch;						// 無敵狀態
 
 		area	Body;							// 身體HitBox
 		
@@ -179,7 +185,11 @@ namespace game_framework {
 		CMovingBitmap bigatt[2][3];				// 衝攻動作
 
 		Skills*		now;						// 現在的招式
+		
 		Bitmaplib *	lib;
+
+		CStateBar *	_s;
+
 		man *		mans;						// 在場上的人	
 		man *		gotCatch;					// 被抓的人
 	};
