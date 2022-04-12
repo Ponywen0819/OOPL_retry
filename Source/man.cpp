@@ -209,10 +209,10 @@ namespace game_framework {
 			commandBuffer += '7';
 		}
 		
-		if (_mode <  5) {
-			if (comm == 1 && Face_to_Left == false)	Face_to_Left = true;
-			else if (comm == 2 && Face_to_Left)	Face_to_Left = false;
-		}
+		//if (_mode <  5) {
+		//	if (comm == 1 && Face_to_Left == false)	Face_to_Left = true;
+		//	else if (comm == 2 && Face_to_Left)	Face_to_Left = false;
+		//}
 	}
 
 	void man::cComm(UINT comm) {
@@ -245,8 +245,7 @@ namespace game_framework {
 					_catching = false;
 					_mode = 0;
 				}
-			}
-			
+			}	
 			else if (_mode != 100) {
 				bool finish = false;
 				for (int i = 0; i < NumOfMan; i++) {
@@ -346,27 +345,10 @@ namespace game_framework {
 
 		if (flag[4]) {
 			flag[4] = false;
-			if (_mode == 100) {
-				_mode = 213;
-				setTimmer(24);
-				if (flag[2]) {
-					if (Face_to_Left) caculateZ(33, -270, -60, -55);
-					else caculateZ(33, 270, -60, -55);
-				}
-				else if (flag[3]) {
-					if (Face_to_Left) caculateZ(33, -270, 60, -55);
-					else caculateZ(33, 270, 60, -55);
-				}
-				else{
-					if (Face_to_Left) caculateZ(33, -165, 0, -55);
-					else caculateZ(33, 165, 0, -55);
-				}
-			}
-			else {
-				_mode = 210;
-				setTimmer(3);
-				jumpType = (_mode == 0);
-			}
+			_mode = 210;
+			setTimmer(3);
+			jumpType = (_mode == 0);
+			
 			_outofctrl = true;
 		}
 		
@@ -389,7 +371,6 @@ namespace game_framework {
 			else{
 				bool finish=false;
 				for (int i = 0; i < NumOfMan; i++) {
-					//TRACE("finish skills %d %d %d\n", NearBy(*(mans + i)) , FaceTo(*(mans + i)) , (mans + i)->isDizzy());
 					if ( NearBy(*(mans + i)) && FaceTo(*(mans + i)) && (mans+i)->isDizzy() ) {
 						setTimmer(10);
 						finish = true;
@@ -399,6 +380,12 @@ namespace game_framework {
 					}
 				}
 				if (!finish) {
+					if (first_att_animation) {
+						_mode = 60;
+					}
+					else{
+						_mode = 65;
+					}
 					_mode = 101;
 					_outofctrl = true;
 					first_att_animation = !first_att_animation;
@@ -407,19 +394,27 @@ namespace game_framework {
 			}
 		}
 
-		if (_mode < 5) {
+		if (_mode <=8) {
+			bool temp = false;
 			for (int i = 0; i < 4; i++) {
 				if (flag[i]) {
-					_mode = 1;
+					if (_mode < 5) {
+						_mode = 5;
+						setTimmer(9);
+						walk_Ani_dir = true;
+					}
+					temp = true;
 					break;
 				}
-				else {
+			}
+			if(!temp){
+				if (_mode > 3) {
 					_mode = 0;
-					_dir[i] = false;
+					setTimmer(9);
 				}
+				for (int i = 0; i < 4;i++) _dir[i] = false;
 			}
 		}
-	
 	}
 
 	void man::checkBuff() {
@@ -442,7 +437,9 @@ namespace game_framework {
 			if (index != commandList.size()) {
 				commandBuffer = "";
 				if (index == 0 || index == 1) {
-					_mode = 100;
+					_mode = 9;
+					_outofctrl = true;
+					run_Ani_dir = true;
 				}
 				else{
 					otherCommand(index);
@@ -459,7 +456,15 @@ namespace game_framework {
 		if (_catching) return;
 
 		if (flag[0]) {
-			flag[0] = false;
+			// 跑步模式
+			if (_mode > 8 && _mode < 12) {				
+				if (!Face_to_Left) {
+					_mode = 218;
+					setTimmer(15);
+				}
+			}
+
+			// 大跳中
 			if (_mode == 213) {
 				if (!Face_to_Left) {
 					Face_to_Left = !Face_to_Left;
@@ -472,9 +477,18 @@ namespace game_framework {
 					_mode = 213;
 				}
 			}
+
 		}
 		if (flag[1]) {
-			flag[1] = false;
+			// 跑步模式
+			if (_mode > 8 && _mode < 12) {
+				if (Face_to_Left) {
+					_mode = 218;
+					setTimmer(15);
+				}
+			}
+
+			// 大跳中
 			if (_mode == 213) {
 				if (Face_to_Left) {
 					Face_to_Left = !Face_to_Left;
@@ -488,20 +502,32 @@ namespace game_framework {
 				}
 			}
 		}
-
-		//TRACE("%d %d \n", flag[4], flag[5]);
+		if (flag[4]) {
+			if (_mode > 8 && _mode < 12) {
+				_mode = 213;
+				setTimmer(24);
+				if (flag[2]) {
+					if (Face_to_Left) caculateZ(33, -270, -60, -55);
+					else caculateZ(33, 270, -60, -55);
+				}
+				else if (flag[3]) {
+					if (Face_to_Left) caculateZ(33, -270, 60, -55);
+					else caculateZ(33, 270, 60, -55);
+				}
+				else {
+					if (Face_to_Left) caculateZ(33, -165, 0, -55);
+					else caculateZ(33, 165, 0, -55);
+				}
+			}
+		}
 		if (flag[5]) {
-			if (_mode == 92) {
-				setattCount();
-				_mode = 106;
+			if (_mode > 8 && _mode < 12) {
+				_mode = 85;
+				setTimmer(15);
 			}
-			else if (_mode == 93 ) {
-				setattCount();
-				_mode = 108;
-			}
-			else if (_mode == 94) {
-				setattCount();
-				_mode = 109;
+			if (_mode == 213) {
+				_mode = 90;
+				setTimmer(9);
 			}
 		}
 	}
@@ -605,46 +631,104 @@ namespace game_framework {
 
 		setZ();
 		switch (_mode){
+
 		// 站立
 
 		case 0: {
+			if (isTime()) {
+				_mode = 1;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 1: {
-			setPosotion(1);
+			if (isTime()) {
+				_mode = 2;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 2: {
+			if (isTime()) {
+				_mode = 3;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 3: {
+			if (isTime()) {
+				_mode = 0;
+				setTimmer(9);
+			}
 			break;
 		}
 
 		// 走路
 
 		case 5: {
+			setPosotion(1);
+			if (isTime()) {
+				_mode = 6;
+				walk_Ani_dir = !walk_Ani_dir;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 6: {
+			setPosotion(1);
+			if (isTime()) {
+				if(walk_Ani_dir) _mode = 7;
+				else _mode = 5;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 7: {
+			setPosotion(1);
+			if (isTime()) {
+				if (walk_Ani_dir) _mode = 8;
+				else _mode = 6;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 8: {
+			setPosotion(1);
+			if (isTime()) {
+				_mode = 7;
+				walk_Ani_dir = !walk_Ani_dir;
+				setTimmer(9);
+			}
 			break;
 		}
 
 		// 跑步
 
 		case 9: {
+			setPosotion(3);
+			if (isTime()) {
+				_mode = 10;
+				run_Ani_dir = !run_Ani_dir;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 10: {
+			setPosotion(3);
+			if (isTime()) {
+				if(run_Ani_dir)	_mode = 11;
+				else _mode = 9;
+				setTimmer(9);
+			}
 			break;
 		}
 		case 11: {
+			setPosotion(3);
+			if (isTime()) {
+				_mode = 10;
+				run_Ani_dir = !run_Ani_dir;
+				setTimmer(9);
+			}
 			break;
 		}
 
@@ -663,7 +747,7 @@ namespace game_framework {
 			break;
 		}
 
-				 // 拿重物跑步
+		// 拿重物跑步
 
 		case 16: {
 			break;
@@ -675,13 +759,13 @@ namespace game_framework {
 			break;
 		}
 
-				 // 拿重物跑步停止
+		// 拿重物跑步停止
 
 		case 19: {
 			break;
 		}
 
-				 // 普通武器攻擊
+		// 普通武器攻擊
 
 		case 20: {
 			break;
@@ -790,20 +874,40 @@ namespace game_framework {
 		// 普通攻擊
 
 		case 60: {
-
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 61;
+				punch *temp = new punch(_x, _y, _z, Face_to_Left, true, lib, (void*)this);
+				temp->setdizzy(2);
+				temp->init(Face_to_Left);
+				now = temp;
+			}
 			break;
 		}
 		case 61: {
-
+			if (isTime()){
+				_mode =0;
+				_outofctrl =false;
+			}
 			break;
 		}
 
 		case 65: {
-
+			if (isTime()) {
+				setTimmer(9);
+				_mode = 66;
+				punch *temp = new punch(_x, _y, _z, Face_to_Left, false, lib, (void*)this);
+				temp->setdizzy(2);
+				temp->init(Face_to_Left);
+				now = temp;
+			}
 			break;
 		}
 		case 66: {
-
+			if (isTime()) {
+				_mode = 0;
+				_outofctrl = false;
+			}
 			break;
 		}
 		
@@ -818,7 +922,6 @@ namespace game_framework {
 			}
 			break;
 		}
-			
 		case 71: {
 			if (Face_to_Left) setInitPosotion(_x - 1, _y);
 			else setInitPosotion(_x + 1, _y);
@@ -840,35 +943,55 @@ namespace game_framework {
 			}
 			break;
 		}
-		case 90: {
-			if (JumpCountisZero()) {
-				_mode = 91; setJumpCount();
+
+		//  衝攻
+
+		case 85: {
+			if (isTime()) {
+				_mode = 86;
+				setTimmer(15);
 			}
 			break;
+		}
+		case 86: {
+			if (isTime()) {
+				_mode = 87;
+				setTimmer(9);
+			}
+			// 這裡放技能
+
+			break;
+		}
+		case 87: {
+			if (isTime()) {
+				_mode = 0;
+				walk_Ani_dir = true;
+				_outofctrl = false;
+			}
+			break;
+		}
+				
+		// 衝跳攻
+		
+		case 90: {
+			if (isTime()) {
+				_mode = 91;
+				// 這裡放技能
+			}
+			if (!Fset) {
+				_mode = 0;
+				walk_Ani_dir = true;
+				_outofctrl = false;
+			}
 		}
 		case 91: {
-			if (JumpCountisZero()) {
-				_mode = 92;
-			}
-			break;
-		}
-		case 92: {
-			setPosotion(2);
-			if (jumping()) {
+			if (!Fset) {
 				_mode = 0;
+				walk_Ani_dir = true;
 				_outofctrl = false;
 			}
-			break;
 		}
-		case 93:
-		case 94: {
-			setPosotion(4);
-			if (jumping()) {
-				_mode = 0;
-				_outofctrl = false;
-			}
-			break;
-		}
+
 		case 100: {						//衝刺動作
 			setPosotion(2);
 			break;
@@ -1298,6 +1421,17 @@ namespace game_framework {
 			break;
 		}
 
+		// 停止跑步
+
+		case 218: {
+			if (isTime()) {
+				_mode = 0;
+				walk_Ani_dir = true;
+				_outofctrl = false;
+			}
+			break;
+		}
+
 		// 打到向後退的動作
 
 		case 220: {
@@ -1420,16 +1554,10 @@ namespace game_framework {
 
 		case 0: {
 			lib->selectByNum(0, index, _x, _y + _z);
-			stand[index].OnMove();
-			stand[index].SetTopLeft(_x, _y + _z);
-			stand[index].OnShow();
 			break;
 		}	
 		case 1: {
 			lib->selectByNum(1, index, _x, _y + _z);
-			walk[index].OnMove();
-			walk[index].SetTopLeft(_x, _y + _z);
-			walk[index].OnShow();
 			break;
 		}
 		case 2: {
@@ -1712,15 +1840,16 @@ namespace game_framework {
 				 
 		// 跑跳攻擊
 
-
-		case 90:									//跳躍蹲下
-			squat[index].SetTopLeft(_x, _y+_z);
-			squat[index].ShowBitmap();
+		case 90: {
+			lib->selectByNum(106, index, _x, _y + _z);
 			break;
-		case 91:									//跳躍準備
-			readyJump[index].SetTopLeft(_x, _y+_z);
-			readyJump[index].ShowBitmap();
+		}
+		case 91: {
+			lib->selectByNum(107, index, _x, _y + _z);
 			break;
+		}
+		
+		
 		case 92:									//跳躍小跳
 			littleJump[index].SetTopLeft(_x, _y + _z);
 			littleJump[index].ShowBitmap();
@@ -1964,6 +2093,13 @@ namespace game_framework {
 			break;
 		}
 		
+		// 停止跑步
+
+		case 218: {
+			lib->selectByNum(114, index, _x, _y + _z);
+			break;
+		}
+
 		// 被打到向後退
 
 		case 220: {

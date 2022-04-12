@@ -23,6 +23,7 @@ namespace game_framework {
 			stonkcount = 6;
 			punch_fall = 2;
 			initG = height;
+			time = 0;
 			
 			commandBuffer = "";
 			setJumpCount();
@@ -33,13 +34,14 @@ namespace game_framework {
 			_outofctrl = false;
 			_isDizzy = false;
 			jumpType = false;
+			walk_Ani_dir = true;
+			run_Ani_dir = true;
 		}
 		man(int x, int y);
 		void init(Bitmaplib *l, man *m, int n,CStateBar *state);		// 設定初始庫
 		void setInitPosotion(int x, int y);			// 設定初始位置
-
 		void LoadBitmap();							// 載入圖形
-		
+
 		void setComm(UINT comm);					// 設定指令
 		void cComm(UINT comm);						// 取消指令
 
@@ -64,6 +66,15 @@ namespace game_framework {
 		}
 		int gotMode() {
 			return _mode;
+		}
+		int getx() {
+			return _x;
+		}
+		int gety() {
+			return _y;
+		}
+		int getz() {
+			return _z;
 		}
 
 	protected:
@@ -164,6 +175,8 @@ namespace game_framework {
 		bool	_Catch;							// 被抓住的狀態
 		bool	_isDizzy;						// 暈眩狀態
 		bool	_untouch;						// 無敵狀態
+		bool	walk_Ani_dir;					// 走路動作的方向
+		bool	run_Ani_dir;					// 跑步動作的方向
 
 		area	Body;							// 身體HitBox
 		
@@ -186,11 +199,12 @@ namespace game_framework {
 
 		Skills*		now;						// 現在的招式
 		
-		Bitmaplib *	lib;
+		Bitmaplib *	lib;						// 圖片輸出
 
-		CStateBar *	_s;
+		CStateBar *	_s;							// 血量條
 
 		man *		mans;						// 在場上的人	
 		man *		gotCatch;					// 被抓的人
+		
 	};
 }

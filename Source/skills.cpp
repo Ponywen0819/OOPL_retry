@@ -94,7 +94,6 @@ namespace game_framework {
 	}
 
 	void Skills::onMove() {
-		TRACE("basic Skill lunch\n");
 	}
 
 	void Skills::onShow() {
@@ -126,52 +125,128 @@ namespace game_framework {
 		setDir(f);
 		initPostion(_x, _y, 20, 15);
 	}
-
-	void punch::onMove() {
-		last();
-		_ani.onMove();
-		setPostion(_x, _y, _z);
-	}
 	
 	void punch::addBitmap(int i) {
 		_ani.addBitmap(i);
 	}
-
-	void punch::onShow() {
-		/*_ani.setTopLeft(_x, _y);
-		_ani.onShow();*/
+	void punch::onMove() {
+		last();
 	}
+	void punch::onShow() {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+		pp = pDC->SelectObject(&p);
+
+		CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+		pb = pDC->SelectObject(&b);
+		pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+		pDC->SelectObject(pp);						// 釋放 pen
+		pDC->SelectObject(pb);						// 釋放 brush
+		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+	}
+
+	// 終結季
 
 	super_att::super_att(int x, int y, int z, bool f, void *owner) : Skills(41,51, owner) {
 		if (f) {
 			setPostion(x + 40, y - 2, z);
+			Lx = 40; Ly = -2;
 		}
 		else {
 			setPostion(x - 2, y - 2, z);
+			Lx = -2; Ly = -2;
 		}
 		setLastTime(12);
 		
 	}
-
+	void super_att::onMove() {
+		last();
+	}
 	void super_att::init(bool f) {
 		setDir(f);
 		initPostion(_x, _y, 41, 51);
 	}
+	void super_att::onShow() {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+		pp = pDC->SelectObject(&p);
 
-	void super_att::onMove() {
-		last();
+		CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+		pb = pDC->SelectObject(&b);
+		pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+		pDC->SelectObject(pp);						// 釋放 pen
+		pDC->SelectObject(pb);						// 釋放 brush
+		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
 	}
 
-	void super_att::onShow() {
-		//CDC *pDC = CDDraw::GetBackCDC();
-		//CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
-		//pp = pDC->SelectObject(&p);
+	// 衝攻
 
-		//CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
-		//pb = pDC->SelectObject(&b);
-		//pDC->Rectangle(_x, _y, _x + _w, _y + _h);
-		//pDC->SelectObject(pp);						// 釋放 pen
-		//pDC->SelectObject(pb);						// 釋放 brush
-		//CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+	run_attack::run_attack(int x, int y, int z, bool f, void *owner) : Skills(61, 17, owner) {
+		if (f) {
+			setPostion(x + 19, y + 37, z);
+			Lx = 19; Ly = 37;
+		}
+		else {
+			setPostion(x - 1, y + 37, z);
+			Lx = -1; Ly = 37;
+		}
+		setLastTime(12);
+
+	}
+
+	void run_attack::init(bool f) {
+		setDir(f);
+		initPostion(_x, _y, 61, 17);
+	}
+	void run_attack::onMove() {
+		last();
+	}
+	void run_attack::onShow() {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+		pp = pDC->SelectObject(&p);
+
+		CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+		pb = pDC->SelectObject(&b);
+		pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+		pDC->SelectObject(pp);						// 釋放 pen
+		pDC->SelectObject(pb);						// 釋放 brush
+		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+	}
+
+	// 衝跳攻
+
+	dash_attack::dash_attack(int x, int y, int z, bool f, void *owner) : Skills(53, 23, owner) {
+		if (f) {
+			setPostion(x + 27, y + 38, z);
+			Lx = 27; Ly = 38;
+		}
+		else {
+			setPostion(x - 1, y + 38, z);
+			Lx = -1; Ly = 38;
+		}
+		setLastTime(12);
+
+	}
+
+	void dash_attack::init(bool f) {
+		setDir(f);
+		initPostion(_x, _y, 53, 23);
+	}
+
+	void dash_attack::onMove() {
+		last();
+	}
+	void dash_attack::onShow() {
+		CDC *pDC = CDDraw::GetBackCDC();
+		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
+		pp = pDC->SelectObject(&p);
+
+		CBrush *pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
+		pb = pDC->SelectObject(&b);
+		pDC->Rectangle(_x, _y, _x + _w, _y + _h);
+		pDC->SelectObject(pp);						// 釋放 pen
+		pDC->SelectObject(pb);						// 釋放 brush
+		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
 	}
 }

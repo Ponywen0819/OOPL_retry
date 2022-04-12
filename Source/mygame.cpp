@@ -267,16 +267,14 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	skills.check();
-	//TRACE("man1\n");
-	//Man[0].checkbeenatt(skills);
-	//TRACE("man2\n");
-	Man[1].checkbeenatt(skills);
 	Man[0].OnMove();
 	Man[1].OnMove();
-	skills.addSkills(Man[0].usingSkill());
-	skills.addSkills(Man[1].usingSkill());
+	//skills.addSkills(Man[0].usingSkill());
+	//skills.addSkills(Man[1].usingSkill());
+	for (int i = 0; i < 2; i++) {
+		
+	}
 	skills.onMove();
-	//TRACE("man1 and man2 nearby %d\n", man1.NearBy(man2))
 }
 
 void CGameStateRun::OnInit(){
@@ -360,6 +358,7 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
+	
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -379,9 +378,6 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 }
 
 void CGameStateRun::OnShow() {
-
-					// 放掉 Back Plain 的 CDC
-	
 	Man[0].onShow();
 	Man[1].onShow();
 	skills.onShow();
