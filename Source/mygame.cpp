@@ -102,7 +102,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_K = 75; // keyboard D
 	const char KEY_LEFT = 37; // keyboard D
 	const char KEY_RIGHT = 39; // keyboard D
-	TRACE("button key  %d\n", nChar);
+	// TRACE("button key  %d\n", nChar);
 
 	if (windows == 0) {
 		if (nChar == KEY_UP && chose == 1) {
@@ -301,7 +301,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_SPACE = 0x20;	// keyboardªÅ¥ÕÁä
 	const char KEY_Z = 90;			// keyboard Z
 
-	TRACE("button key  %d", nChar);
+	// TRACE("button key  %d", nChar);
 
 	if (nChar == KEY_LEFT) {
 		Man[0].setComm(1);

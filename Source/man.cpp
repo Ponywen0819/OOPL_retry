@@ -137,12 +137,6 @@ namespace game_framework {
 	void man::LoadBitmap() {
 		if (TEST) {
 			loadFrame();
-
-			TRACE("0wre %d %d\n", all[0]._wait, all[0]._next);
-
-			TRACE("1werwre %d %d\n", all[1]._wait, all[1]._next);
-
-			TRACE("2werwre %d %d\n", all[2]._wait, all[2]._next);
 		}
 		else {
 			test.LoadBitmap(".\\Bitmaps\\temp\\body.bmp");
@@ -365,18 +359,42 @@ namespace game_framework {
 					_dir[0] = true;
 					_dir[1] = false;
 				}
-				if (flag[1]) {
+				else if (flag[1]) {
 					_dir[0] = false;
 					_dir[1] = true;
+				}
+				else{
+					_dir[0] = false; _dir[1] = false;
 				}
 
 				if (flag[2]) {
 					_dir[2] = true;
 					_dir[3] = false;
 				}
-				if (flag[3]) {
+				else if (flag[3]) {
 					_dir[2] = false;
 					_dir[3] = true;
+				}
+				else {
+					_dir[2] = false; _dir[3] = false;
+				}
+
+				bool button_down = true;
+				for (int i = 0; i < 4; i++) {
+					if (flag[i]) {
+						button_down = false;
+						break;
+					}
+				}
+				if (button_down) {
+					if(all[_mode]._state == 1)
+						backToRandon();
+				}
+				else {
+					if (all[_mode]._state == 0) {
+						_mode = 5;
+						setTimmer(3);
+					}
 				}
 			}
 		}
@@ -770,21 +788,56 @@ namespace game_framework {
 		//TRACE("dizzy %d  %d \n", stonkcount, recoverGap);
 		//倒數
 		if (TEST) {
-			
+			checkFlag();
+
 			Count();
 			int stateNow = all[_mode]._state;
-			// 如果是走路模式
-			//TRACE("state : %d Time : %d\n", stateNow, time);
-			if (stateNow == 0) {
-				if(isTime()){
+			switch (stateNow){
+			// 站立狀態
+			case 0: {
+				if (isTime()) {
 					nextFrame();
 				}
+				break;
 			}
-			else if(stateNow == 1){
-
+			// 走路狀態
+			case 1: {
+				if (isTime()) {
+					if (walk_Ani_dir) {
+						if (++_mode == 9) {
+							_mode = 7;
+							walk_Ani_dir = !walk_Ani_dir;
+						}
+					}
+					else{
+						if (--_mode == 4) {
+							_mode = 6;
+							walk_Ani_dir = !walk_Ani_dir;
+						}
+					}
+					
+					setTimmer(3);
+				}
+				else{
+					if (_dir[0]) {
+						Face_to_Left = true;
+						_x -= 4;
+					}
+					if (_dir[1]) {
+						Face_to_Left = false;
+						_x += 4;
+					}
+					if (_dir[2]) {
+						_z -= 2;
+					}
+					if (_dir[3]) {
+						_z += 2;
+					}
+				}
+				break;
 			}
-			else{
-
+			default:
+				break;
 			}
 		}
 		else {
@@ -1723,6 +1776,7 @@ namespace game_framework {
 			int index;
 			if (Face_to_Left) index = 0;
 			else index = 1;
+			TRACE("%d\n", all[_mode]._pic);
 			lib->selectByNum(all[_mode]._pic, index, _x, _y + _z);
 		}
 		else {
