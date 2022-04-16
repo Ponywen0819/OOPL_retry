@@ -4,6 +4,11 @@
 #include "skills.h"
 #include "Area.h"
 #include "CStateBar.h"
+#include <string>
+#include <map>
+#include "Frame.h"
+
+#define TEST true
 
 namespace game_framework {
 
@@ -38,6 +43,9 @@ namespace game_framework {
 			run_Ani_dir = true;
 		}
 		man(int x, int y);
+		~man() {
+
+		}
 		void init(Bitmaplib *l, man *m, int n,CStateBar *state);		// 設定初始庫
 		void setInitPosotion(int x, int y);			// 設定初始位置
 		void LoadBitmap();							// 載入圖形
@@ -52,32 +60,21 @@ namespace game_framework {
 		Skills* usingSkill();						// 有無使用招式
 		bool NearBy(const man &other);				// 在旁邊
 		bool FaceTo(const man &other);
-		bool out() {
-			return _outofctrl;
-		}
-		bool isDizzy() {								
-			return _isDizzy;
-		}		
-		bool iscatch() {
-			return _catching;
-		}
-		bool gotc() {
-			return _Catch;
-		}
-		int gotMode() {
-			return _mode;
-		}
-		int getx() {
-			return _x;
-		}
-		int gety() {
-			return _y;
-		}
-		int getz() {
-			return _z;
-		}
+		bool out() { return _outofctrl; }
+		bool isDizzy() { return _isDizzy; }
+		bool iscatch() { return _catching; }
+		bool gotc() { return _Catch; }
+		int gotMode() { return _mode; }
+		int getx() { return _x; }
+		int gety() { return _y; }
+		int getz() { return _z; }
+		int getNext() { return all[_mode]._next; }
 
 	protected:
+		bool inMotion;			// 是否在特殊動作裡
+
+
+		int * extra(std::string &line, std::string *tar,int number);
 		virtual void otherCommand(int n);
 		virtual void readOtherList();
 		vector<std::string> commandList;		// 被讀取的指令列表
@@ -94,23 +91,21 @@ namespace game_framework {
 		void specialEvent();
 		void readCommand();
 
-		void setDizzyCount() {
-			dizzyCount = MAN_DIZZY;
-		}
-
+		void setDizzyCount() { dizzyCount = MAN_DIZZY; }
 
 		// 計數器
 
-		void setTimmer(int t) {
-			time = t;
-		}
-		void Count() {
-			if (time > 0) time--;
-		}
-		bool isTime() {
-			return time == 0;
-		}
+		void setTimmer(int t) { time = t; }
+		void Count() {if (time > 0) time--;}
+		bool isTime() { return time == 0; }
 
+		// 讀取Frame資料
+		void loadFrame();				
+
+		void backToRandon();			// 回到原始的狀態
+		void toMotion(int next);				// 處發動作
+		void nextFrame();				// 動作中的下一個Frame
+		
 		// 攻擊動作計數
 
 		void attCount();
@@ -144,8 +139,10 @@ namespace game_framework {
 		void resetCountDown();					//連點倒數歸零
 
 	private:
+
 		int		charector;						// 選擇之腳色
 		int		_x, _y,_z;						// 人物位置
+		// 代表 前後 天地 上下
 		int		_Double_Tap_Gap;				// 連點間隔
 		int		jumpAnimationGap;					
 		int		jumpMotionStand;				// 跳躍動作時間
@@ -179,7 +176,7 @@ namespace game_framework {
 		bool	run_Ani_dir;					// 跑步動作的方向
 
 		area	Body;							// 身體HitBox
-		
+
 		std::string commandBuffer;				// input command buffer
 		
 		CAnimation stand[2];					// 站的動作
@@ -206,5 +203,6 @@ namespace game_framework {
 		man *		mans;						// 在場上的人	
 		man *		gotCatch;					// 被抓的人
 		
+		std::map<int, Frame> all;
 	};
 }

@@ -95,13 +95,14 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	const char KEY_UP = 0x26;	// keyboard上箭頭
 	const char KEY_DOWN = 0x28;	// keyboard下箭頭
-	const char KEY_SPACE = ' '; // keyboard空白
+	const char KEY_SPACE = 0x20; // keyboard空白
 	const char KEY_S = 0x53;	// keyboard S
 	const char KEY_A = 0x41;	// keyboard A
 	const char KEY_D = 0x44; // keyboard D
 	const char KEY_K = 75; // keyboard D
 	const char KEY_LEFT = 37; // keyboard D
 	const char KEY_RIGHT = 39; // keyboard D
+	TRACE("button key  %d\n", nChar);
 
 	if (windows == 0) {
 		if (nChar == KEY_UP && chose == 1) {
@@ -269,8 +270,6 @@ void CGameStateRun::OnMove(){
 	skills.check();
 	Man[0].OnMove();
 	Man[1].OnMove();
-	//skills.addSkills(Man[0].usingSkill());
-	//skills.addSkills(Man[1].usingSkill());
 	for (int i = 0; i < 2; i++) {
 		
 	}
@@ -302,6 +301,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	const char KEY_SPACE = 0x20;	// keyboard空白鍵
 	const char KEY_Z = 90;			// keyboard Z
 
+	TRACE("button key  %d", nChar);
+
 	if (nChar == KEY_LEFT) {
 		Man[0].setComm(1);
 	}
@@ -323,13 +324,20 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
-	const char KEY_LEFT = 0x25;	// keyboard左箭頭
-	const char KEY_UP = 0x26;	// keyboard上箭頭
-	const char KEY_RIGHT = 0x27;	// keyboard右箭頭
-	const char KEY_DOWN = 0x28;	// keyboard下箭頭
-	const char KEY_SPACE = 0x20;	// keyboard空白鍵
-	const char KEY_Z = 90;			// keyboard Z
+	const char KEY_LEFT =	0x25;	// keyboard左箭頭
+	const char KEY_UP =		0x26;	// keyboard上箭頭
+	const char KEY_RIGHT =	0x27;	// keyboard右箭頭
+	const char KEY_DOWN =	0x28;	// keyboard下箭頭
+	const char KEY_SPACE =	0x20;	// keyboard空白鍵
+	const char KEY_Z =		90;		// keyboard Z
 
+		
+	//haha
+	//Hie
+	//豬威比ＮＩＣＩ
+	//SIMPLELIFE超柔抽取衛生紙
+	//臣女喜歡忠貞之鳥
+	
 	if (nChar == KEY_LEFT) {
 		Man[0].cComm(1);
 	}
@@ -350,33 +358,34 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
-{
+// 處理滑鼠的動作
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player1HPState(20, 10);
 	bar.Player1MPState(90);
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
-{
+// 處理滑鼠的動作
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	{
 	
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
-{
+// 處理滑鼠的動作
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 	// 沒事。如果需要處理滑鼠移動的話，寫code在這裡
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
-{
+// 處理滑鼠的動作
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player2HPState(20, 10);
 	bar.Player2MPState(90);
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
-{
+// 處理滑鼠的動作
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 	eraser.SetMovingRight(false);
 }
 
+// 顯示
 void CGameStateRun::OnShow() {
 	Man[0].onShow();
 	Man[1].onShow();
@@ -390,8 +399,8 @@ void CGameStateRun::OnShow() {
 	pDC->SetBkColor(RGB(0, 0, 0));
 	pDC->SetTextColor(RGB(255, 255, 0));
 	char str[500];								// Demo 數字對字串的轉換
-	sprintf(str, "MAN1 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
-		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc(),Man[0].gotMode());
+	sprintf(str, "MAN1 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d next : %d"
+		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc(),Man[0].gotMode(),Man[0].getNext());
 	pDC->TextOut(0, 50, str);
 	sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
 		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());

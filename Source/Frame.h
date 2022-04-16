@@ -1,14 +1,10 @@
-#pragma once
 
+#pragma once
 #include "stdafx.h"
-#include "Resource.h"
-#include <mmsystem.h>
-#include <ddraw.h>
-#include "audio.h"
-#include "gamelib.h"
-#include "Area.h"
+
 
 namespace game_framework {
+
 	class itr {
 	public:
 		itr() {
@@ -22,45 +18,38 @@ namespace game_framework {
 		}
 		itr(int kind, int x, int y, int w, int h, int z_width,
 			int dvx, int dvy, int fall, int vrest, int bdefend, int injury, int effect) :
-			_kind{ kind }, _x{ x }, _y{ y }, _w{ w }, _h{ h }, _z_width{ z_width }, 
-			_dvx{ dvx }, _dvy{ dvy }, _fall{ fall }, _vrest{ vrest }, _bdefend{ bdefend }, _injury{ injury }, _effect{effect}{}
+			_kind{ kind }, _x{ x }, _y{ y }, _w{ w }, _h{ h }, _z_width{ z_width },
+			_dvx{ dvx }, _dvy{ dvy }, _fall{ fall }, _vrest{ vrest }, _bdefend{ bdefend }, _injury{ injury }, _effect{ effect }{}
 
-		int getKind() {
-			return _kind;
+		itr& operator=(const itr& ii) {
+			if (this != &ii) { // 檢查自我賦值
+				_kind = ii._kind;
+				_x = ii._x; _y = ii._y; _w = ii._w; _h = ii._h;
+				_z_width = ii._z_width;
+				_dvx = ii._dvx; _dvy = ii._dvy;
+				_fall = ii._fall;
+				_vrest = ii._vrest;
+				_bdefend = ii._bdefend;
+				_injury = ii._injury;
+				_effect = ii._effect;
+			}
+
+			return *this;
 		}
-		int getX() {
-			return _x;
-		}
-		int getY() {
-			return _y;
-		}
-		int getW() {
-			return _w;
-		}
-		int getH() {
-			return _h;
-		}
-		int getZ_width() {
-			return _z_width;
-		}
-		int getDvx() {
-			return _dvx;
-		}
-		int getDvy() {
-			return _dvy;
-		}
-		int getFall() {
-			return _fall;
-		}
-		int getVrest() {
-			return _vrest;
-		}
-		int getBdefend() {
-			return _bdefend;
-		}
-		int  getInjury() {
-			return _injury;
-		}
+
+
+		int getKind() { return _kind; }
+		int getX() { return _x; }
+		int getY() { return _y; }
+		int getW() { return _w; }
+		int getH() { return _h; }
+		int getZ_width() { return _z_width; }
+		int getDvx() { return _dvx; }
+		int getDvy() { return _dvy; }
+		int getFall() { return _fall; }
+		int getVrest() { return _vrest; }
+		int getBdefend() { return _bdefend; }
+		int  getInjury() { return _injury; }
 
 	private:
 		int _kind;
@@ -73,17 +62,38 @@ namespace game_framework {
 		int _injury;
 		int _effect;
 	};
-	
+
 	class opoint {
 	public:
 		opoint() :_kind{ -1 }, _x{ -1 }, _y{ -1 }, _action{ -1 }, _oid{ -1 }, _facing(-1){}
 
+		opoint(const opoint& oo) {
+			_kind = oo._kind;		// 發出氣功
+			_x = oo._x;
+			_y = oo._y;		// 發出氣功的位置
+			_action = oo._action;		// 招式的第幾個frame
+			_oid = oo._oid;		// 氣功的id
+			_facing = oo._facing;		// 數量及正反
+		}
+
+		opoint& operator=(const opoint& oo) {
+			if (this != &oo) { // 檢查自我賦值
+				_kind = oo._kind;		// 發出氣功
+				_x = oo._x;
+				_y = oo._y;		// 發出氣功的位置
+				_action = oo._action;		// 招式的第幾個frame
+				_oid = oo._oid;		// 氣功的id
+				_facing = oo._facing;		// 數量及正反
+			}
+
+			return *this;
+		}
 		void setKind(int k) { _kind = k; }
 		void setLocation(int x, int y) { _x = x; _y = y; }
 		void setAction(int a) { _action = a; }
 		void setOid(int i) { _oid = i; }
 		void setFacing(int f) { _facing = f; }
-	
+
 		int getKind() { return _kind; }
 		int getX() { return _x; }
 		int getY() { return _y; }
@@ -106,6 +116,28 @@ namespace game_framework {
 		wpoint(int x, int y, int weaponact, int attacking, int cover, int dvx, int dvy, int dvz) :
 			_x{ x }, _y{ y }, _weaponact{ weaponact }, _attacking{ attacking }, _cover{ cover },
 			_dvx{ dvx }, _dvy{ dvy }, _dvz{ dvz }{}
+
+		wpoint& operator=(const wpoint& ww) {
+			if (this != &ww) { // 檢查自我賦值
+				_x = ww._x;
+				_y = ww._y;
+				_weaponact = ww._weaponact;
+				_attacking = ww._attacking;
+				_cover = ww._cover;
+				_dvx = ww._dvx; _dvy = ww._dvy; _dvz = ww._dvz;
+			}
+
+			return *this;
+		}
+
+		int getX() { return _x; }
+		int getY() { return _y; }
+		int getf() { return _weaponact; }
+		int getattcking() { return _attacking; }
+		int getcover() { return _cover; }
+		int getdvx() { return _dvx; }
+		int getdvy() { return _dvy; }
+		int getdvz() { return _dvz; }
 	private:
 		int _x, _y;			// 物品的位置
 		int _weaponact;		// 物品的frame
@@ -119,11 +151,31 @@ namespace game_framework {
 		cpoint() :_kind{ -1 }, _x{ -1 }, _y{ -1 }, _vaction{ -1 }, _aaction{ -1 }, _taction{ -1 },
 			_injury{ -1 }, _hurtable{ -1 }, _decrease{ -1 }, _throwvx{ -1 }, _throwvy{ -1 }, _throwvz{ -1 },
 			_backhurtact{ -1 }, _fronthurtact{ -1 }{}
-		
+
+		cpoint& operator=(const cpoint& cc) {
+			if (this != &cc) { // 檢查自我賦值
+				_kind = cc._kind;
+				_x = cc._x;
+				_y = cc._y;
+				_vaction = cc._vaction;
+				_aaction = cc._aaction;
+				_taction = cc._taction;
+				_injury = cc._injury;
+				_hurtable = cc._hurtable;
+				_decrease = cc._decrease;
+				_throwvx = cc._throwvx;
+				_throwvy = cc._throwvy;
+				_throwvz = cc._throwvz;
+				_backhurtact = cc._backhurtact;
+				_fronthurtact = cc._fronthurtact;
+			}
+			return *this;
+		}
+
 		void setKind(int k) {
 			_kind = k;
 		}
-		void setLoation(int x,int y) {
+		void setLoation(int x, int y) {
 			_x = x; _y = y;
 		}
 		void setVaction(int v) {
@@ -141,7 +193,7 @@ namespace game_framework {
 		void setDecrese(int d) {
 			_decrease = d;
 		}
-		void setThrow(int x,int y,int z) {
+		void setThrow(int x, int y, int z) {
 			_throwvx = x;
 			_throwvy = y;
 			_throwvz = z;
@@ -174,49 +226,58 @@ namespace game_framework {
 		int _injury;
 		int _hurtable;
 		int _decrease;
-		int _throwvx,_throwvy,_throwvz;
+		int _throwvx, _throwvy, _throwvz;
 		int _backhurtact, _fronthurtact;
 	};
 
-	class hitbox{
+	class hitbox {
 	public:
 		hitbox() {
 			_x = _y = _w = _h = 0;
 		}
-		void copy(const hitbox &other) {
-			if (&other != this) {
-				_x = other._x;
-				_y = other._y;
-				_w = other._w;
-				_h = other._h;
+		void copy(const hitbox *other) {
+			if (other != this) {
+				_x = other->_x;
+				_y = other->_y;
+				_w = other->_w;
+				_h = other->_h;
 			}
 		}
+		hitbox(const hitbox& hi) {
+			_x = hi._x;
+			_y = hi._y;
+			_w = hi._w;
+			_h = hi._h;
+		}
 
-		void set(int x,int y,int w,int h) {
+		hitbox& operator=(const hitbox& hi) {
+			if (this != &hi) { // 檢查自我賦值
+				_x = hi._x;
+				_y = hi._y;
+				_w = hi._w;
+				_h = hi._h;
+			}
+
+			return *this;
+		}
+
+		void set(int x, int y, int w, int h) {
 			_x = x;
 			_y = y;
 			_w = w;
 			_h = h;
 		}
 
-		int getX() {
-			return _x;
-		}
-		int getY() {
-			return _y;
-		}
-		int getW() {
-			return _w;
-		}
-		int getH() {
-			return _h;
-		}
+		int getX() { return _x; }
+		int getY() { return _y; }
+		int getW() { return _w; }
+		int getH() { return _h; }
 	private:
 		int _x, _y, _w, _h;
 	};
 
 	class Frame {
-	public:	
+	public:
 		Frame() {
 			_id = 0;
 			_Num_of_hitbox = 0;
@@ -224,45 +285,121 @@ namespace game_framework {
 			_have_cpoint = false;
 			_have_wpoint = false;
 			_have_opiont = false;
+			_hitbox = nullptr;
 		}
-
 		~Frame() {
-			delete _hitbox;
+			if (_hitbox != nullptr) {
+				delete _hitbox;
+			}
 		}
 
+		Frame(const Frame &f) {
+			_id = f._id;
+			_pic = f._pic;
+			_state = f._state;
+			_wait = f._wait;
+			_next = f._next;
+			_mp = f._mp;
+			_centerx = f._centerx;
+			_centery = f._centery;
+			_sound = f._sound;
+			_dvx = f._dvx;
+			_dvy = f._dvy;
+			_Num_of_hitbox = f._Num_of_hitbox;
+			_hitbox = new hitbox[_Num_of_hitbox];
+			for (int i = 0; i < _Num_of_hitbox; i++) {
+				*(_hitbox + i) = (*(f._hitbox + i));
+			}
+			_have_itr = f._have_itr;
+			_i = f._i;
 
-		void addBody(int x,int y,int w,int h) {
+			_have_opiont = f._have_opiont;
+			_op = f._op;
+
+			_have_wpoint = f._have_wpoint;
+			_wp = f._wp;
+
+			_have_cpoint = f._have_cpoint;
+			_cp = f._cp;
+
+		}
+
+		Frame& operator=(const Frame& f) {
+			if (this != &f) { // 檢查自我賦值
+				_id = f._id;
+				_pic = f._pic; 
+				_state = f._state;
+				_wait = f._wait; 
+				_next = f._next;
+				_mp = f._mp; 
+				_centerx = f._centerx; 
+				_centery = f._centery;
+				_sound = f._sound; 
+				_dvx = f._dvx; 
+				_dvy = f._dvy;
+				_Num_of_hitbox = f._Num_of_hitbox;
+				_hitbox = new hitbox[_Num_of_hitbox];
+				for (int i = 0; i < _Num_of_hitbox; i++) {
+					*(_hitbox + i) = *(f._hitbox + i);
+				}
+				_have_itr = f._have_itr;
+				_i = f._i;
+
+				_have_opiont = f._have_opiont;
+				_op = f._op;
+
+				_have_wpoint = f._have_wpoint;
+				_wp = f._wp;
+
+				_have_cpoint = f._have_cpoint;
+				_cp = f._cp;
+			}
+			return *this;
+		}
+
+		void addBody(int *v) {
 			_Num_of_hitbox++;
 			if (_Num_of_hitbox == 1) {
-				hitbox* _hitbox = new hitbox();
-				_hitbox->set(x, y, w, h);
+				_hitbox = new hitbox();
+				_hitbox[0].set(v[0], v[1], v[2], v[3]);
 			}
-			else{
+			else {
 				hitbox* temp = new hitbox[_Num_of_hitbox];
 				int i;
 				for (i = 0; i < _Num_of_hitbox - 1; i++) {
-					(temp + i)->copy(*(_hitbox + i));
+					temp[i] = _hitbox[i];
 				}
-				(temp + i)->set(x, y, w, h);
+				temp[i].set(v[0], v[1], v[2], v[3]);
 				delete _hitbox;
 				_hitbox = temp;
 			}
+			delete v;
 		}
 
-		void setBasic(int id, int pic, int wait, int next, int mp, int x, int y, int sound) {
-			_id = id;_pic = pic;_wait = wait;_next = next;
-			_mp = mp;_center_x = x;_center_y = y;_sound = sound;		// 聲音
+		void setBasic(int *data) {
+			_pic = data[0];
+			_state = data[1];
+			_wait = data[2];
+			_next = data[3];
+			_dvx = data[4];
+			_dvy = data[5];
+			_centerx = data[6];
+			_centery = data[7];
+			_sound = data[8];
+			_mp = data[9];
+			delete data;
 		}
 
-		void setItr(int kind, int _x, int _y, int _w, int _h, int z_width, 
-			int dvx, int dvy, int fall, int vrest, int bdefend, int injury,int effect) {
+		void setItr(int *v) {
 			_have_itr = true;
-			_i = itr(kind,_x,_y,_w,_h,z_width,dvx,dvy,fall,vrest,bdefend,injury,effect);
+			_i = itr(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12]);
+			delete v;
 		}
-		
-		void setWpoint(int x, int y, int weaponact, int attacking, int cover, int dvx, int dvy, int dvz) {
+
+		void setWpoint(int *v) {
 			_have_wpoint = true;
-			_wp = wpoint(x, y, weaponact, attacking, cover, dvx, dvy, dvz);
+
+			_wp = wpoint(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
 		}
 
 		void setCpointBasic(int kind, int x, int y) {
@@ -286,27 +423,41 @@ namespace game_framework {
 			_cp.setHurtAct(backhurtact, fronthurtact);
 		}
 
-		void setOpoint(int kind, int x, int y, int action, int oid, int facing) {
+		void setCpoint(int *v) {
+			_cp.setKind(v[0]);
+			_cp.setLoation(v[1], v[2]);
+			_cp.setVaction(v[3]);
+			_cp.setAction(v[4], v[5]);
+			_cp.setHurtable(v[6]);
+			_cp.setThrow(v[7], v[8], v[9]);
+			_cp.setInjury(v[10]);
+			_cp.setDecrese(v[11]);
+
+		}
+
+		void setOpoint(int *v) {
 			_have_opiont = true;
-			_op.setKind(kind);
-			_op.setLocation(x, y);
-			_op.setAction(action);
-			_op.setOid(oid);
-			_op.setFacing(facing);
+			_op.setKind(v[0]);
+			_op.setLocation(v[1], v[2]);
+			_op.setAction(v[3]);
+			_op.setOid(v[4]);
+			_op.setFacing(v[5]);
 		}
 
 		int _id;
 		int _pic;		// 哪張圖片
+		int _state;		// 狀態
 		int _wait;		// 持續多久
 		int _next;		// 下一格狀態
-		int _mp;			// 消耗多少魔力
-		int _center_x;	// 腳色中心
-		int _center_y;	// 腳色腳的部位
+		int _mp;		// 消耗多少魔力
+		int _centerx;	// 腳色中心
+		int _centery;	// 腳色腳的部位
 		int _sound;		// 聲音
+		int _dvx, _dvy;	// 移動 
 
 		int _Num_of_hitbox;	//hitbox的數量
 		hitbox* _hitbox;
-		
+
 		bool _have_itr;		// 是否有攻擊判定
 		itr _i;
 
@@ -319,6 +470,5 @@ namespace game_framework {
 		bool _have_cpoint;
 		cpoint _cp;
 	};
-
 
 }
