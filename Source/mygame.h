@@ -46,6 +46,9 @@
 #include "man.h"
 #include "skills.h"
 #include "Bitmaplib.h"
+#include "gamemap.h"
+#include "lion forest.h"
+#include "templete1.h"
 
 
 namespace game_framework {
@@ -123,6 +126,8 @@ namespace game_framework {
 		skillsContainer skills;
 		Bitmaplib		lib;
 		CStateBar       bar;
+		lf				lf;
+		temp1			temp1;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -66,7 +66,8 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-	int player1 = -1, player2 = -1;
+	int player1 = -1, player2 = -1,pos = 0;
+	boolean a = FALSE;
 CGameStateInit::CGameStateInit(CGame *g)
 : CGameState(g)
 {
@@ -293,6 +294,8 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(75);
 	Man[1].LoadBitmap();
 	
+	lf.init();
+	temp1.init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -356,10 +359,14 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 	bar.Player1HPState(20, 10);
 	bar.Player1MPState(90);
+	
+	
+	
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
+	
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -380,13 +387,15 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnShow() {
 
-					// 放掉 Back Plain 的 CDC
+	
+	lf.showmap(pos);
+	
 	
 	Man[0].onShow();
 	Man[1].onShow();
 	skills.onShow();
 	bar.OnShowBar(player1, player2);
-
+	
 	CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
 	CFont f, *fp;
 	f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
@@ -402,6 +411,8 @@ void CGameStateRun::OnShow() {
 	pDC->TextOut(0, 100, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();
+
+	
 }
 
 }
