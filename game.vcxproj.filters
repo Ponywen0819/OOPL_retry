@@ -212,6 +212,7 @@
     <ClInclude Include="Source\Area.h">
       <Filter>MyGame</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Source\lion forest.h">
       <Filter>MyGame</Filter>
     </ClInclude>
@@ -219,6 +220,9 @@
       <Filter>MyGame</Filter>
     </ClInclude>
     <ClInclude Include="Source\templete1.h">
+=======
+    <ClInclude Include="Source\Frame.h">
+>>>>>>> c0bf2c167e210dc2024b295f7420888f6dac9a5e
       <Filter>MyGame</Filter>
     </ClInclude>
   </ItemGroup>

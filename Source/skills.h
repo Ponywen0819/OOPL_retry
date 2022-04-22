@@ -86,6 +86,8 @@ namespace game_framework {
 		int		_danmage;			// 傷害
 		int		_cost;				// 耗費
 		int		LastTime;			// 持續時間
+		int		Lx, Ly;				
+		
 		void*	_owner;				// 放出技能的人
 		bool	FaceToLeft;			// 面向的方向
 		area	Area;				// 技能作用範圍
@@ -114,6 +116,20 @@ namespace game_framework {
 		void onShow();
 	private:
 
+	};
+
+	class run_attack :public Skills {
+		run_attack(int x, int y, int z, bool FacetoLeft, void *owner);
+		void init(bool f);
+		void onMove();
+		void onShow();
+	};
+
+	class dash_attack :public Skills {
+		dash_attack(int x, int y, int z, bool FacetoLeft, void *owner);
+		void init(bool f);
+		void onMove();
+		void onShow();
 	};
 	
 	class skillsContainer {

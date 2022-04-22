@@ -320,6 +320,7 @@
     <ClInclude Include="Source\CBouncingBall.h" />
     <ClInclude Include="Source\CEraser.h" />
     <ClInclude Include="Source\CStateBar.h" />
+    <ClInclude Include="Source\Frame.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameView.h" />
