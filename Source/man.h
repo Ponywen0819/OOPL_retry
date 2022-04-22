@@ -29,18 +29,23 @@ namespace game_framework {
 			punch_fall = 2;
 			initG = height;
 			time = 0;
+			Walk_Ani_num = 5;
 			
 			commandBuffer = "";
 			setJumpCount();
 
 			for (int i = 0; i < 7; i++)	flag[i] = false;
 			for (int i = 0; i < 4; i++)	_dir[i] = false;
+			is_jumping = false;
 			first_att_animation = true;
 			_outofctrl = false;
 			_isDizzy = false;
 			jumpType = false;
 			walk_Ani_dir = true;
 			run_Ani_dir = true;
+			JumpUp = false;
+			JumpDown = false;
+			JumpFront = false;
 		}
 		man(int x, int y);
 		~man() {
@@ -60,7 +65,7 @@ namespace game_framework {
 		Skills* usingSkill();						// 有無使用招式
 		bool NearBy(const man &other);				// 在旁邊
 		bool FaceTo(const man &other);
-		bool out() { return _outofctrl; }
+		bool out() { return inMotion; }
 		bool isDizzy() { return _isDizzy; }
 		bool iscatch() { return _catching; }
 		bool gotc() { return _Catch; }
@@ -71,8 +76,26 @@ namespace game_framework {
 		int getNext() { return all[_mode]._next; }
 
 	protected:
-		bool inMotion;			// 是否在特殊動作裡
+		int getNextWalkMotion() {
+			if (walk_Ani_dir) {
+				if (++Walk_Ani_num == 9) {
+					Walk_Ani_num = 7;
+					walk_Ani_dir = !walk_Ani_dir;
+				}
+			}
+			else {
+				if (--Walk_Ani_num == 4) {
+					Walk_Ani_num = 6;
+					walk_Ani_dir = !walk_Ani_dir;
+				}
+			}
+			return Walk_Ani_num;
+		}
+		void adjustPosition(int f_now,int f_next);
 
+		bool inMotion;							// 是否在特殊動作裡
+
+		area itr;								// 攻擊判定範圍
 
 		int * extra(std::string &line, std::string *tar,int number);
 		virtual void otherCommand(int n);
@@ -137,22 +160,31 @@ namespace game_framework {
 
 		void setCountDwon();					//連點倒數
 		void resetCountDown();					//連點倒數歸零
+		void CountDown() { if (_Double_Tap_Gap > 0)_Double_Tap_Gap--; }
 
 	private:
+		bool	rising;							// 在上升還是下降
+		int		initG;							// 設定上升速度
+		int		Walk_Ani_num;					// 下一個走路動作的號碼
+		bool	JumpUp, JumpDown,JumpFront;		// 斜跳
 
 		int		charector;						// 選擇之腳色
 		int		_x, _y,_z;						// 人物位置
 		// 代表 前後 天地 上下
+
 		int		_Double_Tap_Gap;				// 連點間隔
+		
 		int		jumpAnimationGap;					
 		int		jumpMotionStand;				// 跳躍動作時間
-		int		initG;							// 設定上升速度
 		int		attAnimationGap;
 		int		beatenMotionGap;
+		
 		int		punch_fall;
 		int		dizzyGap;
+		
 		int		NumOfMan;						// 在場上的人
 		int		time;							// 計數
+		
 		int		tempf;							//
 		int		dizzyCount;						//
 
@@ -163,15 +195,16 @@ namespace game_framework {
 		bool	jumpType;
 		bool	Face_to_Left;					// 面相方向
 		bool	_dir[4];						// 方向
-		bool	first_att_animation;
-		bool	is_jumping;						// 是否在跳躍
 		bool	flag[7];						// keyboard input flag
+		bool	first_att_animation;
 		bool	Alive;							// 是否活著
 		bool	Fset;							// 是否要計算方城
+		bool	is_jumping;						// 是否在跳躍
 		bool	_catching;						// 抓住別人
 		bool	_Catch;							// 被抓住的狀態
 		bool	_isDizzy;						// 暈眩狀態
 		bool	_untouch;						// 無敵狀態
+		
 		bool	walk_Ani_dir;					// 走路動作的方向
 		bool	run_Ani_dir;					// 跑步動作的方向
 

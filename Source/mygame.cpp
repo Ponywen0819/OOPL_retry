@@ -399,11 +399,13 @@ void CGameStateRun::OnShow() {
 	pDC->SetBkColor(RGB(0, 0, 0));
 	pDC->SetTextColor(RGB(255, 255, 0));
 	char str[500];								// Demo 數字對字串的轉換
+	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d"
+		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext());
+	pDC->TextOut(0, 50, str);
 	sprintf(str, "MAN1 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d next : %d"
 		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc(),Man[0].gotMode(),Man[0].getNext());
-	pDC->TextOut(0, 50, str);
-	sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
-		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());
+	/*sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
+		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());*/
 	pDC->TextOut(0, 100, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();

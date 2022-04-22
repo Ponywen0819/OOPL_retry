@@ -70,6 +70,7 @@ namespace game_framework {
 		_Catch = false;
 		_catching = false;
 		_s = state;
+		readCommand();
 	}
 
 	void man::loadFrame() {
@@ -92,7 +93,7 @@ namespace game_framework {
 					std::string g[10] = { "pic","state","wait","next","dvx","dvy","centerx","centery","sound","mp" };
 					int *temp_basic = extra(s, g, 10);
 					a.setBasic(temp_basic);
-					TRACE("%d\n", a._next);
+					// TRACE("%d\n", a._next);
 
 					std::getline(ifs, s);       //換下一行
 					while (s != "<frame_end>") {
@@ -137,6 +138,7 @@ namespace game_framework {
 	void man::LoadBitmap() {
 		if (TEST) {
 			loadFrame();
+			// TRACE("%d\n", all[218]._pic);
 		}
 		else {
 			test.LoadBitmap(".\\Bitmaps\\temp\\body.bmp");
@@ -232,8 +234,8 @@ namespace game_framework {
 
 	void man::setInitPosotion(int x, int y) {
 		_x = x;
-		_y = y;
-		Body.setPosetion(_x + 25, _y + 15);
+		_z = y;
+		Body.setPosetion(_x + 25, _z + 15);
 	}
 
 	// 人物狀態確認
@@ -266,6 +268,11 @@ namespace game_framework {
 
 	// 狀態更新函示
 
+	void man::adjustPosition(int f_now, int f_next) {
+		if(!Face_to_Left) _x = _x + all[f_now]._centerx - all[f_next]._centerx;
+		else _x = _x - all[f_now]._centerx + all[f_next]._centerx;
+	}
+
 	void man::backToRandon() {
 		inMotion = false;
 		_mode = 0;
@@ -273,6 +280,7 @@ namespace game_framework {
 	}
 
 	void man::toMotion(int f) {
+		adjustPosition(_mode,f);
 		_mode = f;
 		inMotion = true;
 		setTimmer(all[_mode]._wait);
@@ -282,14 +290,44 @@ namespace game_framework {
 		//TRACE("next : %d pic : %d\n", all[_mode]._next, all[_mode]._pic);
 		int temp = all[_mode]._next;
 		if (temp == 999) {
+			adjustPosition(_mode, 0);
 			backToRandon();
 		}
 		else if(temp != 0){
+			adjustPosition(_mode, temp);
 			_mode = temp;
 			setTimmer(all[_mode]._wait);
 		}
 		else{
-
+			// 特殊動作
+			switch (all[_mode]._state){
+			case 2: {
+				if (run_Ani_dir) {
+					if (++_mode == 12) {
+						_mode = 10;
+						run_Ani_dir = !run_Ani_dir;
+					}
+				}
+				else {
+					if (--_mode == 8) {
+						_mode = 10;
+						run_Ani_dir = !run_Ani_dir;
+					}
+				}
+				setTimmer(all[_mode]._wait);
+				break;
+			}
+			case 4: {
+				setTimmer(all[_mode]._wait);
+				break;
+			}
+			case 5: {
+				setTimmer(all[_mode]._wait);
+				break;
+			}
+			default:
+				break;
+			}
 		}
 	}
 
@@ -318,17 +356,11 @@ namespace game_framework {
 			commandBuffer += '4';
 		}
 
-		if (comm == 5) {
-			commandBuffer += '5';
-		}
+		if (comm == 5) {commandBuffer += '5';}
 
-        if (comm == 6) {
-			commandBuffer += '6';
-		}
+        if (comm == 6) {commandBuffer += '6';}
 
-		if (comm == 7) {
-			commandBuffer += '7';
-		}
+		if (comm == 7) {commandBuffer += '7';}
 		
 		//if (_mode <  5) {
 		//	if (comm == 1 && Face_to_Left == false)	Face_to_Left = true;
@@ -354,47 +386,72 @@ namespace game_framework {
 			if (inMotion) {
 				this->specialEvent();
 			}
+			else {
+				if (flag[5]) {
+					flag[5] = false;
+					if(first_att_animation)
+						toMotion(60);
+					else{
+						toMotion(65);
+					}
+					first_att_animation = !first_att_animation;
+				}
+				else if (flag[4]) {
+					flag[4] = false;
+					rising = true;
+					initG = -16;
+					tempf = 16;
+					if (_dir[0] || _dir[1]) { JumpFront = true; }
+					else { JumpFront = false; }
+
+					if (_dir[2]) { JumpUp = true; }
+					else { JumpUp = false; }
+
+					if (_dir[3]) { JumpDown = true; }
+					else { JumpDown = false; }
+					toMotion(210);
+				}
+			}
+			// 處理移動
+			if (flag[0]) {
+				_dir[0] = true;
+				_dir[1] = false;
+			}
+			else if (flag[1]) {
+				_dir[0] = false;
+				_dir[1] = true;
+			}
 			else{
-				if (flag[0]) {
-					_dir[0] = true;
-					_dir[1] = false;
-				}
-				else if (flag[1]) {
-					_dir[0] = false;
-					_dir[1] = true;
-				}
-				else{
-					_dir[0] = false; _dir[1] = false;
-				}
+				_dir[0] = false; _dir[1] = false;
+			}
 
-				if (flag[2]) {
-					_dir[2] = true;
-					_dir[3] = false;
-				}
-				else if (flag[3]) {
-					_dir[2] = false;
-					_dir[3] = true;
-				}
-				else {
-					_dir[2] = false; _dir[3] = false;
-				}
+			if (flag[2]) {
+				_dir[2] = true;
+				_dir[3] = false;
+			}
+			else if (flag[3]) {
+				_dir[2] = false;
+				_dir[3] = true;
+			}
+			else {
+				_dir[2] = false; _dir[3] = false;
+			}
 
-				bool button_down = true;
-				for (int i = 0; i < 4; i++) {
-					if (flag[i]) {
-						button_down = false;
-						break;
-					}
+			bool button_down = true;
+			for (int i = 0; i < 4; i++) {
+				if (flag[i]) {
+					button_down = false;
+					break;
 				}
-				if (button_down) {
-					if(all[_mode]._state == 1)
-						backToRandon();
-				}
-				else {
-					if (all[_mode]._state == 0) {
-						_mode = 5;
-						setTimmer(3);
-					}
+			}
+			if (button_down) {
+				if(all[_mode]._state == 1)
+					backToRandon();
+			}
+			else {
+				if (all[_mode]._state == 0) {
+					_mode = getNextWalkMotion();
+					setTimmer(3);
 				}
 			}
 		}
@@ -590,16 +647,14 @@ namespace game_framework {
 	}
 
 	void man::checkBuff() {
-		if (_outofctrl) return;
-		if (_isDizzy) return;
-		if (_Catch) return;
-		if (_catching) return;
+		if (inMotion) return;
 
 		if (_Double_Tap_Gap <= 0) {
 			setCountDwon();
 			commandBuffer = "";
 		}
 		else{
+			//TRACE("%s\n", commandBuffer.c_str());
 			int index = 0;
 			std::vector<std::string>::iterator i;
 			for (i = commandList.begin(); i != commandList.end(); ++i) {
@@ -609,9 +664,7 @@ namespace game_framework {
 			if (index != commandList.size()) {
 				commandBuffer = "";
 				if (index == 0 || index == 1) {
-					_mode = 9;
-					_outofctrl = true;
-					run_Ani_dir = true;
+					toMotion(9);
 				}
 				else{
 					otherCommand(index);
@@ -622,85 +675,43 @@ namespace game_framework {
 	}
 
 	void man::specialEvent() {
-		if (!_outofctrl) return;
-		if (_isDizzy) return;
-		if (_Catch) return;
-		if (_catching) return;
 
-		if (flag[0]) {
-			// 跑步模式
-			if (_mode > 8 && _mode < 12) {				
-				if (!Face_to_Left) {
-					_mode = 218;
-					setTimmer(15);
-				}
-			}
+		int stateNow = all[_mode]._state;
+		switch (stateNow){
 
-			// 大跳中
-			if (_mode == 213) {
-				if (!Face_to_Left) {
-					Face_to_Left = !Face_to_Left;
-					_mode = 214;
-				}
+		case 2: {
+			if (flag[0] && !Face_to_Left) {
+				toMotion(218);
 			}
-			else if (_mode == 214) {
-				if (!Face_to_Left) {
-					Face_to_Left = !Face_to_Left;
-					_mode = 213;
-				}
+			if (flag[1] && Face_to_Left) {
+				toMotion(218);
 			}
-
+			if (flag[4]) {
+				initG = -11;
+				if (_dir[2]) { JumpUp = true; }
+				else { JumpUp = false; }
+				if (_dir[3]) { JumpDown = true; }
+				else { JumpDown = false; }
+				toMotion(213);
+			}
+			if (flag[5]) {
+				toMotion(85);
+			}
+			break;
 		}
-		if (flag[1]) {
-			// 跑步模式
-			if (_mode > 8 && _mode < 12) {
-				if (Face_to_Left) {
-					_mode = 218;
-					setTimmer(15);
-				}
+		case 4: {
+			if (flag[0] && !Face_to_Left) {
+				//toMotion(218);
 			}
-
-			// 大跳中
-			if (_mode == 213) {
-				if (Face_to_Left) {
-					Face_to_Left = !Face_to_Left;
-					_mode = 214;
-				}
+			if (flag[1] && Face_to_Left) {
+				//toMotion(218);
 			}
-			else if (_mode == 214) {
-				if (Face_to_Left) {
-					Face_to_Left = !Face_to_Left;
-					_mode = 213;
-				}
+			if (flag[5]) {
+				//toMotion(85);
 			}
 		}
-		if (flag[4]) {
-			if (_mode > 8 && _mode < 12) {
-				_mode = 213;
-				setTimmer(24);
-				if (flag[2]) {
-					if (Face_to_Left) caculateZ(33, -270, -60, -55);
-					else caculateZ(33, 270, -60, -55);
-				}
-				else if (flag[3]) {
-					if (Face_to_Left) caculateZ(33, -270, 60, -55);
-					else caculateZ(33, 270, 60, -55);
-				}
-				else {
-					if (Face_to_Left) caculateZ(33, -165, 0, -55);
-					else caculateZ(33, 165, 0, -55);
-				}
-			}
-		}
-		if (flag[5]) {
-			if (_mode > 8 && _mode < 12) {
-				_mode = 85;
-				setTimmer(15);
-			}
-			if (_mode == 213) {
-				_mode = 90;
-				setTimmer(9);
-			}
+		default:
+			break;
 		}
 	}
 
@@ -785,60 +796,98 @@ namespace game_framework {
 	//人物狀態更新
 
 	void man::OnMove() {
-		//TRACE("dizzy %d  %d \n", stonkcount, recoverGap);
-		//倒數
 		if (TEST) {
-			checkFlag();
-
-			Count();
 			int stateNow = all[_mode]._state;
-			switch (stateNow){
-			// 站立狀態
-			case 0: {
-				if (isTime()) {
-					nextFrame();
-				}
-				break;
+			int nextF = all[_mode]._next;
+			// 負責動作變更
+			if (isTime()) {
+				nextFrame();
 			}
+			// 負責位置的調整
+			switch (stateNow){
 			// 走路狀態
 			case 1: {
-				if (isTime()) {
-					if (walk_Ani_dir) {
-						if (++_mode == 9) {
-							_mode = 7;
-							walk_Ani_dir = !walk_Ani_dir;
-						}
-					}
-					else{
-						if (--_mode == 4) {
-							_mode = 6;
-							walk_Ani_dir = !walk_Ani_dir;
-						}
-					}
-					
-					setTimmer(3);
+				if (_dir[0]) {
+					Face_to_Left = true;
+					_x -= 4;
+				}
+				if (_dir[1]) {
+					Face_to_Left = false;
+					_x += 4;
+				}
+				if (_dir[2]) {
+					_z -= 2;
+				}
+				if (_dir[3]) {
+					_z += 2;
+				}
+				break;
+			}
+			// 跑步狀態
+			case 2: {
+				if (Face_to_Left) {
+					_x -= 8;
 				}
 				else{
-					if (_dir[0]) {
-						Face_to_Left = true;
-						_x -= 4;
-					}
-					if (_dir[1]) {
-						Face_to_Left = false;
-						_x += 4;
-					}
-					if (_dir[2]) {
-						_z -= 2;
-					}
-					if (_dir[3]) {
-						_z += 2;
-					}
+					_x += 8;
+				}
+				if (_dir[2]) {
+					_z -= 1;
+				}
+				if (_dir[3]) {
+					_z += 1;
 				}
 				break;
 			}
-			default:
+			//
+			case 4: {
+				if (nextF == 0) {
+					_y += initG;
+					initG += 2;
+					if (_y >= 0) {
+						_y = 0;
+						backToRandon();
+					}
+					
+					if (JumpFront) { 
+						if (Face_to_Left) { _x -= 8; }
+						else { _x += 8; }
+					}
+					if (JumpUp) { _z -= 3; }
+					if (JumpDown) { _z += 3; }
+				}
 				break;
 			}
+			case 5: {
+				_y += initG;
+				initG += 2;
+				if (_y >= 0) {
+					_y = 0;
+					backToRandon();
+				}
+				if (Face_to_Left) { _x -= 15; }
+				else _x += 15;
+				if (JumpUp) { _z -= 4; }
+				if (JumpDown) { _z += 4; }
+				break;
+			}
+			default: {
+				if (Face_to_Left) 
+					_x -= all[_mode]._dvx;
+				else
+					_x += all[_mode]._dvx;
+				_z += all[_mode]._dvy;
+				
+				break;
+			}
+			}
+
+
+			checkFlag();
+			checkBuff();
+
+			CountDown();
+			Count();
 		}
 		else {
 			now = nullptr;
@@ -1776,8 +1825,9 @@ namespace game_framework {
 			int index;
 			if (Face_to_Left) index = 0;
 			else index = 1;
-			TRACE("%d\n", all[_mode]._pic);
-			lib->selectByNum(all[_mode]._pic, index, _x, _y + _z);
+			// TRACE("%d\n", all[_mode]._pic);
+
+			lib->selectByNum(all[_mode]._pic, index,_x, _y + _z - all[_mode]._centery);
 		}
 		else {
 			int index;
