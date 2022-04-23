@@ -66,11 +66,11 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-	int player1 = -1, player2 = -1,pos = 0;
-	boolean a = FALSE;
+int player1 = -1, player2 = -1,pos = 0;
+boolean a = FALSE;
+
 CGameStateInit::CGameStateInit(CGame *g)
-: CGameState(g)
-{
+: CGameState(g){
 }
 
 void CGameStateInit::OnInit(){
@@ -92,8 +92,7 @@ void CGameStateInit::OnBeginState(){
 	start = FALSE;
 }
 
-void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
+void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_UP = 0x26;	// keyboard上箭頭
 	const char KEY_DOWN = 0x28;	// keyboard下箭頭
 	const char KEY_SPACE = 0x20; // keyboard空白
@@ -167,8 +166,7 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point){  //滑鼠處理
 	//GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
 }
 
-void CGameStateInit::OnShow()
-{
+void CGameStateInit::OnShow(){
 
 	if (windows == 0) {
 		menu.OnShowMenu(1);
@@ -197,24 +195,20 @@ void CGameStateInit::OnShow()
 /////////////////////////////////////////////////////////////////////////////
 
 CGameStateOver::CGameStateOver(CGame *g)
-: CGameState(g)
-{
+: CGameState(g){
 }
 
-void CGameStateOver::OnMove()
-{
+void CGameStateOver::OnMove(){
 	counter--;
 	if (counter < 0)
 		GotoGameState(GAME_STATE_INIT);
 }
 
-void CGameStateOver::OnBeginState()
-{
+void CGameStateOver::OnBeginState(){
 	counter = 30 * 5; // 5 seconds
 }
 
-void CGameStateOver::OnInit()
-{
+void CGameStateOver::OnInit(){
 	//
 	// 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
 	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
@@ -230,8 +224,7 @@ void CGameStateOver::OnInit()
 	ShowInitProgress(100);
 }
 
-void CGameStateOver::OnShow()
-{
+void CGameStateOver::OnShow(){
 	CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
 	CFont f,*fp;
 	f.CreatePointFont(160,"Times New Roman");	// 產生 font f; 160表示16 point的字
@@ -250,21 +243,19 @@ void CGameStateOver::OnShow()
 /////////////////////////////////////////////////////////////////////////////
 
 CGameStateRun::CGameStateRun(CGame *g)
-: CGameState(g), NUMBALLS(28)
-{
+: CGameState(g), NUMBALLS(28){
 	ball = new CBall [NUMBALLS];
 }
 
-CGameStateRun::~CGameStateRun()
-{
+CGameStateRun::~CGameStateRun(){
 	delete [] ball;
 }
 
 void CGameStateRun::OnBeginState(){
 	Man[0].setInitPosotion(200, 200);
 	Man[1].setInitPosotion(150, 200);
-	Man[0].init(&lib, Man,2,&bar);
-	Man[1].init(&lib, Man,2,&bar);
+	Man[0].init(&lib, Man,2,&bar,nullptr);
+	Man[1].init(&lib, Man,2,&bar, nullptr);
 }	
 
 void CGameStateRun::OnMove(){
@@ -295,8 +286,7 @@ void CGameStateRun::OnInit(){
 	temp1.init();
 }
 
-void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
+void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_LEFT  = 0x25;	// keyboard左箭頭
 	const char KEY_UP    = 0x26;	// keyboard上箭頭
 	const char KEY_RIGHT = 0x27;	// keyboard右箭頭
@@ -370,13 +360,9 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
 	
 }
 
-<<<<<<< HEAD
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
-{
-=======
+
 // 處理滑鼠的動作
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	{
->>>>>>> c0bf2c167e210dc2024b295f7420888f6dac9a5e
 	
 }
 
@@ -398,14 +384,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 
 // 顯示
 void CGameStateRun::OnShow() {
-<<<<<<< HEAD
-
-	
 	lf.showmap(pos);
-	
-	
-=======
->>>>>>> c0bf2c167e210dc2024b295f7420888f6dac9a5e
 	Man[0].onShow();
 	Man[1].onShow();
 	skills.onShow();
@@ -421,8 +400,6 @@ void CGameStateRun::OnShow() {
 	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d"
 		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext());
 	pDC->TextOut(0, 50, str);
-	sprintf(str, "MAN1 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d next : %d"
-		, Man[0].out(), Man[0].isDizzy(), Man[0].iscatch(), Man[0].gotc(),Man[0].gotMode(),Man[0].getNext());
 	/*sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
 		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());*/
 	pDC->TextOut(0, 100, str);
