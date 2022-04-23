@@ -175,6 +175,26 @@
    bdy_end:
 <frame_end>
 
+<frame> 80 jump_attack
+   pic: 14  state: 3  wait: 2  next: 81  dvx: 0  dvy: 0  centerx: 39  centery: 70  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7
+   bdy:
+      kind: 0  x: 20  y: 18  w: 34  h: 61
+   bdy_end:
+<frame_end>
+
+<frame> 81 jump_attack
+   pic: 15  state: 3  wait: 6  next: 999  dvx: 0  dvy: 0  centerx: 39  centery: 70  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 0  x: 34  y: 45  w: 46  h: 18  dvx: 2  arest: 15  bdefend: 16  injury: 35  
+   itr_end:
+   bdy:
+      kind: 0  x: 22  y: 19  w: 32  h: 60
+   bdy_end:
+   bdy:
+      kind: 0  x: 45  y: 20  w: 28  h: 27
+   bdy_end:
+<frame_end>
+
 <frame> 85 run_attack
    pic: 102  state: 3  wait: 5  next: 86  dvx: 6  dvy: 0  centerx: 31  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    bdy:

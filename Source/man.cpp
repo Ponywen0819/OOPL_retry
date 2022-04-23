@@ -290,8 +290,14 @@ namespace game_framework {
 		//TRACE("next : %d pic : %d\n", all[_mode]._next, all[_mode]._pic);
 		int temp = all[_mode]._next;
 		if (temp == 999) {
-			adjustPosition(_mode, 0);
-			backToRandon();
+			if (all[_mode]._state == 3) {
+				adjustPosition(_mode, 212);
+				_mode = 212;
+			}
+			else {
+				adjustPosition(_mode, 0);
+				backToRandon();
+			}
 		}
 		else if(temp != 0){
 			adjustPosition(_mode, temp);
@@ -322,6 +328,7 @@ namespace game_framework {
 				break;
 			}
 			case 5: {
+				
 				setTimmer(all[_mode]._wait);
 				break;
 			}
@@ -688,6 +695,8 @@ namespace game_framework {
 			}
 			if (flag[4]) {
 				initG = -11;
+				if (Face_to_Left) { JumpFront = true; }
+				else { JumpFront = false; }
 				if (_dir[2]) { JumpUp = true; }
 				else { JumpUp = false; }
 				if (_dir[3]) { JumpDown = true; }
@@ -700,16 +709,35 @@ namespace game_framework {
 			break;
 		}
 		case 4: {
-			if (flag[0] && !Face_to_Left) {
-				//toMotion(218);
-			}
-			if (flag[1] && Face_to_Left) {
-				//toMotion(218);
-			}
+			if (flag[0]) Face_to_Left = true;
+			if (flag[1])Face_to_Left = false;
+
 			if (flag[5]) {
-				//toMotion(85);
+				toMotion(80);
 			}
+			break;
 		}
+
+		case 5: {
+			if (JumpFront) {
+				if (flag[0]) {
+					if (!Face_to_Left)_mode = 213; Face_to_Left = true;
+				}
+				if(flag[1]) {
+					if (Face_to_Left)_mode = 214; Face_to_Left = false;
+				}
+			}
+			else {
+				if (flag[0]) {
+					if (!Face_to_Left)_mode = 214; Face_to_Left = true;
+				}
+				if (flag[1]) {
+					if (Face_to_Left)_mode = 213; Face_to_Left = false;
+				}
+			}
+			break;
+		}
+		
 		default:
 			break;
 		}
@@ -839,7 +867,24 @@ namespace game_framework {
 				}
 				break;
 			}
-			//
+			
+			case 3: {
+				_y += initG;
+				initG += 2;
+				if (_y >= 0) {
+					_y = 0;
+					backToRandon();
+				}
+
+				if (JumpFront) {
+					if (Face_to_Left) { _x -= 8; }
+					else { _x += 8; }
+				}
+				if (JumpUp) { _z -= 3; }
+				if (JumpDown) { _z += 3; }
+				break;
+			}
+					//
 			case 4: {
 				if (nextF == 0) {
 					_y += initG;
@@ -858,6 +903,7 @@ namespace game_framework {
 				}
 				break;
 			}
+			
 			case 5: {
 				_y += initG;
 				initG += 2;
@@ -865,12 +911,13 @@ namespace game_framework {
 					_y = 0;
 					backToRandon();
 				}
-				if (Face_to_Left) { _x -= 15; }
+				if (JumpFront) { _x -= 15; }
 				else _x += 15;
 				if (JumpUp) { _z -= 4; }
 				if (JumpDown) { _z += 4; }
 				break;
 			}
+			
 			default: {
 				if (Face_to_Left) 
 					_x -= all[_mode]._dvx;
