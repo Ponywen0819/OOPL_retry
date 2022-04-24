@@ -17,9 +17,10 @@ namespace game_framework {
 			_injury = 0;
 		}
 		itr(int kind, int x, int y, int w, int h, int z_width,
-			int dvx, int dvy, int fall, int vrest, int bdefend, int injury, int effect) :
-			_kind{ kind }, _x{ x }, _y{ y }, _w{ w }, _h{ h }, _z_width{ z_width },
-			_dvx{ dvx }, _dvy{ dvy }, _fall{ fall }, _vrest{ vrest }, _bdefend{ bdefend }, _injury{ injury }, _effect{ effect }{}
+			int dvx, int dvy, int fall, int vrest, int arest,int bdefend, int injury, int effect,int catchingact,int caughtact) :
+			_kind{ kind }, _x{ x }, _y{ y }, _w{ w }, _h{ h }, _z_width{ z_width },_dvx{ dvx }, _dvy{ dvy },
+			_fall{ fall }, _vrest{ vrest }, _arest{arest}, _bdefend{ bdefend }, _injury{ injury }, _effect{ effect }
+			, _catchingact{ catchingact }, _caughtact{ caughtact }{}
 		itr(const itr& ii) {
 			_kind = ii._kind;
 			_x = ii._x; 
@@ -39,9 +40,13 @@ namespace game_framework {
 		itr& operator=(const itr& ii) {
 			if (this != &ii) { // ÀË¬d¦Û§Ú½á­È
 				_kind = ii._kind;
-				_x = ii._x; _y = ii._y; _w = ii._w; _h = ii._h;
+				_x = ii._x; 
+				_y = ii._y; 
+				_w = ii._w; 
+				_h = ii._h;
 				_z_width = ii._z_width;
-				_dvx = ii._dvx; _dvy = ii._dvy;
+				_dvx = ii._dvx; 
+				_dvy = ii._dvy;
 				_fall = ii._fall;
 				_vrest = ii._vrest;
 				_bdefend = ii._bdefend;
@@ -73,9 +78,12 @@ namespace game_framework {
 		int _dvx, _dvy;
 		int _fall;
 		int _vrest;
+		int _arest;
 		int _bdefend;
 		int _injury;
 		int _effect;
+		int _catchingact;
+		int _caughtact;
 	};
 
 	class opoint {
@@ -407,7 +415,7 @@ namespace game_framework {
 
 		void setItr(int *v) {
 			_have_itr = true;
-			_i = itr(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12]);
+			_i = itr(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12],v[13],v[14],v[15]);
 			delete v;
 		}
 

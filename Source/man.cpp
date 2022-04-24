@@ -28,22 +28,16 @@ namespace game_framework {
 		readCommand();
 	}
 
-
 	void man::readCommand() {
 		commandList.push_back("11");
 		commandList.push_back("22");
 		readOtherList();
 	}
-	
 
 	void man::setInitPosotion(int x, int y) {
 		_x = float(x);
 		_z = float(y);
 	}
-
-	// 人物狀態確認
-
-	
 
 	// 以新的中心位置調整人物
 
@@ -171,24 +165,30 @@ namespace game_framework {
 		else {
 			if (flag[5]) {
 				flag[5] = false;
-				if (first_att_animation)
-					toMotion(60);
-				else {
-					toMotion(65);
+				if (useSupperAtt) {
+					toMotion(70);
 				}
-				first_att_animation = !first_att_animation;
+				else {
+					if (first_att_animation)
+						toMotion(60);
+					else {
+						toMotion(65);
+					}
+					first_att_animation = !first_att_animation;
+				}
 			}
 			else if (flag[4]) {
 				flag[4] = false;
-				initG = float(-16.3);
-				if (_dir[0] || _dir[1]) { JumpFront = true; }
-				else { JumpFront = false; }
+				if (_dir[0]) { JumpBack = true; JumpFront = false;}
+				else if(_dir[1]){ JumpBack = false; JumpFront = true;}
+				else{ JumpBack = false; JumpFront = false; }
 
 				if (_dir[2]) { JumpUp = true; }
 				else { JumpUp = false; }
 
 				if (_dir[3]) { JumpDown = true; }
 				else { JumpDown = false; }
+				setYstep(-16.3, 8.0, 3.0);
 				toMotion(210);
 			}
 		}
@@ -274,20 +274,20 @@ namespace game_framework {
 			if (flag[0] && !Face_to_Left) {
 				toMotion(218);
 			}
-			if (flag[1] && Face_to_Left) {
+			else if (flag[1] && Face_to_Left) {
 				toMotion(218);
 			}
-			if (flag[4]) {
-				initG = -11;
-				if (Face_to_Left) { JumpFront = true; }
-				else { JumpFront = false; }
+			else if (flag[4]) {
+				if (Face_to_Left) { JumpBack = true; JumpFront = false; }
+				else {  JumpBack = false; JumpFront = true;}
 				if (_dir[2]) { JumpUp = true; }
 				else { JumpUp = false; }
 				if (_dir[3]) { JumpDown = true; }
 				else { JumpDown = false; }
+				setYstep(-11, 15, 3.75);
 				toMotion(213);
 			}
-			if (flag[5]) {
+			else if (flag[5]) {
 				toMotion(85);
 			}
 			break;
@@ -319,6 +319,9 @@ namespace game_framework {
 					if (Face_to_Left)_mode = 213; Face_to_Left = false;
 				}
 			}
+			if (flag[5]) {
+				toMotion(90);
+			}
 			break;
 		}
 		
@@ -339,9 +342,40 @@ namespace game_framework {
 				switch (tempf._i.getKind()) {
 				case 0: {
 					// 有被碰到
-					if (touch(tempf._i ,temp.Face_to_Left ,temp._x ,temp._y ,temp._z)) {			
-						toMotion(220);
+					if (touch(tempf._i ,temp.Face_to_Left ,temp._x ,temp._y ,temp._z)) {
+						int fa = tempf._i.getFall();
+						if (fa == 0) {fall -= 18;}
+						else { fall -= fa;}
+						TRACE("%d %.1f\n", fa, fall);
+
+						if (fall < 35) {			// 擊飛
+
+						}
+						else if (fall < 55) {		// 暈眩
+							toMotion(226);
+						}
+						else if (fall < 60) {			// 被打到第二下
+							if (temp.Face_to_Left != Face_to_Left) {
+								toMotion(222);
+							}
+							else {
+								toMotion(224);
+							}
+						}
+						else{						// 被打到第一下
+							toMotion(220);
+						}
 					}
+					if (temp.Face_to_Left) {
+						_x -= tempf._i.getDvx();
+					}
+					else {
+						_x += tempf._i.getDvx();
+					}
+					break;
+				}
+				case 6: {
+					useSupperAtt = true;
 					break;
 				}
 				default: {
@@ -363,6 +397,7 @@ namespace game_framework {
 		if (isTime()) {
 			nextFrame();
 		}
+		moveY();
 		// 負責位置的調整
 		switch (stateNow) {
 		// 走路狀態
@@ -399,10 +434,11 @@ namespace game_framework {
 			}
 			break;
 		}
-		// 衝刺攻擊
+		// 普通拳腳攻擊
 		case 3: {
-			if (_y < 0) {
-				setHight();
+			if (_y > 0) {
+				_y = 0;
+				backToRandon();
 			}
 			else{
 				int dvx = (*Frams)[_mode]._dvx;
@@ -414,25 +450,23 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
-			setHight();
+			if (_y > 0) {
+				_y = 0;backToRandon();
+			}
 			break;
 		}
-		//大跳攻擊
+		//大跳
 		case 5: {
-			_y += initG;
-			initG += 2;
-			if (_y >= 0) {
+			if (_y > 0) {
+				_y = 0;backToRandon();
+			}
+			break;
+		}
+		default: {
+			if (_y > 0) {
 				_y = 0;
 				backToRandon();
 			}
-			if (JumpFront) { _x -= 15; }
-			else _x += 15;
-			if (JumpUp) { _z -= 4; }
-			if (JumpDown) { _z += 4; }
-			break;
-		}
-
-		default: {
 			if (Face_to_Left)
 				_x -= (*Frams)[_mode]._dvx;
 			else
@@ -442,8 +476,8 @@ namespace game_framework {
 			break;
 		}
 		}
-
-
+		
+		useSupperAtt = false;
 		checkbeenatt();
 		checkFlag();
 		checkBuff();

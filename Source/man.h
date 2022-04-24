@@ -28,9 +28,9 @@ namespace game_framework {
 			Frams = f;
 		}
 
-		bool touch(itr i,bool _Face_to_left,float x,float y,float z) {
+		bool touch(itr i,bool _Face_to_left, double x, double y, double z) {
 			// 攻擊作用範圍
-			float Lx, Ly, Rx, Ry;
+			double Lx, Ly, Rx, Ry;
 			if (_Face_to_left) {
 				Rx = 79 + x - i.getX();
 				Lx = Rx - i.getW();
@@ -48,7 +48,7 @@ namespace game_framework {
 
 			for (int i = 0; i < n; i++) {
 				hitbox hit = *((*Frams)[_mode]._hitbox + i);
-				float _Lx, _Ly, _Rx, _Ry;
+				double _Lx, _Ly, _Rx, _Ry;
 				if (this->Face_to_Left) {
 					_Rx = 79 + _x - hit.getX();
 					_Lx = _Rx - hit.getW();
@@ -62,10 +62,10 @@ namespace game_framework {
 					_Rx = _Lx + hit.getW();
 					_Ry = _Ly + hit.getH();
 				}
-				float min_x = _Lx > Lx ? _Lx : Lx;
-				float min_y = _Ly > Ly ? _Ly : Ly;
-				float max_x = _Rx < Rx ? _Rx : Rx;
-				float max_y = _Ry < Ry ? _Ry : Ry;
+				double min_x = _Lx > Lx ? _Lx : Lx;
+				double min_y = _Ly > Ly ? _Ly : Ly;
+				double max_x = _Rx < Rx ? _Rx : Rx;
+				double max_y = _Ry < Ry ? _Ry : Ry;
 				if (min_x > max_x || min_y > max_y) {
 					continue;
 				}
@@ -78,7 +78,7 @@ namespace game_framework {
 
 		std::map<int, Frame> *Frams;
 		int		_mode;			//現在的模式
-		float	_x, _y, _z;		//現在的位置
+		double	_x, _y, _z;		//現在的位置
 		bool	Face_to_Left;	// 面相方向
 	};
 
@@ -90,13 +90,12 @@ namespace game_framework {
 			initG = 0;
 			time = 0;
 			Walk_Ani_num = 5;
-			
+			fall = 100;
 			commandBuffer = "";
 
 			for (int i = 0; i < 7; i++)	flag[i] = false;
 			for (int i = 0; i < 4; i++)	_dir[i] = false;
 			first_att_animation = true;
-			_outofctrl = false;
 			jumpType = false;
 			walk_Ani_dir = true;
 			run_Ani_dir = true;
@@ -115,18 +114,16 @@ namespace game_framework {
 			numofobj = n;
 		}
 
-		// 設定初始位置
-		void	setInitPosotion(int x, int y);		
+		void	setInitPosotion(int x, int y);		// 設定初始位置	
 
-		// 設定指令
-		void	setComm(UINT comm);					
-		// 取消指令
-		void	cComm(UINT comm);					
+		void	setComm(UINT comm);					// 設定指令
+		void	cComm(UINT comm);					// 取消指令					
 
-		void	checkbeenatt();	// 被攻擊偵測
+		void	checkbeenatt();						// 被攻擊偵測
 		void	OnMove();							// 改變位置
 		void	onShow();							// 顯示
 
+		
 		void	setCH(int ch) {						//設定是哪個腳色
 			charector = ch;
 		}
@@ -171,18 +168,28 @@ namespace game_framework {
 			return Walk_Ani_num;
 		}
 		void	adjustPosition(int f_now,int f_next);
-
 		bool	inMotion;							// 是否在特殊動作裡
 
 		virtual void otherCommand(int n);
 		virtual void readOtherList();
 
-		vector<std::string> commandList;		// 被讀取的指令列表
+		vector<std::string> commandList;			// 被讀取的指令列表
 		
-		bool _outofctrl;					
-	
 		void setPosotion(int n);
-
+		void setYstep(double G, double x, double z) {
+			_y += G++; initG = G; stepx = x; stepz = z;
+		}
+		void moveY() {
+			if (_y >= 0) { 
+				return; 
+			}
+			_y += initG++;
+			initG += 1;
+			if (JumpFront) {_x += stepx;}
+			if (JumpBack) {_x -= stepx;}
+			if (JumpUp) { _z -= stepz; }
+			if (JumpDown) { _z += stepz; }
+		}
 
 		void checkFlag();
 		void checkBuff();
@@ -190,56 +197,52 @@ namespace game_framework {
 		void readCommand();
 
 		// 計數器
-
 		void setTimmer(int t) { time = t; }
-		void Count() {if (time > 0) time--;}
+		void Count() {
+			if (fall < 100)fall += 5;
+			if (time > 0) time--;
+		}
 		bool isTime() { return time == 0; }			
 
-		void backToRandon();			// 回到原始的狀態
-		void toMotion(int next);		// 處發動作
-		void nextFrame();				// 動作中的下一個Frame
+		void backToRandon();						// 回到原始的狀態
+		void toMotion(int next);					// 處發動作
+		void nextFrame();							// 動作中的下一個Frame
 		
 
 		// 指令輸入間隔
-
-		void setCountDwon();					//連點倒數
-		void resetCountDown();					//連點倒數歸零
+		void setCountDwon();						//連點倒數
+		void resetCountDown();						//連點倒數歸零
 		void CountDown() { if (_Double_Tap_Gap > 0)_Double_Tap_Gap--; }
 
 	private:
-		float	initG;							// 設定上升速度
-		int		Walk_Ani_num;					// 下一個走路動作的號碼
-		bool	JumpUp, JumpDown,JumpFront;		// 斜跳
+		double	initG;								// 設定上升速度
+		double	stepx, stepz;						// 跳躍移動距離
+		double	fall;								// 暈眩值
 
-		int		charector;						// 選擇之腳色
+		int		Walk_Ani_num;						// 下一個走路動作的號碼
+		int		charector;							// 選擇之腳色
+		int		_Double_Tap_Gap;					// 連點間隔
+		int		NumOfMan;							// 在場上的人
+		int		time;								// 計數
 
-		int		_Double_Tap_Gap;				// 連點間隔
-		
-		int		NumOfMan;						// 在場上的人
-		int		time;							// 計數
-
+		bool	useSupperAtt;						// 可以使用終結季
+		bool	JumpUp, JumpDown,JumpFront,JumpBack;			// 斜跳
 		bool	jumpType;
+		bool	_dir[4];							// 方向
+		bool	flag[7];							// keyboard input flag
+		bool	first_att_animation;				// 是不是出左拳
+		bool	Alive;								// 是否活著
+		bool	walk_Ani_dir;						// 走路動作的方向
+		bool	run_Ani_dir;						// 跑步動作的方向
+			
+		std::string commandBuffer;					// input command buffer
 		
-		bool	_dir[4];						// 方向
-		bool	flag[7];						// keyboard input flag
-		bool	first_att_animation;			// 是不是出左拳
-		bool	Alive;							// 是否活著
-		
-		
-		bool	walk_Ani_dir;					// 走路動作的方向
-		bool	run_Ani_dir;					// 跑步動作的方向
-
-		std::string commandBuffer;				// input command buffer
-		
-		Bitmaplib *	lib;						// 圖片輸出
-		CStateBar *	_s;							// 血量條
-
-		obj **all;								// 場上的物品人物
-		int numofobj;							// 場上的物品人物數量
-
-
-		man *		mans;						// 在場上的人	
-		man *		gotCatch;					// 被抓的人
+		Bitmaplib *	lib;							// 圖片輸出
+		CStateBar *	_s;								// 血量條
+		obj **all;									// 場上的物品人物
+		int numofobj;								// 場上的物品人物數量
+		man *		mans;							// 在場上的人	
+		man *		gotCatch;						// 被抓的人
 	};
 
 	class weapon:public obj{

@@ -243,18 +243,17 @@ void CGameStateOver::OnShow(){
 /////////////////////////////////////////////////////////////////////////////
 
 CGameStateRun::CGameStateRun(CGame *g)
-: CGameState(g), NUMBALLS(28){
-	ball = new CBall [NUMBALLS];
+: CGameState(g){
+	
 }
 
 CGameStateRun::~CGameStateRun(){
-	delete[] ball;
 	delete[] all;
 }
 
 void CGameStateRun::OnBeginState(){
-	Man[0].setInitPosotion(200, 200);
-	Man[1].setInitPosotion(150, 200);
+	Man[0].setInitPosotion(300, 450);
+	Man[1].setInitPosotion(550, 450);
 	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(0));
 	Man[1].init(&Blib, Man,2,&bar,Flib.getFrame(0));
 }	
@@ -270,12 +269,12 @@ void CGameStateRun::OnMove(){
 }
 
 void CGameStateRun::OnInit(){
-	//
 	bar.LoadBitmap();
 
 	ShowInitProgress(33);	
 	Blib.LoadBitmap();
 
+	ShowInitProgress(70);
 	Flib.init();
 	
 	all = new obj*[2];
@@ -358,9 +357,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player1HPState(20, 10);
 	bar.Player1MPState(90);
-	
-	
-	
 }
 
 
@@ -382,7 +378,6 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
-	eraser.SetMovingRight(false);
 }
 
 // 顯示

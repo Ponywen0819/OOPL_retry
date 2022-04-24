@@ -65,7 +65,7 @@ namespace game_framework {
 
 	int* Framelib::extra(std::string &line, std::string *tar, int number) {
 		int *value = new int[number];
-		for (int i = 0; i < number; i++)	value[i] = -1;
+		for (int i = 0; i < number; i++)	value[i] = 0;
 		for (int i = 0; i < number; i++) {
 			unsigned int temp = 0;
 			temp = line.find(tar[i], temp);
@@ -120,8 +120,9 @@ namespace game_framework {
 							}
 							else if (s == "   itr:") {
 								std::getline(ifs, s);
-								std::string btar[7] = { "kind","x","y","w","h","catchingact","caughtact" };
-								a.setItr(extra(s, btar, 7));
+								std::string btar[16] = { "kind","x","y","w","h","z_width","dvx","dvy","fall","vrest","arest"
+									,"bdefend","injury","effect","catchingact","caughtact" };
+								a.setItr(extra(s, btar, 16));
 							}
 							else if (s == "   opoint:") {
 								std::getline(ifs, s);
