@@ -13,14 +13,73 @@ namespace game_framework {
 	class obj{
 	public:
 		obj() { Frams = nullptr; _mode = 0; _x = _y = _z = 0.0; }
+		obj(const obj& o) {
+			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
+		}
+
+		obj& operator=(const obj& o) {
+			if (this != &o) {
+				Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
+			}
+			return *this;
+		}
+
 		obj(std::map<int, Frame> *f) {
 			Frams = f;
 		}
 
-	protected:
+		bool touch(itr i,bool _Face_to_left,float x,float y,float z) {
+			// 攻擊作用範圍
+			float Lx, Ly, Rx, Ry;
+			if (_Face_to_left) {
+				Rx = 79 + x - i.getX();
+				Lx = Rx - i.getW();
+				
+				Ly = i.getY() + y;
+				Ry = Ly + i.getH();
+			}
+			else {
+				Lx = i.getX() + x;
+				Ly = i.getY() + y;
+				Rx = Lx + i.getW();
+				Ry = Ly + i.getH();
+			}
+			int n = (*Frams)[_mode]._Num_of_hitbox;
+
+			for (int i = 0; i < n; i++) {
+				hitbox hit = *((*Frams)[_mode]._hitbox + i);
+				float _Lx, _Ly, _Rx, _Ry;
+				if (this->Face_to_Left) {
+					_Rx = 79 + _x - hit.getX();
+					_Lx = _Rx - hit.getW();
+
+					_Ly = hit.getY() + _y;
+					_Ry = _Ly + hit.getH();
+				}
+				else {
+					_Lx = hit.getX() + _x;
+					_Ly = hit.getY() + _y;
+					_Rx = _Lx + hit.getW();
+					_Ry = _Ly + hit.getH();
+				}
+				float min_x = _Lx > Lx ? _Lx : Lx;
+				float min_y = _Ly > Ly ? _Ly : Ly;
+				float max_x = _Rx < Rx ? _Rx : Rx;
+				float max_y = _Ry < Ry ? _Ry : Ry;
+				if (min_x > max_x || min_y > max_y) {
+					continue;
+				}
+				else {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		std::map<int, Frame> *Frams;
 		int		_mode;			//現在的模式
 		float	_x, _y, _z;		//現在的位置
+		bool	Face_to_Left;	// 面相方向
 	};
 
 	class man:public obj{
@@ -51,6 +110,11 @@ namespace game_framework {
 		// 設定初始庫
 		void	init(Bitmaplib *l, man *m, int n,CStateBar *state, std::map<int, Frame> *f);		
 
+		void	getAllObj(obj** a, int n) {
+			all = a;
+			numofobj = n;
+		}
+
 		// 設定初始位置
 		void	setInitPosotion(int x, int y);		
 
@@ -59,14 +123,30 @@ namespace game_framework {
 		// 取消指令
 		void	cComm(UINT comm);					
 
-		void	checkbeenatt(skillsContainer &con);	// 被攻擊偵測
+		void	checkbeenatt();	// 被攻擊偵測
 		void	OnMove();							// 改變位置
 		void	onShow();							// 顯示
 
-		void setCH(int ch) {						//設定是哪個腳色
+		void	setCH(int ch) {						//設定是哪個腳色
 			charector = ch;
 		}
 		
+		void	setHight() {
+			_y += initG;
+			initG += 2;
+			if (_y >= 0) {
+				_y = 0;
+				backToRandon();
+			}
+
+			if (JumpFront) {
+				if (Face_to_Left) { _x -= 8; }
+				else { _x += 8; }
+			}
+			if (JumpUp) { _z -= 3; }
+			if (JumpDown) { _z += 3; }
+		}
+
 		bool	out() { return inMotion; }
 		int		gotMode() { return _mode; }
 		int		getx() { return int(_x); }
@@ -139,7 +219,7 @@ namespace game_framework {
 		int		time;							// 計數
 
 		bool	jumpType;
-		bool	Face_to_Left;					// 面相方向
+		
 		bool	_dir[4];						// 方向
 		bool	flag[7];						// keyboard input flag
 		bool	first_att_animation;			// 是不是出左拳
@@ -153,6 +233,10 @@ namespace game_framework {
 		
 		Bitmaplib *	lib;						// 圖片輸出
 		CStateBar *	_s;							// 血量條
+
+		obj **all;								// 場上的物品人物
+		int numofobj;							// 場上的物品人物數量
+
 
 		man *		mans;						// 在場上的人	
 		man *		gotCatch;					// 被抓的人

@@ -28,6 +28,7 @@ namespace game_framework {
 		readCommand();
 	}
 
+
 	void man::readCommand() {
 		commandList.push_back("11");
 		commandList.push_back("22");
@@ -70,7 +71,7 @@ namespace game_framework {
 		//TRACE("next : %d pic : %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic);
 		int temp = (*Frams)[_mode]._next;
 		if (temp == 999) {
-			if ((*Frams)[_mode]._state == 3) {
+			if ( _y < 0) {
 				adjustPosition(_mode, 212);
 				_mode = 212;
 			}
@@ -108,7 +109,6 @@ namespace game_framework {
 				break;
 			}
 			case 5: {
-				
 				setTimmer((*Frams)[_mode]._wait);
 				break;
 			}
@@ -149,10 +149,6 @@ namespace game_framework {
 
 		if (comm == 7) {commandBuffer += '7';}
 		
-		//if (_mode <  5) {
-		//	if (comm == 1 && Face_to_Left == false)	Face_to_Left = true;
-		//	else if (comm == 2 && Face_to_Left)	Face_to_Left = false;
-		//}
 	}
 
 	void man::cComm(UINT comm) {
@@ -184,7 +180,6 @@ namespace game_framework {
 			}
 			else if (flag[4]) {
 				flag[4] = false;
-				rising = true;
 				initG = float(-16.3);
 				if (_dir[0] || _dir[1]) { JumpFront = true; }
 				else { JumpFront = false; }
@@ -332,8 +327,30 @@ namespace game_framework {
 		}
 	}
 
-	void man::checkbeenatt(skillsContainer &con) {
-		
+	void man::checkbeenatt() {
+		for (int i = 0; i < numofobj; i++) {
+			if (*(all + i) == this) {
+				continue;
+			}
+			obj temp = *(*(all + i));
+			int _mode = temp._mode;
+			Frame tempf = (*(temp.Frams))[_mode];
+			if(tempf._have_itr){				// 這個東西具有攻擊性
+				switch (tempf._i.getKind()) {
+				case 0: {
+					// 有被碰到
+					if (touch(tempf._i ,temp.Face_to_Left ,temp._x ,temp._y ,temp._z)) {			
+						toMotion(220);
+					}
+					break;
+				}
+				default: {
+					break;
+				}
+				}
+				
+			}
+		}
 	}
 
 	//人物狀態更新
@@ -384,38 +401,20 @@ namespace game_framework {
 		}
 		// 衝刺攻擊
 		case 3: {
-			_y += initG;
-			initG += 2;
-			if (_y >= 0) {
-				_y = 0;
-				backToRandon();
+			if (_y < 0) {
+				setHight();
 			}
-
-			if (JumpFront) {
-				if (Face_to_Left) { _x -= 8; }
-				else { _x += 8; }
+			else{
+				int dvx = (*Frams)[_mode]._dvx;
+				int dvy = (*Frams)[_mode]._dvy;
+				if (Face_to_Left) { _x -= dvx; }
+				else { _x += dvx; }
 			}
-			if (JumpUp) { _z -= 3; }
-			if (JumpDown) { _z += 3; }
 			break;
 		}
 		//原地跳
 		case 4: {
-			if (nextF == 0) {
-				_y += initG;
-				initG += 2;
-				if (_y >= 0) {
-					_y = 0;
-					backToRandon();
-				}
-
-				if (JumpFront) {
-					if (Face_to_Left) { _x -= 8; }
-					else { _x += 8; }
-				}
-				if (JumpUp) { _z -= 3; }
-				if (JumpDown) { _z += 3; }
-			}
+			setHight();
 			break;
 		}
 		//大跳攻擊
@@ -445,6 +444,7 @@ namespace game_framework {
 		}
 
 
+		checkbeenatt();
 		checkFlag();
 		checkBuff();
 
@@ -460,8 +460,10 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		TRACE("%d\n", (*Frams)[_mode]._pic);
+		//TRACE("%d\n", (*Frams)[_mode]._pic);
 		lib->selectByNum(0,(*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+	
+		
 	}
 
 	//處理指令輸入時間間隔

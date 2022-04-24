@@ -248,7 +248,8 @@ CGameStateRun::CGameStateRun(CGame *g)
 }
 
 CGameStateRun::~CGameStateRun(){
-	delete [] ball;
+	delete[] ball;
+	delete[] all;
 }
 
 void CGameStateRun::OnBeginState(){
@@ -277,6 +278,13 @@ void CGameStateRun::OnInit(){
 
 	Flib.init();
 	
+	all = new obj*[2];
+	numOfObj = 2;
+	all[0] = Man;
+	all[1] = (Man + 1);
+
+	Man[0].getAllObj(all, 2);
+	Man[1].getAllObj(all, 2);
 	lf.init();
 	temp1.init();
 }
@@ -395,7 +403,6 @@ void CGameStateRun::OnShow() {
 	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d"
 		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext());
 	pDC->TextOut(0, 50, str);
-	
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();
 

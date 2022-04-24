@@ -123,6 +123,9 @@ namespace game_framework {
 		CInteger		hits_left;	// 剩下的撞擊數
 		CBouncingBall   bball;		// 反覆彈跳的球
 		
+		obj**			all;		// 在場上的所有東西
+		int				numOfObj;	// 在場的物品總數
+
 		man				Man[2];		// 人物1
 		skillsContainer skills;
 		Bitmaplib		Blib;

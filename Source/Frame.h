@@ -20,6 +20,21 @@ namespace game_framework {
 			int dvx, int dvy, int fall, int vrest, int bdefend, int injury, int effect) :
 			_kind{ kind }, _x{ x }, _y{ y }, _w{ w }, _h{ h }, _z_width{ z_width },
 			_dvx{ dvx }, _dvy{ dvy }, _fall{ fall }, _vrest{ vrest }, _bdefend{ bdefend }, _injury{ injury }, _effect{ effect }{}
+		itr(const itr& ii) {
+			_kind = ii._kind;
+			_x = ii._x; 
+			_y = ii._y; 
+			_w = ii._w; 
+			_h = ii._h;
+			_z_width = ii._z_width;
+			_dvx = ii._dvx; 
+			_dvy = ii._dvy;
+			_fall = ii._fall;
+			_vrest = ii._vrest;
+			_bdefend = ii._bdefend;
+			_injury = ii._injury;
+			_effect = ii._effect;
+		}
 
 		itr& operator=(const itr& ii) {
 			if (this != &ii) { // ÀË¬d¦Û§Ú½á­È

@@ -103,7 +103,6 @@ namespace game_framework {
 						std::string g[10] = { "pic","state","wait","next","dvx","dvy","centerx","centery","sound","mp" };
 						int *temp_basic = extra(s, g, 10);
 						a.setBasic(temp_basic); 
-						// TRACE("%d\n", a._next);
 
 						std::getline(ifs, s);       //´«¤U¤@¦æ
 						while (s != "<frame_end>") {
