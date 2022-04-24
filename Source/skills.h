@@ -104,7 +104,6 @@ namespace game_framework {
 	private:
 		bool _FacetoLeft;
 		bool _LeftPunch;
-		PAnimation _ani;			// 技能動畫
 		Bitmaplib *lib;
 	};
 

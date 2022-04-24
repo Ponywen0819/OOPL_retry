@@ -15,103 +15,17 @@
 #include <map>
 #include "man.h"
 
-#define height 28
-#define File ".\\data\\t.txt"
 namespace game_framework {
 
-	//初始化
-	int* man::extra(std::string &line, std::string *tar, int number) {
-		int *value = new int[number];
-		for (int i = 0; i < number; i++)	value[i] = -1;
-		for (int i = 0; i < number; i++) {
-			unsigned int temp = 0;
-			temp = line.find(tar[i], temp);
-			if (temp != std::string::npos) {
-				temp += tar[i].length() + 2;
-				std::string temp_id = "";
-				while (line[temp] != ' ' && (temp < line.size())) {
-					temp_id += line[temp++];
-				}
-				value[i] = std::stoi(temp_id);
-			}
-		}
-		return value;
-	}
-
+	// 初始化外部資料
 	void man::init(Bitmaplib *l, man *m, int n, CStateBar *state, std::map<int, Frame> *f) {
-		lib = l;
-		mans = m;
+		lib = l;				//獲取圖片庫
+		mans = m;				//獲取場上人數
 		NumOfMan = n;
-		Frams = f;
+		Frams = f;				//獲取動作表
+		_s = state;				//搞耍
 
-		_s = state;
 		readCommand();
-	}
-
-	void man::loadFrame() {
-		std::ifstream ifs(File, std::ios::in);
-		if (!ifs.is_open()) {
-			TRACE("Failed to open file.");
-		}
-		else {
-			std::string s;
-			while (std::getline(ifs, s)) {
-				if (s.substr(0, 7) == "<frame>") {
-					Frame a;
-					int b = 8;
-					std::string id = "";
-					while (s[b] != ' ') {
-						id += s[b++];
-					}
-					a._id = std::stoi(id);
-					std::getline(ifs, s);
-					std::string g[10] = { "pic","state","wait","next","dvx","dvy","centerx","centery","sound","mp" };
-					int *temp_basic = extra(s, g, 10);
-					a.setBasic(temp_basic);
-					// TRACE("%d\n", a._next);
-
-					std::getline(ifs, s);       //換下一行
-					while (s != "<frame_end>") {
-						if (s == "   wpoint:") {
-							std::getline(ifs, s);
-							std::string w[8] = { "x","y","weaponact","attacking","cover","dvx","dvy","dvz" };
-							
-							a.setWpoint(extra(s, w, 8));
-						}
-						else if (s == "   bdy:") {
-							std::getline(ifs, s);
-							std::string btar[4] = { "x","y","w","h" };
-
-							a.addBody(extra(s, btar, 4));
-						}
-						else if (s == "   itr:") {
-							std::getline(ifs, s);
-							std::string btar[7] = { "kind","x","y","w","h","catchingact","caughtact" };
-							a.setItr(extra(s, btar, 7));
-						}
-						else if (s == "   opoint:") {
-							std::getline(ifs, s);
-							std::string btar[6] = { "kind","x","y","action","oid","facing" };
-							a.setOpoint(extra(s, btar, 6));
-						}
-						else if (s == "   cpoint:") {
-							std::getline(ifs, s);
-							std::string btar[12] = { "kind","x","y","vaction","aaction","taction"
-							,"hurtable","throwx","throwy","throwz","throwinjury","decrease" };
-							a.setCpoint(extra(s, btar, 12));
-						}
-						std::getline(ifs, s);       //換下一行
-					}
-					(*Frams)[a._id] = a;
-				}
-			}
-			ifs.close();
-		}
-		ifs.close();
-	}
-
-	void man::LoadBitmap() {
-		loadFrame();
 	}
 
 	void man::readCommand() {
@@ -119,40 +33,17 @@ namespace game_framework {
 		commandList.push_back("22");
 		readOtherList();
 	}
-
-	void man::readOtherList() {
-
-	}
+	
 
 	void man::setInitPosotion(int x, int y) {
-		_x = x;
-		_z = y;
-		Body.setPosetion(_x + 25, _z + 15);
+		_x = float(x);
+		_z = float(y);
 	}
 
 	// 人物狀態確認
 
-	bool man::NearBy(const man &other) {
-		area temp,temp2;
-		temp.init(_x, _y, 79, 79);
-		temp2.init(other._x, other._y,79,79);
-		if (temp.touch(temp2)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	
-	bool man::FaceTo(const man &other) {
-		if (Face_to_Left) {
-			return _x > other._x;
-		}
-		else{
-			return _x < other._x;
-		}
-	}
-	
+
 	// 以新的中心位置調整人物
 
 	void man::adjustPosition(int f_now, int f_next) {
@@ -294,7 +185,7 @@ namespace game_framework {
 			else if (flag[4]) {
 				flag[4] = false;
 				rising = true;
-				initG = -16;
+				initG = float(-16.3);
 				if (_dir[0] || _dir[1]) { JumpFront = true; }
 				else { JumpFront = false; }
 
@@ -457,7 +348,7 @@ namespace game_framework {
 		}
 		// 負責位置的調整
 		switch (stateNow) {
-			// 走路狀態
+		// 走路狀態
 		case 1: {
 			if (_dir[0]) {
 				Face_to_Left = true;
@@ -468,14 +359,14 @@ namespace game_framework {
 				_x += 4;
 			}
 			if (_dir[2]) {
-				_z -= 2;
+				_z -= float(1.3);
 			}
 			if (_dir[3]) {
-				_z += 2;
+				_z += float(1.3);
 			}
 			break;
 		}
-				// 跑步狀態
+		// 跑步狀態
 		case 2: {
 			if (Face_to_Left) {
 				_x -= 8;
@@ -491,7 +382,7 @@ namespace game_framework {
 			}
 			break;
 		}
-
+		// 衝刺攻擊
 		case 3: {
 			_y += initG;
 			initG += 2;
@@ -508,7 +399,7 @@ namespace game_framework {
 			if (JumpDown) { _z += 3; }
 			break;
 		}
-				//
+		//原地跳
 		case 4: {
 			if (nextF == 0) {
 				_y += initG;
@@ -527,7 +418,7 @@ namespace game_framework {
 			}
 			break;
 		}
-
+		//大跳攻擊
 		case 5: {
 			_y += initG;
 			initG += 2;
@@ -569,8 +460,8 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		// TRACE("%d\n", (*Frams)[_mode]._pic);
-		lib->selectByNum((*Frams)[_mode]._pic, index, _x, _y + _z - (*Frams)[_mode]._centery);
+		TRACE("%d\n", (*Frams)[_mode]._pic);
+		lib->selectByNum(0,(*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
 	}
 
 	//處理指令輸入時間間隔
@@ -586,6 +477,11 @@ namespace game_framework {
 	//這是留給子類別操控的func
 
 	void man::otherCommand(int n) {
+
+	}
+	
+
+	void man::readOtherList() {
 
 	}
 }

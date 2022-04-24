@@ -254,8 +254,8 @@ CGameStateRun::~CGameStateRun(){
 void CGameStateRun::OnBeginState(){
 	Man[0].setInitPosotion(200, 200);
 	Man[1].setInitPosotion(150, 200);
-	Man[0].init(&lib, Man,2,&bar,nullptr);
-	Man[1].init(&lib, Man,2,&bar, nullptr);
+	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(0));
+	Man[1].init(&Blib, Man,2,&bar,Flib.getFrame(0));
 }	
 
 void CGameStateRun::OnMove(){
@@ -273,14 +273,9 @@ void CGameStateRun::OnInit(){
 	bar.LoadBitmap();
 
 	ShowInitProgress(33);	
-	lib.LoadBitmap();
+	Blib.LoadBitmap();
 
-	ShowInitProgress(50);
-	Man[0].LoadBitmap();
-	
-
-	ShowInitProgress(75);
-	Man[1].LoadBitmap();
+	Flib.init();
 	
 	lf.init();
 	temp1.init();
@@ -400,9 +395,7 @@ void CGameStateRun::OnShow() {
 	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d"
 		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext());
 	pDC->TextOut(0, 50, str);
-	/*sprintf(str, "MAN2 _out : %d _dizz : %d _catch : %d _got : %d  mode : %d"
-		, Man[1].out(), Man[1].isDizzy(), Man[1].iscatch(), Man[1].gotc(), Man[1].gotMode());*/
-	pDC->TextOut(0, 100, str);
+	
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();
 
