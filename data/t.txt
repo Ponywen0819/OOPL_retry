@@ -520,6 +520,16 @@
    bdy_end:
 <frame_end>
 
+<frame> 219 crouch2
+   pic: 60  state: 15  wait: 2  next: 999  dvx: 0  dvy: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 12 
+   wpoint:
+      kind: 1  x: 26  y: 60  weaponact: 21  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 26  y: 36  w: 29  h: 44
+   bdy_end:
+<frame_end>
+
 <frame> 220 injured
    pic: 120  state: 11  wait: 2  next: 221  dvx: 0  dvy: 0  centerx: 47  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    wpoint:
@@ -645,4 +655,18 @@
    bdy:
       kind: 0  x: 29  y: 26  w: 37  h: 53
    bdy_end:
+<frame_end>
+
+<frame> 230 lying
+   pic: 34  state: 14  wait: 30  next: 219  dvx: 0  dvy: 0  centerx: 39  centery: 72  hit_a: 0  hit_d: 0  hit_j: 0
+   wpoint:
+      kind: 1  x: 35  y: 74  weaponact: 32  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
+<frame_end>
+
+<frame> 231 lying
+   pic: 44  state: 14  wait: 30  next: 219  dvx: 0  dvy: 0  centerx: 39  centery: 75  hit_a: 0  hit_d: 0  hit_j: 0
+   wpoint:
+      kind: 1  x: 32  y: 74  weaponact: 24  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
 <frame_end>

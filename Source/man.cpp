@@ -189,6 +189,26 @@ namespace game_framework {
 				setTimmer((*Frams)[_mode]._wait);
 				break;
 			}
+			case 12: {
+				if (_mode == 185) {
+					adjustPosition(_mode, 230);
+					_mode = 230;
+					setTimmer((*Frams)[_mode]._wait);
+				}
+				else if (_mode == 190) {
+					if (_y == 0) {
+						adjustPosition(_mode, 231);
+						_mode = 231;
+						setTimmer((*Frams)[_mode]._wait);
+					}
+				}
+				else {
+					adjustPosition(_mode, _mode + 1);
+					_mode++;
+					setTimmer((*Frams)[_mode]._wait);
+				}
+				break;
+			}
 			default:
 				break;
 			}
@@ -430,14 +450,20 @@ namespace game_framework {
 							if (fa == 0) { fall -= 18; }
 							else { fall -= fa; }
 							//TRACE("%d %.1f\n", fa, fall);
+							TRACE("%d %d\n", temp.Face_to_Left, this->Face_to_Left);
 							if (fall < 35) {			// 擊飛
-
+								if (temp.Face_to_Left != this->Face_to_Left) {
+									toMotion(180);
+								}
+								else {
+									toMotion(186);
+								}
 							}
 							else if (fall < 55) {		// 暈眩
 								toMotion(226);
 							}
 							else if (fall < 60) {		// 被打到第二下
-								if (temp.Face_to_Left != Face_to_Left) {
+								if (temp.Face_to_Left != this->Face_to_Left) {
 									toMotion(222);
 								}
 								else {
@@ -447,12 +473,12 @@ namespace game_framework {
 							else {						// 被打到第一下
 								toMotion(220);
 							}
-						}
-						if (temp.Face_to_Left) {
-							_x -= tempf._i.getDvx();
-						}
-						else {
-							_x += tempf._i.getDvx();
+							if (temp.Face_to_Left) {
+								_x -= tempf._i.getDvx();
+							}
+							else {
+								_x += tempf._i.getDvx();
+							}
 						}
 					}
 					break;

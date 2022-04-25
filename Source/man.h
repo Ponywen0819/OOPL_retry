@@ -20,6 +20,7 @@ namespace game_framework {
 			beatenCount = nullptr;
 			beatenList = nullptr;
 			numOfBeaten = 0;
+			Face_to_Left = true;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
