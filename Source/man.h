@@ -12,9 +12,21 @@
 namespace game_framework {
 	class obj{
 	public:
-		obj() { Frams = nullptr; _mode = 0; _x = _y = _z = 0.0; }
+		obj() { 
+			Frams = nullptr; 
+			_mode = 0; 
+			_x = _y = _z = 0.0; 
+			beatenCount = 0;
+			beatenCount = nullptr;
+			beatenList = nullptr;
+			numOfBeaten = 0;
+		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
+		}
+		~obj() {
+			delete beatenCount;
+			delete beatenCount;
 		}
 
 		obj& operator=(const obj& o) {
@@ -76,11 +88,23 @@ namespace game_framework {
 			return false;
 		}
 
+		void addBeaten(obj *who);
+
+		bool checkBeenBeaten(obj *who);
+		void restList();
+		void bcount();
+		void del(int n);
+
 		std::map<int, Frame> *Frams;
-		int		_mode;			//現在的模式
-		double	_x, _y, _z;		//現在的位置
-		bool	Face_to_Left;	// 面相方向
+		int		_mode;				//現在的模式
+		double	_x, _y, _z;			//現在的位置
+		bool	Face_to_Left;		// 面相方向
+
+		obj**	beatenList;			//被打到的人
+		int*	beatenCount;		//多久之後才可以再打一次
+		int		numOfBeaten;		//有多少人被打到
 	};
+
 
 	class man:public obj{
 	public:
@@ -126,22 +150,6 @@ namespace game_framework {
 		
 		void	setCH(int ch) {						//設定是哪個腳色
 			charector = ch;
-		}
-		
-		void	setHight() {
-			_y += initG;
-			initG += 2;
-			if (_y >= 0) {
-				_y = 0;
-				backToRandon();
-			}
-
-			if (JumpFront) {
-				if (Face_to_Left) { _x -= 8; }
-				else { _x += 8; }
-			}
-			if (JumpUp) { _z -= 3; }
-			if (JumpDown) { _z += 3; }
 		}
 
 		bool	out() { return inMotion; }
@@ -199,7 +207,8 @@ namespace game_framework {
 		// 計數器
 		void setTimmer(int t) { time = t; }
 		void Count() {
-			if (fall < 100)fall += 5;
+			if (fall < 100)fall ++;
+			else if (fall < 45) fall = 45;
 			if (time > 0) time--;
 		}
 		bool isTime() { return time == 0; }			
@@ -237,6 +246,8 @@ namespace game_framework {
 			
 		std::string commandBuffer;					// input command buffer
 		
+		obj*	beaten;								//
+
 		Bitmaplib *	lib;							// 圖片輸出
 		CStateBar *	_s;								// 血量條
 		obj **all;									// 場上的物品人物

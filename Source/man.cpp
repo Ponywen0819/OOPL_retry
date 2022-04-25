@@ -17,6 +17,88 @@
 
 namespace game_framework {
 
+	void obj::addBeaten(obj *who) {
+		numOfBeaten++;
+		if (beatenList == nullptr) {
+			beatenList = new obj*;
+			beatenCount = new int;
+			*(beatenList) = who;
+			int vrest = (*Frams)[_mode]._i.getVrest();
+			if (vrest == 0) { *beatenCount = 4; }
+			else { *beatenCount = vrest; }
+		}
+		else{
+			obj ** temp = new obj*[numOfBeaten];
+			int * tempc = new int[numOfBeaten];
+			int i;
+			for (i = 0; i < numOfBeaten-1; i++) {
+				(*(temp + i)) = *(beatenList + i);
+				*(tempc + i) = *(beatenCount + i);
+			}
+			(*(temp + i)) = who;
+			*beatenCount = (*Frams)[_mode]._i.getVrest();
+			delete beatenList;
+			beatenList = temp;
+		
+			int vrest = (*Frams)[_mode]._i.getVrest();
+			if (vrest == 0) { *(tempc + i) = 4; }
+			else { *(tempc + i) = vrest; }
+
+			delete beatenCount;
+			beatenCount = tempc;
+		}
+	}
+
+	bool obj::checkBeenBeaten(obj *who) {
+		if (beatenList == nullptr) return false;
+		for (int i = 0; i < numOfBeaten; i++) {
+			if ((*(beatenList + i)) == who) {
+				return true;
+			}
+		}
+		return false;
+	}
+	void obj::restList() {
+		numOfBeaten = 0;
+		delete beatenList;
+		delete beatenCount;
+		beatenList = nullptr;
+		beatenCount = nullptr;
+	}
+
+	void obj::bcount() {
+		int i = 0;
+		while (i<numOfBeaten) {
+			if (--(*(beatenCount + i))==0) {
+				del(i);
+			}
+			i++;
+		}
+	}
+	void obj::del(int n) {
+		if (n >= numOfBeaten) return;
+		if (numOfBeaten == 1) {
+			restList(); return;
+		}
+		obj ** temp = new obj*[numOfBeaten-1];
+		int * tempc = new int[numOfBeaten-1];
+		int real = 0;
+		for (int i = 0; i < numOfBeaten; i++) {
+			if (n == i)continue;
+			else{
+				(*(temp + real)) = *(beatenList + real);
+				*(tempc + real) = *(beatenCount + real);
+				real++;
+			}
+		}
+		delete beatenList;
+		beatenList = temp;
+		delete beatenCount;
+		beatenCount = tempc;
+		numOfBeaten--;
+	}
+
+
 	// 初始化外部資料
 	void man::init(Bitmaplib *l, man *m, int n, CStateBar *state, std::map<int, Frame> *f) {
 		lib = l;				//獲取圖片庫
@@ -63,6 +145,7 @@ namespace game_framework {
 
 	void man::nextFrame() {
 		//TRACE("next : %d pic : %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic);
+		restList();
 		int temp = (*Frams)[_mode]._next;
 		if (temp == 999) {
 			if ( _y < 0) {
@@ -341,48 +424,50 @@ namespace game_framework {
 			if(tempf._have_itr){				// 這個東西具有攻擊性
 				switch (tempf._i.getKind()) {
 				case 0: {
-					// 有被碰到
-					if (touch(tempf._i ,temp.Face_to_Left ,temp._x ,temp._y ,temp._z)) {
-						int fa = tempf._i.getFall();
-						if (fa == 0) {fall -= 18;}
-						else { fall -= fa;}
-						TRACE("%d %.1f\n", fa, fall);
+					if (touch(tempf._i, temp.Face_to_Left, temp._x, temp._y, temp._z)) {
+						if (!((*(all + i))->checkBeenBeaten(this))) {
+							int fa = tempf._i.getFall();
+							if (fa == 0) { fall -= 18; }
+							else { fall -= fa; }
+							//TRACE("%d %.1f\n", fa, fall);
+							if (fall < 35) {			// 擊飛
 
-						if (fall < 35) {			// 擊飛
-
-						}
-						else if (fall < 55) {		// 暈眩
-							toMotion(226);
-						}
-						else if (fall < 60) {			// 被打到第二下
-							if (temp.Face_to_Left != Face_to_Left) {
-								toMotion(222);
 							}
-							else {
-								toMotion(224);
+							else if (fall < 55) {		// 暈眩
+								toMotion(226);
+							}
+							else if (fall < 60) {		// 被打到第二下
+								if (temp.Face_to_Left != Face_to_Left) {
+									toMotion(222);
+								}
+								else {
+									toMotion(224);
+								}
+							}
+							else {						// 被打到第一下
+								toMotion(220);
 							}
 						}
-						else{						// 被打到第一下
-							toMotion(220);
+						if (temp.Face_to_Left) {
+							_x -= tempf._i.getDvx();
 						}
-					}
-					if (temp.Face_to_Left) {
-						_x -= tempf._i.getDvx();
-					}
-					else {
-						_x += tempf._i.getDvx();
+						else {
+							_x += tempf._i.getDvx();
+						}
 					}
 					break;
 				}
 				case 6: {
-					useSupperAtt = true;
+					if (touch(tempf._i, temp.Face_to_Left, temp._x, temp._y, temp._z)) {
+						useSupperAtt = true;
+					}
 					break;
 				}
 				default: {
 					break;
 				}
 				}
-				
+				(*(all + i))->addBeaten(this);
 			}
 		}
 	}
@@ -478,6 +563,7 @@ namespace game_framework {
 		}
 		
 		useSupperAtt = false;
+		bcount();
 		checkbeenatt();
 		checkFlag();
 		checkBuff();

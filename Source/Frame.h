@@ -494,4 +494,5 @@ namespace game_framework {
 		cpoint _cp;
 	};
 
+	
 }
