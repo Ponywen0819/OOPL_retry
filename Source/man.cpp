@@ -161,6 +161,9 @@ namespace game_framework {
 			adjustPosition(_mode, temp);
 			_mode = temp;
 			setTimmer((*Frams)[_mode]._wait);
+			if ((*Frams)[_mode]._state == 9) {
+				Caught->_mode = (*Frams)[_mode]._cp.getVaction();
+			}
 		}
 		else{
 			// 特殊動作
@@ -189,6 +192,17 @@ namespace game_framework {
 				setTimmer((*Frams)[_mode]._wait);
 				break;
 			}
+			case 9: {
+				if (flag[5]) {
+					flag[5] = false;
+					int p = (*Frams)[_mode]._cp.getAaction();
+					adjustPosition(_mode, p);
+					_mode = p;
+					Caught->_mode = (*Frams)[_mode]._cp.getVaction();
+					setTimmer((*Frams)[_mode]._wait);
+				}
+				break;
+			}
 			case 12: {
 				if (_mode == 185) {
 					adjustPosition(_mode, 230);
@@ -209,8 +223,9 @@ namespace game_framework {
 				}
 				break;
 			}
-			default:
+			default: {
 				break;
+			}
 			}
 		}
 	}
@@ -438,21 +453,20 @@ namespace game_framework {
 			if (*(all + i) == this) {
 				continue;
 			}
-			obj temp = *(*(all + i));
-			int _mode = temp._mode;
-			Frame tempf = (*(temp.Frams))[_mode];
+			int mode = (*(*(all + i)))._mode;
+			Frame tempf = (*((*(*(all + i))).Frams))[mode];
 			if(tempf._have_itr){				// 這個東西具有攻擊性
 				switch (tempf._i.getKind()) {
 				case 0: {
-					if (touch(tempf._i, temp.Face_to_Left, temp._x, temp._y, temp._z)) {
+					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
 						if (!((*(all + i))->checkBeenBeaten(this))) {
 							int fa = tempf._i.getFall();
 							if (fa == 0) { fall -= 18; }
 							else { fall -= fa; }
 							//TRACE("%d %.1f\n", fa, fall);
-							TRACE("%d %d\n", temp.Face_to_Left, this->Face_to_Left);
+							//TRACE("%d %d\n", temp.Face_to_Left, this->Face_to_Left);
 							if (fall < 35) {			// 擊飛
-								if (temp.Face_to_Left != this->Face_to_Left) {
+								if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
 									toMotion(180);
 								}
 								else {
@@ -463,7 +477,7 @@ namespace game_framework {
 								toMotion(226);
 							}
 							else if (fall < 60) {		// 被打到第二下
-								if (temp.Face_to_Left != this->Face_to_Left) {
+								if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
 									toMotion(222);
 								}
 								else {
@@ -473,7 +487,7 @@ namespace game_framework {
 							else {						// 被打到第一下
 								toMotion(220);
 							}
-							if (temp.Face_to_Left) {
+							if ((*(*(all + i))).Face_to_Left) {
 								_x -= tempf._i.getDvx();
 							}
 							else {
@@ -483,8 +497,23 @@ namespace game_framework {
 					}
 					break;
 				}
+				case 1: {
+					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
+						if ((*Frams)[_mode]._state == 16) {
+							inMotion = true;
+							(*(all + i))->inMotion = true;
+
+							(*(all + i))->_mode = tempf._i.getCatching();
+							(*(all + i))->Caught = this;
+							this->_mode = tempf._i.getCaught();
+
+							Face_to_Left = !(*(all + i))->Face_to_Left;
+						}
+					}
+					break;
+				}
 				case 6: {
-					if (touch(tempf._i, temp.Face_to_Left, temp._x, temp._y, temp._z)) {
+					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
 						useSupperAtt = true;
 					}
 					break;
@@ -573,6 +602,22 @@ namespace game_framework {
 			}
 			break;
 		}
+		
+		case 9: {
+			int cx;
+			int cy  = (*(Caught->Frams))[_mode]._cp.getY();
+			bool cf = Caught->Face_to_Left;
+
+			if (cf) { cx = 79 - (*(Caught->Frams))[_mode]._cp.getX(); }
+			else { cx = (*(Caught->Frams))[_mode]._cp.getX(); }
+
+
+			
+			break;
+		}
+		case 10: {
+
+		}
 		default: {
 			if (_y > 0) {
 				_y = 0;
@@ -596,8 +641,6 @@ namespace game_framework {
 
 		CountDown();
 		Count();
-
-
 	}
 	
 	//人物顯示

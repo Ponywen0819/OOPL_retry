@@ -395,8 +395,8 @@ void CGameStateRun::OnShow() {
 	pDC->SetBkColor(RGB(0, 0, 0));
 	pDC->SetTextColor(RGB(255, 255, 0));
 	char str[500];								// Demo 數字對字串的轉換
-	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d"
-		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext());
+	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d state: %d"
+		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext(),Man[0].getState());
 	pDC->TextOut(0, 50, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();

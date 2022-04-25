@@ -15,6 +15,8 @@ namespace game_framework {
 			_vrest = 0;
 			_bdefend = 0;
 			_injury = 0;
+			_catchingact = 0;
+			_caughtact = 0;
 		}
 		itr(int kind, int x, int y, int w, int h, int z_width,
 			int dvx, int dvy, int fall, int vrest, int arest,int bdefend, int injury, int effect,int catchingact,int caughtact) :
@@ -35,6 +37,8 @@ namespace game_framework {
 			_bdefend = ii._bdefend;
 			_injury = ii._injury;
 			_effect = ii._effect;
+			_catchingact = ii._catchingact;
+			_caughtact = ii._caughtact;
 		}
 
 		itr& operator=(const itr& ii) {
@@ -52,6 +56,8 @@ namespace game_framework {
 				_bdefend = ii._bdefend;
 				_injury = ii._injury;
 				_effect = ii._effect;
+				_catchingact = ii._catchingact;
+				_caughtact = ii._caughtact;
 			}
 
 			return *this;
@@ -69,7 +75,9 @@ namespace game_framework {
 		int getFall() { return _fall; }
 		int getVrest() { return _vrest; }
 		int getBdefend() { return _bdefend; }
-		int  getInjury() { return _injury; }
+		int getInjury() { return _injury; }
+		int getCatching() { return _catchingact; }
+		int getCaught() {return _caughtact;}
 
 	private:
 		int _kind;

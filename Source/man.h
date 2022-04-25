@@ -21,18 +21,32 @@ namespace game_framework {
 			beatenList = nullptr;
 			numOfBeaten = 0;
 			Face_to_Left = true;
+			inMotion = false;
+			Caught = nullptr;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
 		}
 		~obj() {
-			delete beatenCount;
-			delete beatenCount;
+			if (beatenCount != nullptr) {
+				delete beatenCount;
+			}
+			if (beatenList != nullptr) {
+				delete beatenList;
+			}
 		}
 
 		obj& operator=(const obj& o) {
 			if (this != &o) {
-				Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
+				Frams = o.Frams; 
+				_mode = o._mode; 
+				_x = o._x; 
+				_y = o._y; 
+				_z = o._z; 
+				Face_to_Left = o.Face_to_Left;
+				beatenList = o.beatenList;
+				beatenCount = o.beatenCount;
+
 			}
 			return *this;
 		}
@@ -96,14 +110,16 @@ namespace game_framework {
 		void bcount();
 		void del(int n);
 
+		bool	inMotion;			// 是否在特殊動作裡
 		std::map<int, Frame> *Frams;
-		int		_mode;				//現在的模式
-		double	_x, _y, _z;			//現在的位置
+		int		_mode;				// 現在的模式
+		double	_x, _y, _z;			// 現在的位置
 		bool	Face_to_Left;		// 面相方向
+		obj*	Caught;				// 被抓住的人
 
-		obj**	beatenList;			//被打到的人
-		int*	beatenCount;		//多久之後才可以再打一次
-		int		numOfBeaten;		//有多少人被打到
+		obj**	beatenList;			// 被打到的人
+		int*	beatenCount;		// 多久之後才可以再打一次
+		int		numOfBeaten;		// 有多少人被打到
 	};
 
 
@@ -131,6 +147,7 @@ namespace game_framework {
 		~man() {
 
 		}
+		
 		// 設定初始庫
 		void	init(Bitmaplib *l, man *m, int n,CStateBar *state, std::map<int, Frame> *f);		
 
@@ -148,7 +165,6 @@ namespace game_framework {
 		void	OnMove();							// 改變位置
 		void	onShow();							// 顯示
 
-		
 		void	setCH(int ch) {						//設定是哪個腳色
 			charector = ch;
 		}
@@ -159,6 +175,7 @@ namespace game_framework {
 		int		gety() { return int(_y); }
 		int		getz() { return int(_z); }
 		int		getNext() { return (*Frams)[_mode]._next; }
+		int		getState() { return (*Frams)[_mode]._state; }
 
 	protected:
 		int		getNextWalkMotion() {
@@ -177,7 +194,7 @@ namespace game_framework {
 			return Walk_Ani_num;
 		}
 		void	adjustPosition(int f_now,int f_next);
-		bool	inMotion;							// 是否在特殊動作裡
+		
 
 		virtual void otherCommand(int n);
 		virtual void readOtherList();
