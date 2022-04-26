@@ -144,8 +144,13 @@ namespace game_framework {
 	}
 
 	void man::nextFrame() {
+		//TRACE("%d\n",cc);
 		//TRACE("next : %d pic : %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic);
 		restList();
+		int ast = (*Frams)[_mode]._i.getArest();
+		if ((*Frams)[_mode]._have_itr && ast!=0) {
+			arestC = ast;
+		}
 		int temp = (*Frams)[_mode]._next;
 		if (temp == 999) {
 			if ( _y < 0) {
@@ -193,13 +198,33 @@ namespace game_framework {
 				break;
 			}
 			case 9: {
-				if (flag[5]) {
-					flag[5] = false;
-					int p = (*Frams)[_mode]._cp.getAaction();
-					adjustPosition(_mode, p);
-					_mode = p;
-					Caught->_mode = (*Frams)[_mode]._cp.getVaction();
-					setTimmer((*Frams)[_mode]._wait);
+				if (cc <= 0) {
+					backToRandon();
+					Caught->_mode = 133;
+				}
+				break;
+			}
+			case 10: {
+				if (_mode >= 133) {
+					if (_mode == 138) {
+						if (_y == 0) {
+							adjustPosition(_mode, 230);
+							_mode = 230;
+							setTimmer((*Frams)[_mode]._wait);
+						}
+					}
+					else if (_mode == 144) {
+						if (_y == 0) {
+							adjustPosition(_mode, 231);
+							_mode = 231;
+							setTimmer((*Frams)[_mode]._wait);
+						}
+					}
+					else {
+						adjustPosition(_mode, _mode + 1);
+						_mode++;
+						setTimmer((*Frams)[_mode]._wait);
+					}
 				}
 				break;
 			}
@@ -255,9 +280,17 @@ namespace game_framework {
 			commandBuffer += '4';
 		}
 
-		if (comm == 5) {commandBuffer += '5';}
+		if (comm == 5) {
+			
+			commandBuffer += '5';
+		}
 
-        if (comm == 6) {commandBuffer += '6';}
+        if (comm == 6) {
+			if (arestC > 0) {
+				flag[5] = false;
+			}
+			commandBuffer += '6';
+		}
 
 		if (comm == 7) {commandBuffer += '7';}
 		
@@ -442,7 +475,28 @@ namespace game_framework {
 			}
 			break;
 		}
-		
+		case 9: {
+			if (flag[0]) {
+				if (!Face_to_Left) {
+					backToRandon();
+					Caught->_mode = 133;
+				}
+			}
+			else if (flag[1]) {
+				if (Face_to_Left) {
+					backToRandon();
+					Caught->_mode = 133;
+				}
+			}
+			else if (flag[5]) {
+				flag[5] = false;
+				int p = (*Frams)[_mode]._cp.getAaction();
+				adjustPosition(_mode, p);
+				_mode = p;
+				Caught->_mode = (*Frams)[_mode]._cp.getVaction();
+				setTimmer((*Frams)[_mode]._wait);
+			}
+		}
 		default:
 			break;
 		}
@@ -455,6 +509,11 @@ namespace game_framework {
 			}
 			int mode = (*(*(all + i)))._mode;
 			Frame tempf = (*((*(*(all + i))).Frams))[mode];
+			TRACE("%d\n", (*(all + i))->arestC);
+			if ((*(all + i))->arestC > 0) {
+				TRACE("aaa");
+				continue;
+			}
 			if(tempf._have_itr){				// 這個東西具有攻擊性
 				switch (tempf._i.getKind()) {
 				case 0: {
@@ -463,8 +522,6 @@ namespace game_framework {
 							int fa = tempf._i.getFall();
 							if (fa == 0) { fall -= 18; }
 							else { fall -= fa; }
-							//TRACE("%d %.1f\n", fa, fall);
-							//TRACE("%d %d\n", temp.Face_to_Left, this->Face_to_Left);
 							if (fall < 35) {			// 擊飛
 								if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
 									toMotion(180);
@@ -472,6 +529,8 @@ namespace game_framework {
 								else {
 									toMotion(186);
 								}
+								time = (*Frams)[_mode]._wait;
+								fall = 100;
 							}
 							else if (fall < 55) {		// 暈眩
 								toMotion(226);
@@ -493,13 +552,15 @@ namespace game_framework {
 							else {
 								_x += tempf._i.getDvx();
 							}
+
+							(*(all + i))->addBeaten(this);
 						}
 					}
 					break;
 				}
 				case 1: {
 					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
-						if ((*Frams)[_mode]._state == 16) {
+						if ((*Frams)[_mode]._state == 16 ) {
 							inMotion = true;
 							(*(all + i))->inMotion = true;
 
@@ -508,6 +569,7 @@ namespace game_framework {
 							this->_mode = tempf._i.getCaught();
 
 							Face_to_Left = !(*(all + i))->Face_to_Left;
+							(*(all + i))->cc = 301;
 						}
 					}
 					break;
@@ -522,7 +584,6 @@ namespace game_framework {
 					break;
 				}
 				}
-				(*(all + i))->addBeaten(this);
 			}
 		}
 	}
@@ -530,13 +591,14 @@ namespace game_framework {
 	//人物狀態更新
 
 	void man::OnMove() {
-
-		int stateNow = (*Frams)[_mode]._state;
-		int nextF = (*Frams)[_mode]._next;
-		// 負責動作變更
+		//TRACE("%d\n",arestC);
 		if (isTime()) {
 			nextFrame();
 		}
+		int stateNow = (*Frams)[_mode]._state;
+		int nextF = (*Frams)[_mode]._next;
+		// 負責動作變更
+		
 		moveY();
 		// 負責位置的調整
 		switch (stateNow) {
@@ -604,19 +666,18 @@ namespace game_framework {
 		}
 		
 		case 9: {
-			int cx;
-			int cy  = (*(Caught->Frams))[_mode]._cp.getY();
-			bool cf = Caught->Face_to_Left;
+			if (Face_to_Left) {
+				Caught->_x = this->_x + 79 - (*Frams)[_mode]._cp.getX() - (*(Caught->Frams))[Caught->_mode]._cp.getX();
+			}
+			else {
+				Caught->_x = this->_x +(*Frams)[_mode]._cp.getX() + (*(Caught->Frams))[Caught->_mode]._cp.getX() -79;
+			}
 
-			if (cf) { cx = 79 - (*(Caught->Frams))[_mode]._cp.getX(); }
-			else { cx = (*(Caught->Frams))[_mode]._cp.getX(); }
-
-
-			
+			cc += (*Frams)[_mode]._cp.getDecrese();
 			break;
 		}
 		case 10: {
-
+			break;
 		}
 		default: {
 			if (_y > 0) {

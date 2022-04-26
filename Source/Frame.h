@@ -13,6 +13,7 @@ namespace game_framework {
 			_dvx = _dvy = 0;
 			_fall = 0;
 			_vrest = 0;
+			_arest = 0;
 			_bdefend = 0;
 			_injury = 0;
 			_catchingact = 0;
@@ -34,6 +35,7 @@ namespace game_framework {
 			_dvy = ii._dvy;
 			_fall = ii._fall;
 			_vrest = ii._vrest;
+			_arest = ii._arest;
 			_bdefend = ii._bdefend;
 			_injury = ii._injury;
 			_effect = ii._effect;
@@ -53,6 +55,7 @@ namespace game_framework {
 				_dvy = ii._dvy;
 				_fall = ii._fall;
 				_vrest = ii._vrest;
+				_arest = ii._arest;
 				_bdefend = ii._bdefend;
 				_injury = ii._injury;
 				_effect = ii._effect;
@@ -74,6 +77,7 @@ namespace game_framework {
 		int getDvy() { return _dvy; }
 		int getFall() { return _fall; }
 		int getVrest() { return _vrest; }
+		int getArest() { return _arest; }
 		int getBdefend() { return _bdefend; }
 		int getInjury() { return _injury; }
 		int getCatching() { return _catchingact; }

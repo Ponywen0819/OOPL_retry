@@ -23,6 +23,7 @@ namespace game_framework {
 			Face_to_Left = true;
 			inMotion = false;
 			Caught = nullptr;
+			arestC = 0;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
@@ -120,6 +121,10 @@ namespace game_framework {
 		obj**	beatenList;			// 被打到的人
 		int*	beatenCount;		// 多久之後才可以再打一次
 		int		numOfBeaten;		// 有多少人被打到
+		
+		int		cc;					//抓人計數
+		int		time;				// 計數
+		int		arestC;				//多久之後才可以打人
 	};
 
 
@@ -225,6 +230,7 @@ namespace game_framework {
 		// 計數器
 		void setTimmer(int t) { time = t; }
 		void Count() {
+			if (arestC > 0)arestC--;
 			if (fall < 100)fall ++;
 			else if (fall < 45) fall = 45;
 			if (time > 0) time--;
@@ -250,7 +256,7 @@ namespace game_framework {
 		int		charector;							// 選擇之腳色
 		int		_Double_Tap_Gap;					// 連點間隔
 		int		NumOfMan;							// 在場上的人
-		int		time;								// 計數
+		
 
 		bool	useSupperAtt;						// 可以使用終結季
 		bool	JumpUp, JumpDown,JumpFront,JumpBack;			// 斜跳
