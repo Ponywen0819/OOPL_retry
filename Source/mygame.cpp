@@ -370,13 +370,9 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
 	
 }
 
-<<<<<<< HEAD
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
-{
-=======
+
 // 處理滑鼠的動作
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	{
->>>>>>> c0bf2c167e210dc2024b295f7420888f6dac9a5e
 	
 }
 
@@ -398,14 +394,9 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 
 // 顯示
 void CGameStateRun::OnShow() {
-<<<<<<< HEAD
 
-	
 	lf.showmap(pos);
-	
-	
-=======
->>>>>>> c0bf2c167e210dc2024b295f7420888f6dac9a5e
+
 	Man[0].onShow();
 	Man[1].onShow();
 	skills.onShow();
