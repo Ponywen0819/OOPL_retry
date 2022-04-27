@@ -19,44 +19,66 @@ namespace game_framework {
 		std::string path;
 		for (int i = 0; i < 140; i++) {
 			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(i) + ".bmp";
-			pic[0][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			tempPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 		for (int i = 0; i < 140; i++) {
 			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(140+i) + ".bmp";
-			pic[0][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			tempPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 
-		for (int i = 0; i < 140; i++) {
+		for (int i = 0; i < 190; i++) {
 			path = ".\\Bitmaps\\firen\\" + std::to_string(i) + ".bmp";
-			pic[1][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			FirenPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
-		for (int i = 0; i < 140; i++) {
-			path = ".\\Bitmaps\\firen\\" + std::to_string(140 + i) + ".bmp";
-			pic[1][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		for (int i = 0; i < 190; i++) {
+			path = ".\\Bitmaps\\firen\\" + std::to_string(190 + i) + ".bmp";
+			FirenPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 
-		for (int i = 0; i < 140; i++) {
+		for (int i = 0; i < 180; i++) {
 			path = ".\\Bitmaps\\deep\\" + std::to_string(i) + ".bmp";
-			pic[2][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			DeepPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
-		for (int i = 0; i < 140; i++) {
-			path = ".\\Bitmaps\\deep\\" + std::to_string(140 + i) + ".bmp";
-			pic[2][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		for (int i = 0; i < 180; i++) {
+			path = ".\\Bitmaps\\deep\\" + std::to_string(180 + i) + ".bmp";
+			DeepPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 
-		for (int i = 0; i < 140; i++) {
+		for (int i = 0; i < 170; i++) {
 			path = ".\\Bitmaps\\freeze\\" + std::to_string(i) + ".bmp";
-			pic[3][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			FreezePic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
-		for (int i = 0; i < 140; i++) {
-			path = ".\\Bitmaps\\freeze\\" + std::to_string(140 + i) + ".bmp";
-			pic[3][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		for (int i = 0; i < 170; i++) {
+			path = ".\\Bitmaps\\freeze\\" + std::to_string(170 + i) + ".bmp";
+			FreezePic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 	}
 
 	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
-		pic[ch][index][n].SetTopLeft(x, y);
-		pic[ch][index][n].ShowBitmap();
+		switch (ch){
+		case 0: {
+			tempPic[index][n].SetTopLeft(x, y);
+			tempPic[index][n].ShowBitmap();
+			break;
+		}
+		case 1: {
+			FirenPic[index][n].SetTopLeft(x, y);
+			FirenPic[index][n].ShowBitmap();
+			break;
+		}
+		case 2: {
+			DeepPic[index][n].SetTopLeft(x, y);
+			DeepPic[index][n].ShowBitmap();
+			break;
+		}
+		case 3: {
+			FreezePic[index][n].SetTopLeft(x, y);
+			FreezePic[index][n].ShowBitmap();
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	void Framelib::init() {

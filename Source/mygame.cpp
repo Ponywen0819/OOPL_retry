@@ -254,7 +254,10 @@ CGameStateRun::~CGameStateRun(){
 void CGameStateRun::OnBeginState(){
 	Man[0].setInitPosotion(300, 450);
 	Man[1].setInitPosotion(550, 450);
-	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(0));
+	Man[0].setCH(3);
+	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(3));
+	
+	Man[1].setCH(0);
 	Man[1].init(&Blib, Man,2,&bar,Flib.getFrame(0));
 }	
 
@@ -262,9 +265,6 @@ void CGameStateRun::OnMove(){
 	skills.check();
 	Man[0].OnMove();
 	Man[1].OnMove();
-	for (int i = 0; i < 2; i++) {
-		
-	}
 	skills.onMove();
 }
 
