@@ -303,7 +303,7 @@ namespace game_framework {
 
 	class objCreater {
 	public:
-		weaponCreater() {
+		objCreater() {
 
 		}
 
