@@ -116,7 +116,6 @@ namespace game_framework {
 			else setPostion(x + 59, y + 35, z);
 		}
 		lib = l;
-		_ani.init(l);
 		addBitmap(0);
 		setLastTime(15);
 	}
@@ -127,7 +126,6 @@ namespace game_framework {
 	}
 	
 	void punch::addBitmap(int i) {
-		_ani.addBitmap(i);
 	}
 	void punch::onMove() {
 		last();

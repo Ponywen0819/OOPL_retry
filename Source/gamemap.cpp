@@ -39,7 +39,7 @@ namespace game_framework {
 		else {
 			move_pixel_right = 0;
 		}
-		TRACE("!!!%.3f %.3f %.3f %d %.3f\n",  move_pixel_right, layer_dis, layer_width, back_ground.Width(), temp);
+		// TRACE("!!!%.3f %.3f %.3f %d %.3f\n",  move_pixel_right, layer_dis, layer_width, back_ground.Width(), temp);
 	}
 	void gamemap::onShow() {
 
@@ -51,7 +51,7 @@ namespace game_framework {
 				_x--;
 				move_pixel_right += temp;
 				move_pixel_left += temp;
-				TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
+				// TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace game_framework {
 			if (move_pixel_right < temp * (layer_dis - 1)) {
 				move_pixel_right += temp;
 				move_pixel_left += temp;
-				TRACE("%d %d\n", man_position, move_pixel_right);
+				// TRACE("%d %d\n", man_position, move_pixel_right);
 			}
 		}
 

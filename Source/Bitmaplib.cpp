@@ -4,190 +4,162 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
-#include "Bitmaplib.h"
 #include <string>
+#include <map>
+#include "Frame.h"
+#include <fstream>
+#include <sstream>
+#include "Bitmaplib.h"
 
 namespace game_framework {
 
 	Bitmaplib::Bitmaplib() {}
 
 	void Bitmaplib::LoadBitmap() {
-		punch.LoadBitmap(".\\Bitmaps\\punch.bmp",RGB(0,0,0));
-		beaten1[0][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\0.bmp", RGB(0, 0, 0));
-		beaten1[1][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\0.bmp", RGB(0, 0, 0));
-
-		beaten1[0][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\1.bmp", RGB(0, 0, 0));
-		beaten1[1][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\1.bmp", RGB(0, 0, 0));
-
-		dizzy[0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\2.bmp", RGB(0, 0, 0));
-		dizzy[1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\2.bmp", RGB(0, 0, 0));
-
-		beatenR2[0][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\3.bmp", RGB(0, 0, 0));
-		beatenR2[1][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\3.bmp", RGB(0, 0, 0));
-
-		beatenR2[0][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\4.bmp", RGB(0, 0, 0));
-		beatenR2[1][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\4.bmp", RGB(0, 0, 0));
-
-		beatenL2[0][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\5.bmp", RGB(0, 0, 0));
-		beatenL2[1][0].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\5.bmp", RGB(0, 0, 0));
-		
-		beatenL2[0][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\L\\6.bmp", RGB(0, 0, 0));
-		beatenL2[1][1].LoadBitmap(".\\Bitmaps\\temp\\beaten\\R\\6.bmp", RGB(0, 0, 0));
-		
-		super_att[0][0].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\0.bmp", RGB(0, 0, 0));
-		super_att[1][0].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\0.bmp", RGB(0, 0, 0));
-
-		super_att[0][1].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\1.bmp", RGB(0, 0, 0));
-		super_att[1][1].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\1.bmp", RGB(0, 0, 0));
-
-		super_att[0][2].LoadBitmap(".\\Bitmaps\\temp\\super_att\\L\\2.bmp", RGB(0, 0, 0));
-		super_att[1][2].LoadBitmap(".\\Bitmaps\\temp\\super_att\\R\\2.bmp", RGB(0, 0, 0));
-
-		falling[0][ 0].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\0.bmp", RGB(0, 0, 0));
-		falling[0][ 1].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\1.bmp", RGB(0, 0, 0));
-		falling[0][ 2].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\2.bmp", RGB(0, 0, 0));
-		falling[0][ 3].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\3.bmp", RGB(0, 0, 0));
-		falling[0][ 4].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\4.bmp", RGB(0, 0, 0));
-		falling[0][ 5].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\5.bmp", RGB(0, 0, 0));
-		falling[0][ 6].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\6.bmp", RGB(0, 0, 0));
-		falling[0][ 7].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\7.bmp", RGB(0, 0, 0));
-		falling[0][ 8].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\8.bmp", RGB(0, 0, 0));
-		falling[0][ 9].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\9.bmp", RGB(0, 0, 0));
-		falling[0][10].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\10.bmp", RGB(0, 0, 0));
-		falling[0][11].LoadBitmap(".\\Bitmaps\\temp\\fall\\L\\11.bmp", RGB(0, 0, 0));
-		
-		falling[1][ 0].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\0.bmp", RGB(0, 0, 0));
-		falling[1][ 1].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\1.bmp", RGB(0, 0, 0));
-		falling[1][ 2].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\2.bmp", RGB(0, 0, 0));
-		falling[1][ 3].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\3.bmp", RGB(0, 0, 0));
-		falling[1][ 4].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\4.bmp", RGB(0, 0, 0));
-		falling[1][ 5].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\5.bmp", RGB(0, 0, 0));
-		falling[1][ 6].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\6.bmp", RGB(0, 0, 0));
-		falling[1][ 7].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\7.bmp", RGB(0, 0, 0));
-		falling[1][ 8].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\8.bmp", RGB(0, 0, 0));
-		falling[1][ 9].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\9.bmp", RGB(0, 0, 0));
-		falling[1][10].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\10.bmp", RGB(0, 0, 0));
-		falling[1][11].LoadBitmap(".\\Bitmaps\\temp\\fall\\R\\11.bmp", RGB(0, 0, 0));
-		
 		std::string path;
 		for (int i = 0; i < 140; i++) {
 			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(i) + ".bmp";
-			pic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			pic[0][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 		for (int i = 0; i < 140; i++) {
 			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(140+i) + ".bmp";
-			pic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+			pic[0][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\firen\\" + std::to_string(i) + ".bmp";
+			pic[1][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\firen\\" + std::to_string(140 + i) + ".bmp";
+			pic[1][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\deep\\" + std::to_string(i) + ".bmp";
+			pic[2][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\deep\\" + std::to_string(140 + i) + ".bmp";
+			pic[2][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\freeze\\" + std::to_string(i) + ".bmp";
+			pic[3][1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\freeze\\" + std::to_string(140 + i) + ".bmp";
+			pic[3][0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 	}
 
-	void Bitmaplib::selectByNum(int n, int index, int x, int y) {
-		pic[index][n].SetTopLeft(x, y);
-		pic[index][n].ShowBitmap();
+	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
+		pic[ch][index][n].SetTopLeft(x, y);
+		pic[ch][index][n].ShowBitmap();
 	}
 
-	void Bitmaplib::showBynumber(int i, int x, int y) {
-		switch (i) {
-		case 0:
-			punch.SetTopLeft(x, y);
-			punch.ShowBitmap();
-			break;
-		default:
-			break;
+	void Framelib::init() {
+		loadFrame();
+	}
+
+	int* Framelib::extra(std::string &line, std::string *tar, int number) {
+		int *value = new int[number];
+		for (int i = 0; i < number; i++)	value[i] = 0;
+		for (int i = 0; i < number; i++) {
+			unsigned int temp = 0;
+			temp = line.find(tar[i], temp);
+			if (temp != std::string::npos) {
+				temp += tar[i].length() + 2;
+				std::string temp_id = "";
+				while (line[temp] != ' ' && (temp < line.size())) {
+					temp_id += line[temp++];
+				}
+				value[i] = std::stoi(temp_id);
+			}
 		}
+		return value;
 	}
 
-	void Bitmaplib::setPunchTopLeft(int x, int y) {
-		punch.SetTopLeft(x, y);
-	}
+	void Framelib::loadFrame() {
+		std::string path[4] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt" };
+		for (int ch = 0; ch < 4; ch++) {
+			std::ifstream ifs(path[ch].c_str(), std::ios::in);
+			if (!ifs.is_open()) {
+				TRACE("Failed to open file.");
+			}
+			else {
+				std::string s;
+				while (std::getline(ifs, s)) {
+					if (s.substr(0, 7) == "<frame>") {
+						Frame a;
+						int b = 8;
+						std::string id = "";
+						while (s[b] != ' ') {
+							id += s[b++];
+						}
+						a._id = std::stoi(id);
+						std::getline(ifs, s);
+						std::string g[10] = { "pic","state","wait","next","dvx","dvy","centerx","centery","sound","mp" };
+						int *temp_basic = extra(s, g, 10);
+						a.setBasic(temp_basic); 
 
-	void Bitmaplib::showPunch() {
-		punch.ShowBitmap();
-	}
+						std::getline(ifs, s);       //換下一行
+						while (s != "<frame_end>") {
+							if (s == "   wpoint:") {
+								std::getline(ifs, s);
+								std::string w[8] = { "x","y","weaponact","attacking","cover","dvx","dvy","dvz" };
 
-	void Bitmaplib::setbeatenTopLeft(int step, bool FaceToLeft, int index,int x,int y) {
-		int f;
-		if (FaceToLeft) f = 0;
-		else f = 0;
+								a.setWpoint(extra(s, w, 8));
+							}
+							else if (s == "   bdy:") {
+								std::getline(ifs, s);
+								std::string btar[4] = { "x","y","w","h" };
 
-		switch (step) {
-		case 0:				// 被打第一下
-			beaten1[f][index].SetTopLeft(x, y);
-			break;
-		case 1:				// 被右邊打
-			beatenR2[f][index].SetTopLeft(x, y);
-			break;
-		case 2:				// 被左邊打
-			beatenL2[f][index].SetTopLeft(x, y);
-			break;
-		case 3:
-			dizzy[f].SetTopLeft(x, y);
-			break;
+								a.addBody(extra(s, btar, 4));
+							}
+							else if (s == "   itr:") {
+								std::getline(ifs, s);
+								std::string btar[16] = { "kind","x","y","w","h","z_width","dvx","dvy","fall","vrest","arest"
+									,"bdefend","injury","effect","catchingact","caughtact" };
+								a.setItr(extra(s, btar, 16));
+							}
+							else if (s == "   opoint:") {
+								std::getline(ifs, s);
+								std::string btar[6] = { "kind","x","y","action","oid","facing" };
+								a.setOpoint(extra(s, btar, 6));
+							}
+							else if (s == "   cpoint:") {
+								std::getline(ifs, s);
+								std::string btar[12] = { "kind","x","y","vaction","aaction","taction"
+								,"hurtable","throwx","throwy","throwz","throwinjury","decrease" };
+								a.setCpoint(extra(s, btar, 12));
+							}
+							std::getline(ifs, s);       //換下一行
+						}
+						switch (ch){
+						case 0: {
+							Frams_t[a._id] = a;
+							break;
+						}
+						case 1: {
+							Frams_firen[a._id] = a;
+							break;
+						}
+						case 2: {
+							Frams_deep[a._id] = a;
+							break;
+						}
+						case 3: {
+							Frams_freeze[a._id] = a;
+							break;
+						}
+						}
+					}
+				}
+				ifs.close();
+			}
+			ifs.close();
 		}
-	}
-	void Bitmaplib::showBeaten(int step,bool FaceToLeft, int index) {
-		int f;
-		if (FaceToLeft) f = 0;
-		else f = 0;
-
-		switch (step) {
-		case 0:				// 被打第一下
-			beaten1[f][index].ShowBitmap();
-			break;
-		case 1:				// 被右邊打
-			beatenR2[f][index].ShowBitmap();
-			break;
-		case 2:				// 被左邊打
-			beatenL2[f][index].ShowBitmap();
-			break;
-		case 3:
-			dizzy[f].ShowBitmap();
-			break;
-		}
-	}
-
-	void Bitmaplib::setSuper_attTopLeft(int f, int index, int x, int y){
-		super_att[f][index].SetTopLeft(x, y);
-	}
-	void Bitmaplib::showSuper_att(int f, int index) {
-		super_att[f][index].ShowBitmap();
-	}
-
-	void Bitmaplib::Falling(int step, int FaceToLeft, int index, int x, int y) {
-		if (step == 0) {		// 被右邊打
-			falling[FaceToLeft][index].SetTopLeft(x, y);
-			falling[FaceToLeft][index].ShowBitmap();
-		}
-		else{
-			falling[FaceToLeft][index+6].SetTopLeft(x, y);
-			falling[FaceToLeft][index + 6].ShowBitmap();
-		}
-	}
-	
-
-
-	PAnimation::PAnimation(Bitmaplib *l) :num{ 0 }, index{ 0 }, lib{ l }{}
-
-	void PAnimation::addBitmap(int i) {
-		//TRACE("skills add %d\n", i);
-		bitmapnumbers.push_back(i);
-		num++;
-		index = 0;
-	}
-	
-	void PAnimation::setTopLeft(int x,int y) {
-		_x = x; _y = y;
-	}
-
-	void PAnimation::onMove() {
-		index = (index + 1);
-		if (index >= num) {
-			index = 0;
-		}
-	}
-
-	void PAnimation::onShow() {
-		//TRACE("%d\n",index);
-		int n = bitmapnumbers.at(index);
-		lib->showBynumber(n, _x, _y);
 	}
 }
