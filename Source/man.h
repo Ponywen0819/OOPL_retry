@@ -298,8 +298,20 @@ namespace game_framework {
 	private:
 		man*	holding;		//誰再拿他
 		bool	IsHolding;		//有被拾取
-
 		int hp;
 	};
 
+	class objCreater {
+	public:
+		objCreater() {
+
+		}
+
+
+	private:
+
+
+
+
+	};
 }

@@ -8,7 +8,11 @@ namespace game_framework {
 
 		void selectByNum(int ch, int n,int index,int x, int y);
 	private:
-		CMovingBitmap pic[4][2][140];	//人物的圖片
+		CMovingBitmap tempPic[2][140];	//人物的圖片
+		CMovingBitmap FirenPic[2][190];	//人物的圖片
+		CMovingBitmap DeepPic[2][180];	//人物的圖片
+		CMovingBitmap FreezePic[2][170];	//人物的圖片
+
 		CMovingBitmap weapon[2][35];	//球棒的圖片
 	};
 
@@ -23,15 +27,19 @@ namespace game_framework {
 			switch (n){
 			case 0: {
 				return &Frams_t; 
+				break;
 			}
 			case 1: {
 				return &Frams_firen; 
+				break;
 			}
 			case 2: {
 				return &Frams_deep; 
+				break;
 			}
 			default: {
 				return &Frams_freeze; 
+				break;
 			}
 			}
 		}

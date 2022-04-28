@@ -145,7 +145,7 @@ namespace game_framework {
 
 	void man::nextFrame() {
 		//TRACE("%d\n",cc);
-		//TRACE("next : %d pic : %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic);
+		//TRACE("next : %d pic : %d %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic,_mode);
 		restList();
 		int ast = (*Frams)[_mode]._i.getArest();
 		if ((*Frams)[_mode]._have_itr && ast!=0) {
@@ -167,6 +167,7 @@ namespace game_framework {
 			_mode = temp;
 			setTimmer((*Frams)[_mode]._wait);
 			if ((*Frams)[_mode]._state == 9) {
+				//TRACE("%d\n", (*Frams)[_mode]._cp.getVaction());
 				Caught->_mode = (*Frams)[_mode]._cp.getVaction();
 			}
 		}
@@ -509,9 +510,9 @@ namespace game_framework {
 			}
 			int mode = (*(*(all + i)))._mode;
 			Frame tempf = (*((*(*(all + i))).Frams))[mode];
-			TRACE("%d\n", (*(all + i))->arestC);
+			//TRACE("%d\n", (*(all + i))->arestC);
 			if ((*(all + i))->arestC > 0) {
-				TRACE("aaa");
+				//TRACE("aaa");
 				continue;
 			}
 			if(tempf._have_itr){				// 這個東西具有攻擊性
@@ -710,8 +711,9 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
+		//TRACE("%d %d\n", _mode ,(*Frams)[_mode]._pic);
 		//TRACE("%d\n", (*Frams)[_mode]._pic);
-		lib->selectByNum(0,(*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+		lib->selectByNum(charector,(*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
 	
 		
 	}
