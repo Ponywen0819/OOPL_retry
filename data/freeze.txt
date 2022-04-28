@@ -813,8 +813,7 @@
 <frame_end>
 
 <frame> 123 catching
-   pic: 52  state: 9  wait: 3  next: 121  dvx: 0  dvy: 0  dvz: 0  centerx: 31  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: 14
+   pic: 52  state: 9  wait: 3  next: 121  dvx: 0  dvy: 0  dvz: 0  centerx: 31  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 14
    cpoint:
       kind: 1  x: 58  y: 38 injury: 15  vaction: 132  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 3 
    cpoint_end:

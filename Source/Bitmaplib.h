@@ -27,15 +27,19 @@ namespace game_framework {
 			switch (n){
 			case 0: {
 				return &Frams_t; 
+				break;
 			}
 			case 1: {
 				return &Frams_firen; 
+				break;
 			}
 			case 2: {
 				return &Frams_deep; 
+				break;
 			}
 			default: {
 				return &Frams_freeze; 
+				break;
 			}
 			}
 		}

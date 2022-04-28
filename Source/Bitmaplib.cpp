@@ -105,6 +105,7 @@ namespace game_framework {
 
 	void Framelib::loadFrame() {
 		std::string path[4] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt" };
+		std::map<int, Frame>* f[4] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze};
 		for (int ch = 0; ch < 4; ch++) {
 			std::ifstream ifs(path[ch].c_str(), std::ios::in);
 			if (!ifs.is_open()) {
@@ -159,24 +160,7 @@ namespace game_framework {
 							}
 							std::getline(ifs, s);       //´«¤U¤@¦æ
 						}
-						switch (ch){
-						case 0: {
-							Frams_t[a._id] = a;
-							break;
-						}
-						case 1: {
-							Frams_firen[a._id] = a;
-							break;
-						}
-						case 2: {
-							Frams_deep[a._id] = a;
-							break;
-						}
-						case 3: {
-							Frams_freeze[a._id] = a;
-							break;
-						}
-						}
+						(*(f[ch]))[a._id] = a;
 					}
 				}
 				ifs.close();
