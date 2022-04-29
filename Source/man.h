@@ -56,6 +56,28 @@ namespace game_framework {
 			Frams = f;
 		}
 
+		// 物品各自有自己移動的方式
+		virtual void OnMove() = 0;
+		virtual void OnShow() = 0;
+
+		// 動作更新函式
+		virtual void backToRandon() =0;	
+		virtual void toMotion(int next) =0;	
+		virtual void nextFrame() =0;
+
+		// 鍵盤動作
+		virtual void	setComm(UINT comm) {}			// 設定指令
+		virtual void	cComm(UINT comm) {}				// 取消指令					
+
+		// init
+		void init(Bitmaplib *l,obj** a,int n, std::map<int, Frame> *f) {
+			Frams = f;
+			this->all = a;
+			numOfObj = n;
+			lib = l;
+		}
+
+
 		bool touch(itr i,bool _Face_to_left, double x, double y, double z) {
 			// 攻擊作用範圍
 			double Lx, Ly, Rx, Ry;
@@ -94,6 +116,7 @@ namespace game_framework {
 				double min_y = _Ly > Ly ? _Ly : Ly;
 				double max_x = _Rx < Rx ? _Rx : Rx;
 				double max_y = _Ry < Ry ? _Ry : Ry;
+				//TRACE("%.1f %.1f %.1f %.1f\n", min_x, min_y, max_x, max_y);
 				if (min_x > max_x || min_y > max_y) {
 					continue;
 				}
@@ -104,29 +127,31 @@ namespace game_framework {
 			return false;
 		}
 
+		//不重要
 		void addBeaten(obj *who);
-
 		bool checkBeenBeaten(obj *who);
 		void restList();
 		void bcount();
 		void del(int n);
+		
+		std::map<int, Frame> *Frams;
+		obj** all;
+		int numOfObj;
+		Bitmaplib *	lib;			// 圖片輸出
 
 		bool	inMotion;			// 是否在特殊動作裡
-		std::map<int, Frame> *Frams;
 		int		_mode;				// 現在的模式
 		double	_x, _y, _z;			// 現在的位置
 		bool	Face_to_Left;		// 面相方向
-		obj*	Caught;				// 被抓住的人
 
+		obj*	Caught;				// 被抓住的人
 		obj**	beatenList;			// 被打到的人
 		int*	beatenCount;		// 多久之後才可以再打一次
 		int		numOfBeaten;		// 有多少人被打到
-		
-		int		cc;					//抓人計數
+		int		cc;					// 抓人計數
 		int		time;				// 計數
-		int		arestC;				//多久之後才可以打人
+		int		arestC;				// 多久之後才可以打人
 	};
-
 
 	class man:public obj{
 	public:
@@ -149,16 +174,19 @@ namespace game_framework {
 			JumpDown = false;
 			JumpFront = false;
 		}
+		
+		man(int ch) :man() {
+			charector = ch;
+			commandList.push_back("11");
+			commandList.push_back("22");
+		}
 		~man() {
 
-		}
-		
-		// 設定初始庫
-		void	init(Bitmaplib *l, man *m, int n,CStateBar *state, std::map<int, Frame> *f);		
+		}	
 
 		void	getAllObj(obj** a, int n) {
 			all = a;
-			numofobj = n;
+			numOfObj = n;
 		}
 
 		void	setInitPosotion(int x, int y);		// 設定初始位置	
@@ -168,7 +196,7 @@ namespace game_framework {
 
 		void	checkbeenatt();						// 被攻擊偵測
 		void	OnMove();							// 改變位置
-		void	onShow();							// 顯示
+		void	OnShow();							// 顯示
 
 		void	setCH(int ch) {						//設定是哪個腳色
 			charector = ch;
@@ -199,10 +227,6 @@ namespace game_framework {
 			return Walk_Ani_num;
 		}
 		void	adjustPosition(int f_now,int f_next);
-		
-
-		virtual void otherCommand(int n);
-		virtual void readOtherList();
 
 		vector<std::string> commandList;			// 被讀取的指令列表
 		
@@ -227,6 +251,10 @@ namespace game_framework {
 		void specialEvent();
 		void readCommand();
 
+		void backToRandon();						// 回到原始的狀態
+		void toMotion(int next);					// 處發動作
+		void nextFrame();							// 動作中的下一個Frame
+
 		// 計數器
 		void setTimmer(int t) { time = t; }
 		void Count() {
@@ -236,11 +264,6 @@ namespace game_framework {
 			if (time > 0) time--;
 		}
 		bool isTime() { return time == 0; }			
-
-		void backToRandon();						// 回到原始的狀態
-		void toMotion(int next);					// 處發動作
-		void nextFrame();							// 動作中的下一個Frame
-		
 
 		// 指令輸入間隔
 		void setCountDwon();						//連點倒數
@@ -259,7 +282,7 @@ namespace game_framework {
 		
 
 		bool	useSupperAtt;						// 可以使用終結季
-		bool	JumpUp, JumpDown,JumpFront,JumpBack;			// 斜跳
+		bool	JumpUp, JumpDown,JumpFront,JumpBack;// 斜跳
 		bool	jumpType;
 		bool	_dir[4];							// 方向
 		bool	flag[7];							// keyboard input flag
@@ -270,14 +293,6 @@ namespace game_framework {
 			
 		std::string commandBuffer;					// input command buffer
 		
-		obj*	beaten;								//
-
-		Bitmaplib *	lib;							// 圖片輸出
-		CStateBar *	_s;								// 血量條
-		obj **all;									// 場上的物品人物
-		int numofobj;								// 場上的物品人物數量
-		man *		mans;							// 在場上的人	
-		man *		gotCatch;						// 被抓的人
 	};
 
 	class weapon:public obj{
@@ -301,17 +316,27 @@ namespace game_framework {
 		int hp;
 	};
 
-	class objCreater {
+	class ObjContainer {
 	public:
-		objCreater() {
-
+		ObjContainer() {
+			numOfObj = 0;
 		}
+		~ObjContainer() {
+			delete[] all;
+		}
+		void init(int player1,int player2, Bitmaplib *l, Framelib* f);
+		void creatWeapon(int n);
+		void addobj();
 
-
+		void KeyUp(UINT nChar);
+		void KeyDown(UINT nChar);
+		
+		void OnMove();
+		void OnShow();
 	private:
-
-
-
-
+		int		state;				// 使用者選用腳色的形況
+		int		numOfObj;			// 場上所有物品的數量
+		obj**	all;				// 場上所有物品
+		
 	};
 }
