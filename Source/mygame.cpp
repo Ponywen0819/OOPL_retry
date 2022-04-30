@@ -264,7 +264,7 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(33);	
 	Blib.LoadBitmap();
 
-	ShowInitProgress(70);
+	ShowInitProgress(65);
 	Flib.init();
 
 	lf.init();

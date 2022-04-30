@@ -57,26 +57,23 @@ namespace game_framework {
 	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
 		switch (ch){
 		case 0: {
-			tempPic[index][n].SetTopLeft(x, y);
-			tempPic[index][n].ShowBitmap();
-			break;
-		}
-		case 1: {
-			FirenPic[index][n].SetTopLeft(x, y);
-			FirenPic[index][n].ShowBitmap();
-			break;
-		}
-		case 2: {
 			DeepPic[index][n].SetTopLeft(x, y);
 			DeepPic[index][n].ShowBitmap();
 			break;
 		}
-		case 3: {
+		case 1: {
 			FreezePic[index][n].SetTopLeft(x, y);
 			FreezePic[index][n].ShowBitmap();
 			break;
 		}
+		case 2: {
+			FirenPic[index][n].SetTopLeft(x, y);
+			FirenPic[index][n].ShowBitmap();
+			break;
+		}
 		default:
+			tempPic[index][n].SetTopLeft(x, y);
+			tempPic[index][n].ShowBitmap();
 			break;
 		}
 	}
@@ -104,9 +101,10 @@ namespace game_framework {
 	}
 
 	void Framelib::loadFrame() {
-		std::string path[4] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt" };
-		std::map<int, Frame>* f[4] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze};
-		for (int ch = 0; ch < 4; ch++) {
+		std::string path[7] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",
+			".\\data\\freeze.txt",".\\data\\weapon0.txt",".\\data\\weapon1.txt",".\\data\\weapon7.txt" };
+		std::map<int, Frame>* f[7] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze,&Frams_weapon0,&Frams_weapon1,&Frams_weapon7};
+		for (int ch = 0; ch < 7; ch++) {
 			std::ifstream ifs(path[ch].c_str(), std::ios::in);
 			if (!ifs.is_open()) {
 				TRACE("Failed to open file.");

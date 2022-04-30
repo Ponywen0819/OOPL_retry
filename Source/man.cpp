@@ -100,8 +100,6 @@ namespace game_framework {
 
 
 	void man::readCommand() {
-		commandList.push_back("11");
-		commandList.push_back("22");
 	}
 
 	void man::setInitPosotion(int x, int y) {
@@ -132,8 +130,6 @@ namespace game_framework {
 	}
 
 	void man::nextFrame() {
-		//TRACE("%d\n",cc);
-		//TRACE("next : %d pic : %d %d\n", (*Frams)[_mode]._next, (*Frams)[_mode]._pic,_mode);
 		restList();
 		int ast = (*Frams)[_mode]._i.getArest();
 		if ((*Frams)[_mode]._have_itr && ast!=0) {
@@ -141,9 +137,14 @@ namespace game_framework {
 		}
 		int temp = (*Frams)[_mode]._next;
 		if (temp == 999) {
-			if ( _y < 0) {
+			if ((*Frams)[_mode]._state == 7) {
+				if (!flag[6]) {
+					backToRandon();
+				}
+			}
+			else if ( _y < 0) {
 				adjustPosition(_mode, 212);
-				_mode = 212;
+				toMotion(212);
 			}
 			else {
 				adjustPosition(_mode, 0);
@@ -210,7 +211,6 @@ namespace game_framework {
 						setTimmer((*Frams)[_mode]._wait);
 					}
 				}
-				TRACE("\t%d\n", _mode);
 				break;
 			}
 			case 12: {
@@ -244,39 +244,32 @@ namespace game_framework {
 
 	void man::setComm(UINT comm) {
 		flag[comm - 1] = true;
-		if (comm == 2) {
-			flag[0] = false;
-			commandBuffer += '2';
-		}
 
 		if (comm == 1) {
 			flag[1] = false;
-			commandBuffer += '1';
+			commandBuffer += 'L';
 		}
-
-		if (comm == 3) {
+		else if (comm == 2) {
+			flag[0] = false;
+			commandBuffer += 'R';
+		}
+		else if (comm == 3) {
 			flag[3] = false;
-			commandBuffer += '3';
+			commandBuffer += 'U';
 		}
-
-		if (comm == 4) {
+		else if (comm == 4) {
 			flag[2] = false;
-			commandBuffer += '4';
+			commandBuffer += 'D';
 		}
-
-		if (comm == 5) {
-			
-			commandBuffer += '5';
+		else if (comm == 5) {
+			commandBuffer += 'J';
 		}
-
-        if (comm == 6) {
-			if (arestC > 0) {
-				flag[5] = false;
-			}
-			commandBuffer += '6';
+        else if (comm == 6) {
+			commandBuffer += 'A';
 		}
-
-		if (comm == 7) {commandBuffer += '7';}
+		else if (comm == 7) {
+			commandBuffer += 'F';
+		}
 		
 	}
 
@@ -326,27 +319,27 @@ namespace game_framework {
 				setYstep(-16.3, 8.0, 3.0);
 				toMotion(210);
 			}
+			else if (flag[6]) {
+				toMotion(111);
+			}
 		}
+		
 		// 處理移動
 		if (flag[0]) {
-			_dir[0] = true;
-			_dir[1] = false;
+			_dir[0] = true;_dir[1] = false;
 		}
 		else if (flag[1]) {
-			_dir[0] = false;
-			_dir[1] = true;
+			_dir[0] = false;_dir[1] = true;
 		}
 		else {
 			_dir[0] = false; _dir[1] = false;
 		}
 
 		if (flag[2]) {
-			_dir[2] = true;
-			_dir[3] = false;
+			_dir[2] = true;_dir[3] = false;
 		}
 		else if (flag[3]) {
-			_dir[2] = false;
-			_dir[3] = true;
+			_dir[2] = false;_dir[3] = true;
 		}
 		else {
 			_dir[2] = false; _dir[3] = false;
@@ -376,25 +369,49 @@ namespace game_framework {
 		if (inMotion) {
 			return;
 		}
-
 		if (_Double_Tap_Gap <= 0) {
-			setCountDwon();
+			_Double_Tap_Gap = 55;
 			commandBuffer = "";
 		}
 		else{
-			//TRACE("%s\n", commandBuffer.c_str());
-			int index = 0;
-			std::vector<std::string>::iterator i;
-			for (i = commandList.begin(); i != commandList.end(); ++i) {
-				if (*i == commandBuffer) break;
-				index++;
-			}
-			if (index != commandList.size()) {
-				commandBuffer = "";
-				if (index == 0 || index == 1) {
-					toMotion(9);
+			_Double_Tap_Gap--;
+			std::string commandList[] = { "LL","RR","FRA","FRJ","FUJ","FDJ","FDA","FUJA"};
+			// 檢查是否有在技能表裡面
+			bool match = false;
+			for (int i = 0; i < 8; i++) {
+				if (SkillsMotion[i] == -1) continue;
+				else if (commandBuffer == commandList[i]) {
+					if ((*Frams)[_mode]._state <= 1) {
+						TRACE("%d %s\n", (*Frams)[_mode]._state, commandBuffer.c_str());
+						if (i == 0) {
+							if (Face_to_Left) {
+								toMotion(SkillsMotion[i]);
+							}
+						}
+						else if (i == 1) {
+							if (!Face_to_Left) {
+								toMotion(SkillsMotion[i]);
+							}
+						}
+						else {
+							toMotion(SkillsMotion[i]);
+						}
+					}
+					commandBuffer = "";
+				}
+				else {
+					int len = commandBuffer.size();
+					if (commandList[i].substr(0, len) == commandBuffer) {
+						match = true;
+					}
 				}
 			}
+
+			// 如果沒有在技能列表裡面就重置
+			if (!match) {
+				commandBuffer = "";
+			}
+			//TRACE("%s\n", commandBuffer.c_str());
 		}
 
 	}
@@ -676,7 +693,6 @@ namespace game_framework {
 		checkFlag();
 		checkBuff();
 
-		CountDown();
 		Count();
 	}
 	
@@ -700,7 +716,13 @@ namespace game_framework {
 		_Double_Tap_Gap = -1;
 	}
 
+	void weapon::OnShow() {
+
+	}
+
 	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
+		lib = l;
+		fl = f;
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
 			all = new obj*[2];
@@ -1041,10 +1063,12 @@ namespace game_framework {
 	}
 
 	void ObjContainer::creatWeapon(int n) {
+		weapon* temp = new weapon;
+
 
 	}
 
-	void ObjContainer::addobj() {
+	void ObjContainer::addobj(obj* n) {
 
 	}
 }

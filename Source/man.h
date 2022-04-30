@@ -61,9 +61,9 @@ namespace game_framework {
 		virtual void OnShow() = 0;
 
 		// 動作更新函式
-		virtual void backToRandon() =0;	
-		virtual void toMotion(int next) =0;	
-		virtual void nextFrame() =0;
+		virtual void backToRandon() {};
+		virtual void toMotion(int next) {};
+		virtual void nextFrame() {};
 
 		// 鍵盤動作
 		virtual void	setComm(UINT comm) {}			// 設定指令
@@ -164,9 +164,12 @@ namespace game_framework {
 			fall = 100;
 			commandBuffer = "";
 
+			for (int i = 0; i < 8; i++)SkillsMotion[i] = -1;
+			SkillsMotion[0] = SkillsMotion[1] = 9;
 			for (int i = 0; i < 7; i++)	flag[i] = false;
 			for (int i = 0; i < 4; i++)	_dir[i] = false;
 			first_att_animation = true;
+			inSpecialMotion = false;
 			jumpType = false;
 			walk_Ani_dir = true;
 			run_Ani_dir = true;
@@ -177,9 +180,24 @@ namespace game_framework {
 		
 		man(int ch) :man() {
 			charector = ch;
-			commandList.push_back("11");
-			commandList.push_back("22");
+
+			switch (ch){
+			case 1: {
+
+				break;
+			}
+			case 2: {
+				break;
+			}
+			case 3: {
+				break;
+			}
+			default:
+
+				break;
+			}
 		}
+		
 		~man() {
 
 		}	
@@ -228,8 +246,6 @@ namespace game_framework {
 		}
 		void	adjustPosition(int f_now,int f_next);
 
-		vector<std::string> commandList;			// 被讀取的指令列表
-		
 		void setPosotion(int n);
 		void setYstep(double G, double x, double z) {
 			_y += G++; initG = G; stepx = x; stepz = z;
@@ -279,8 +295,9 @@ namespace game_framework {
 		int		charector;							// 選擇之腳色
 		int		_Double_Tap_Gap;					// 連點間隔
 		int		NumOfMan;							// 在場上的人
-		
+		int		SkillsMotion[8];					
 
+		bool	inSpecialMotion;					// 在特殊動作中
 		bool	useSupperAtt;						// 可以使用終結季
 		bool	JumpUp, JumpDown,JumpFront,JumpBack;// 斜跳
 		bool	jumpType;
@@ -299,7 +316,8 @@ namespace game_framework {
 	public:
 		weapon() { _mode = 0; }
 		
-		void init(std::map<int, Frame> *f){
+		void init(std::map<int, Frame> *f,Bitmaplib* b){
+			lib = b;
 			Frams = f;
 			hp = 200;
 		}
@@ -326,7 +344,7 @@ namespace game_framework {
 		}
 		void init(int player1,int player2, Bitmaplib *l, Framelib* f);
 		void creatWeapon(int n);
-		void addobj();
+		void addobj(obj *n);
 
 		void KeyUp(UINT nChar);
 		void KeyDown(UINT nChar);
@@ -337,6 +355,9 @@ namespace game_framework {
 		int		state;				// 使用者選用腳色的形況
 		int		numOfObj;			// 場上所有物品的數量
 		obj**	all;				// 場上所有物品
+
+		Bitmaplib* lib;				
+		Framelib* fl;
 		
 	};
 }
