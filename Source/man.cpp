@@ -287,11 +287,38 @@ namespace game_framework {
 	}
 
 	void man::checkFlag() {
+		
+		
+		bool button_down = false;
+		// 處理移動
+		if (flag[0]) {
+			_dir[0] = true; _dir[1] = false; button_down = true;
+		}
+		else if (flag[1]) {
+			_dir[0] = false;_dir[1] = true; button_down = true;
+		}
+		else {
+			_dir[0] = false; _dir[1] = false;
+		}
+
+		if (flag[2]) {
+			_dir[2] = true;_dir[3] = false; button_down = true;
+		}
+		else if (flag[3]) {
+			_dir[2] = false;_dir[3] = true; button_down = true;
+		}
+		else {
+			_dir[2] = false; _dir[3] = false;
+		}
+
 		if (inMotion) {
 			this->specialEvent();
 		}
 		else {
-			if (flag[5]) {
+			if (button_down) {
+				toMotion(getNextWalkMotion());
+			}
+			else if (flag[5]) {
 				flag[5] = false;
 				if (useSupperAtt) {
 					toMotion(70);
@@ -307,9 +334,9 @@ namespace game_framework {
 			}
 			else if (flag[4]) {
 				flag[4] = false;
-				if (_dir[0]) { JumpBack = true; JumpFront = false;}
-				else if(_dir[1]){ JumpBack = false; JumpFront = true;}
-				else{ JumpBack = false; JumpFront = false; }
+				if (_dir[0]) { JumpBack = true; JumpFront = false; }
+				else if (_dir[1]) { JumpBack = false; JumpFront = true; }
+				else { JumpBack = false; JumpFront = false; }
 
 				if (_dir[2]) { JumpUp = true; }
 				else { JumpUp = false; }
@@ -323,46 +350,6 @@ namespace game_framework {
 				toMotion(111);
 			}
 		}
-		
-		// 處理移動
-		if (flag[0]) {
-			_dir[0] = true;_dir[1] = false;
-		}
-		else if (flag[1]) {
-			_dir[0] = false;_dir[1] = true;
-		}
-		else {
-			_dir[0] = false; _dir[1] = false;
-		}
-
-		if (flag[2]) {
-			_dir[2] = true;_dir[3] = false;
-		}
-		else if (flag[3]) {
-			_dir[2] = false;_dir[3] = true;
-		}
-		else {
-			_dir[2] = false; _dir[3] = false;
-		}
-
-		bool button_down = true;
-		for (int i = 0; i < 4; i++) {
-			if (flag[i]) {
-				button_down = false;
-				break;
-			}
-		}
-		if (button_down) {
-			if ((*Frams)[_mode]._state == 1)
-				backToRandon();
-		}
-		else {
-			if ((*Frams)[_mode]._state == 0) {
-				_mode = getNextWalkMotion();
-				setTimmer(3);
-			}
-		}
-
 	}
 
 	void man::checkBuff() {
@@ -420,7 +407,12 @@ namespace game_framework {
 
 		int stateNow = (*Frams)[_mode]._state;
 		switch (stateNow){
-
+		case 1: {
+			if (flag[6]) {
+				toMotion(102);
+			}
+			break;
+		}
 		case 2: {
 			if (flag[0] && !Face_to_Left) {
 				toMotion(218);
