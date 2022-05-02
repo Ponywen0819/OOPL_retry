@@ -190,9 +190,17 @@ namespace game_framework {
 				break;
 			}
 			case 1: {
+				SkillsMotion[2] = 235;
+				SkillsMotion[3] = 245;
+				SkillsMotion[4] = 260;
+				SkillsMotion[5] = 270;
 				break;
 			}
 			case 2: {
+				SkillsMotion[2] = 235;
+				SkillsMotion[3] = 255;
+				SkillsMotion[4] = 285;
+				SkillsMotion[5] = 267;
 				break;
 			}
 			default:
@@ -262,6 +270,7 @@ namespace game_framework {
 			if (JumpBack) {_x -= stepx;}
 			if (JumpUp) { _z -= stepz; }
 			if (JumpDown) { _z += stepz; }
+
 			if (charector == 0) {
 				if ((initG == 0) && (_mode == 267)) {
 					toMotion(268);

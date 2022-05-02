@@ -180,6 +180,12 @@ namespace game_framework {
 				setTimmer((*Frams)[_mode]._wait);
 				break;
 			}
+			case 3: {
+				if (_mode == 267) {
+					toMotion(268);
+				}
+				break;
+			}
 			case 4: {
 				setTimmer((*Frams)[_mode]._wait);
 				break;
@@ -584,9 +590,11 @@ namespace game_framework {
 		if (isTime()) {
 			nextFrame();
 		}
+		Count();
+
 		int stateNow = (*Frams)[_mode]._state;
 		
-		TRACE("%d %d\n", initG);
+		TRACE("%d %.1f %.1f\n",_mode,initG,_y);
 		// 負責位置的調整
 		moveY();
 		switch (stateNow) {
@@ -632,7 +640,6 @@ namespace game_framework {
 			}
 			else{
 				int dvx = (*Frams)[_mode]._dvx;
-				int dvy = (*Frams)[_mode]._dvy;
 				if (Face_to_Left) { _x -= dvx; }
 				else { _x += dvx; }
 			}
@@ -682,13 +689,13 @@ namespace game_framework {
 		}
 		}
 		
+		
 		useSupperAtt = false;
 		bcount();
 		checkbeenatt();
 		checkFlag();
 		checkBuff();
 
-		Count();
 	}
 	
 	//人物顯示
