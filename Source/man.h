@@ -180,20 +180,22 @@ namespace game_framework {
 		
 		man(int ch) :man() {
 			charector = ch;
-
+			//"LL","RR","FRA","FRJ","FUJ","FDJ","FDA","FUJA"
 			switch (ch){
+			case 0: {
+				SkillsMotion[2] = 235;
+				SkillsMotion[3] = 290;
+				SkillsMotion[4] = 266;
+				SkillsMotion[6] = 260;
+				break;
+			}
 			case 1: {
-
 				break;
 			}
 			case 2: {
 				break;
 			}
-			case 3: {
-				break;
-			}
 			default:
-
 				break;
 			}
 		}
@@ -260,6 +262,11 @@ namespace game_framework {
 			if (JumpBack) {_x -= stepx;}
 			if (JumpUp) { _z -= stepz; }
 			if (JumpDown) { _z += stepz; }
+			if (charector == 0) {
+				if ((initG == 0) && (_mode == 267)) {
+					toMotion(268);
+				}
+			}
 		}
 
 		void checkFlag();

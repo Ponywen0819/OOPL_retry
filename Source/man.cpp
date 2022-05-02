@@ -99,6 +99,8 @@ namespace game_framework {
 	}
 
 
+
+
 	void man::readCommand() {
 	}
 
@@ -287,8 +289,6 @@ namespace game_framework {
 	}
 
 	void man::checkFlag() {
-		
-		
 		bool button_down = false;
 		// 處理移動
 		if (flag[0]) {
@@ -353,9 +353,9 @@ namespace game_framework {
 	}
 
 	void man::checkBuff() {
-		if (inMotion) {
+		/*if (inMotion) {
 			return;
-		}
+		}*/
 		if (_Double_Tap_Gap <= 0) {
 			_Double_Tap_Gap = 55;
 			commandBuffer = "";
@@ -363,28 +363,32 @@ namespace game_framework {
 		else{
 			_Double_Tap_Gap--;
 			std::string commandList[] = { "LL","RR","FRA","FRJ","FUJ","FDJ","FDA","FUJA"};
+			//TRACE("%s\n",commandBuffer.c_str());
 			// 檢查是否有在技能表裡面
 			bool match = false;
 			for (int i = 0; i < 8; i++) {
+				//TRACE("%d\n", SkillsMotion[i]);
 				if (SkillsMotion[i] == -1) continue;
 				else if (commandBuffer == commandList[i]) {
-					if ((*Frams)[_mode]._state <= 1) {
-						TRACE("%d %s\n", (*Frams)[_mode]._state, commandBuffer.c_str());
+					//TRACE("matched\n");
+					int temp_state = (*Frams)[_mode]._state;
+					if (( temp_state <= 1) || (temp_state==7)) {
+						//TRACE("%d %s\n", (*Frams)[_mode]._state, commandBuffer.c_str());
 						if (i == 0) {
 							if (Face_to_Left) {
-								toMotion(SkillsMotion[i]);
+								toMotion(SkillsMotion[0]);
 							}
 						}
 						else if (i == 1) {
 							if (!Face_to_Left) {
-								toMotion(SkillsMotion[i]);
+								toMotion(SkillsMotion[1]);
 							}
 						}
 						else {
 							toMotion(SkillsMotion[i]);
 						}
+						commandBuffer = "";
 					}
-					commandBuffer = "";
 				}
 				else {
 					int len = commandBuffer.size();
@@ -398,7 +402,6 @@ namespace game_framework {
 			if (!match) {
 				commandBuffer = "";
 			}
-			//TRACE("%s\n", commandBuffer.c_str());
 		}
 
 	}
@@ -444,7 +447,6 @@ namespace game_framework {
 			}
 			break;
 		}
-
 		case 5: {
 			if (JumpFront) {
 				if (flag[0]) {
@@ -489,6 +491,7 @@ namespace game_framework {
 				setTimmer((*Frams)[_mode]._wait);
 			}
 		}
+		//溫紹傑是白癡
 		default:
 			break;
 		}
@@ -576,14 +579,14 @@ namespace game_framework {
 	}
 
 	//人物狀態更新
-
 	void man::OnMove() {
 		//負責動作的變更
 		if (isTime()) {
 			nextFrame();
 		}
-		
 		int stateNow = (*Frams)[_mode]._state;
+		
+		TRACE("%d %d\n", initG);
 		// 負責位置的調整
 		moveY();
 		switch (stateNow) {
@@ -689,7 +692,6 @@ namespace game_framework {
 	}
 	
 	//人物顯示
-
 	void man::OnShow() {
 		int index;
 		if (Face_to_Left) index = 0;
@@ -699,7 +701,6 @@ namespace game_framework {
 	}
 
 	//處理指令輸入時間間隔
-
 	void man::setCountDwon() {
 		_Double_Tap_Gap = 75;
 	}
@@ -708,9 +709,15 @@ namespace game_framework {
 		_Double_Tap_Gap = -1;
 	}
 
+
+
+
 	void weapon::OnShow() {
 
 	}
+
+
+
 
 	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
 		lib = l;
