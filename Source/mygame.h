@@ -44,7 +44,6 @@
 #include "Cchose.h"
 #include "CStateBar.h"
 #include "man.h"
-#include "skills.h"
 #include "Bitmaplib.h"
 #include "gamemap.h"
 #include "lion forest.h"

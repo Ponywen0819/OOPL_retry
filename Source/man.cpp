@@ -8,7 +8,6 @@
 #include <string>
 #include <sstream>
 #include <string>
-#include "skills.h"
 #include "Area.h"
 #include "CStateBar.h"
 #include "Frame.h"
@@ -16,6 +15,10 @@
 #include "man.h"
 
 namespace game_framework {
+
+	//
+	//------------------------------物品的部分------------------------------------------
+	//
 
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
@@ -99,18 +102,11 @@ namespace game_framework {
 	}
 
 
-
-
-	void man::readCommand() {
-	}
-
-	void man::setInitPosotion(int x, int y) {
-		_x = float(x);
-		_z = float(y);
-	}
+	//
+	//------------------------------人物的部分------------------------------------------
+	//
 
 	// 以新的中心位置調整人物
-
 	void man::adjustPosition(int f_now, int f_next) {
 		if(!Face_to_Left) _x = _x + (*Frams)[f_now]._centerx - (*Frams)[f_next]._centerx;
 		else _x = _x - (*Frams)[f_now]._centerx + (*Frams)[f_next]._centerx;
@@ -287,13 +283,6 @@ namespace game_framework {
 
 	// 依據輸入改變狀態
 
-	void man::setPosotion(int n) {
-		if (_dir[0]) _x -= n;
-		if (_dir[1]) _x += n;
-		if (_dir[2]) _y -= 1;
-		if (_dir[3]) _y += 1;
-	}
-
 	void man::checkFlag() {
 		bool button_down = false;
 		// 處理移動
@@ -349,7 +338,7 @@ namespace game_framework {
 
 				if (_dir[3]) { JumpDown = true; }
 				else { JumpDown = false; }
-				setYstep(-16.3, 8.0, 3.0);
+				setYstep(jump_height, jump_distance, jump_distance_z);
 				toMotion(210);
 			}
 			else if (flag[6]) {
@@ -415,6 +404,25 @@ namespace game_framework {
 	void man::specialEvent() {
 
 		int stateNow = (*Frams)[_mode]._state;
+		int ha = (*Frams)[_mode].hit_a;
+		if ( ha != 0) {
+			if (flag[5]) {
+				toMotion(ha);
+			}
+		}
+		int hd = (*Frams)[_mode].hit_d;
+		if (hd != 0) {
+			if (flag[6]) {
+				toMotion(hd);
+			}
+		}
+		int hj = (*Frams)[_mode].hit_j;
+		if ((*Frams)[_mode].hit_j != 0) {
+			if (flag[4]) {
+				toMotion(hj);
+			}
+		}
+		// TRACE("%d %d %d %d\n", ha, hd, hj, _mode);
 		switch (stateNow){
 		case 1: {
 			if (flag[6]) {
@@ -488,7 +496,7 @@ namespace game_framework {
 					Caught->_mode = 133;
 				}
 			}
-			else if (flag[5]) {
+			else if (flag[5] && _mode ==121) {
 				flag[5] = false;
 				int p = (*Frams)[_mode]._cp.getAaction();
 				adjustPosition(_mode, p);
@@ -513,16 +521,97 @@ namespace game_framework {
 			if ((*(all + i))->arestC > 0) {
 				continue;
 			}
-			if(tempf._have_itr){				// 這個東西具有攻擊性
+			bool t = touch((*(all + i)));
+			if(tempf._have_itr && t){				// 這個東西具有攻擊性並且有碰到
 				switch (tempf._i.getKind()) {
 				case 0: {
-					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
-						if (!((*(all + i))->checkBeenBeaten(this))) {
+					if (!((*(all + i))->checkBeenBeaten(this))) {
+						int fa = tempf._i.getFall();
+
+						if (fa == 0) { fall -= 18; }
+						else { fall -= fa; }
+
+						if (fall < 35) {			// 擊飛
+							if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+								toMotion(180);
+							}
+							else {
+								toMotion(186);
+							}
+							time = (*Frams)[_mode]._wait;
+							fall = 100;
+						}
+						else if (fall < 55) {		// 暈眩
+							toMotion(226);
+						}
+						else if (fall < 60) {		// 被打到第二下
+							if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+								toMotion(222);
+							}
+							else {
+								toMotion(224);
+							}
+						}
+						else {						// 被打到第一下
+							toMotion(220);
+						}
+
+
+						if ((*(*(all + i))).Face_to_Left) {
+							_x -= tempf._i.getDvx();
+						}
+						else {
+							_x += tempf._i.getDvx();
+						}
+
+						(*(all + i))->addBeaten(this);
+					}
+					break;
+				}
+				case 1: {
+					if ((*Frams)[_mode]._state == 16) {
+						(*(all + i))->toMotion(tempf._i.getCatching());
+						(*(all + i))->Caught = this;
+						this->toMotion(tempf._i.getCaught());
+
+						Face_to_Left = !(*(all + i))->Face_to_Left;
+						(*(all + i))->cc = 301;
+					}
+					break;
+				}
+				case 6: {
+					useSupperAtt = true;
+					break;
+				}
+				default: {
+					break;
+				}
+				}
+			}
+		}
+	}
+
+	void man::checkbeenatt(obj ** a,int n) {
+		for (int i = 0; i < n; i++) {
+			if ((*(a + i)) == this) {
+				continue;
+			}
+			int mode = (*(*(a + i)))._mode;
+			Frame tempf = (*((*(a + i))->Frams))[mode];
+			if ((*(a + i))->arestC > 0) {
+				continue;
+			}
+			if (tempf._have_itr) {				// 這個東西具有攻擊性
+				bool t = touch(tempf._i, (*(*(a + i))).Face_to_Left, (*(*(a + i)))._x, (*(*(a + i)))._y, (*(*(a + i)))._z);
+				if (t) {
+					switch (tempf._i.getKind()) {
+					case 0: {
+						if (!((*(a + i))->checkBeenBeaten(this))) {
 							int fa = tempf._i.getFall();
 							if (fa == 0) { fall -= 18; }
 							else { fall -= fa; }
 							if (fall < 35) {			// 擊飛
-								if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+								if ((*(*(a + i))).Face_to_Left != this->Face_to_Left) {
 									toMotion(180);
 								}
 								else {
@@ -535,7 +624,7 @@ namespace game_framework {
 								toMotion(226);
 							}
 							else if (fall < 60) {		// 被打到第二下
-								if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+								if ((*(*(a + i))).Face_to_Left != this->Face_to_Left) {
 									toMotion(222);
 								}
 								else {
@@ -545,46 +634,41 @@ namespace game_framework {
 							else {						// 被打到第一下
 								toMotion(220);
 							}
-							if ((*(*(all + i))).Face_to_Left) {
+							if ((*(*(a + i))).Face_to_Left) {
 								_x -= tempf._i.getDvx();
 							}
 							else {
 								_x += tempf._i.getDvx();
 							}
 
-							(*(all + i))->addBeaten(this);
+							(*(a + i))->addBeaten(this);
 						}
+						break;
 					}
-					break;
-				}
-				case 1: {
-					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
-						if ((*Frams)[_mode]._state == 16 ) {
-							(*(all + i))->toMotion(tempf._i.getCatching());
-							(*(all + i))->Caught = this;
+					case 1: {
+						if ((*Frams)[_mode]._state == 16) {
+							(*(a + i))->toMotion(tempf._i.getCatching());
+							(*(a + i))->Caught = this;
 							this->toMotion(tempf._i.getCaught());
 
 							Face_to_Left = !(*(all + i))->Face_to_Left;
-							(*(all + i))->cc = 301;
+							(*(a + i))->cc = 301;
 						}
+						break;
 					}
-					break;
-				}
-				case 6: {
-					if (touch(tempf._i, (*(*(all + i))).Face_to_Left, (*(*(all + i)))._x, (*(*(all + i)))._y, (*(*(all + i)))._z)) {
+					case 6: {
 						useSupperAtt = true;
+						break;
 					}
-					break;
-				}
-				default: {
-					break;
-				}
+					default: {
+						break;
+					}
+					}
 				}
 			}
 		}
 	}
-
-	//人物狀態更新
+		//人物狀態更新
 	void man::OnMove() {
 		//負責動作的變更
 		if (isTime()) {
@@ -593,42 +677,40 @@ namespace game_framework {
 		Count();
 
 		int stateNow = (*Frams)[_mode]._state;
-		
-		TRACE("%d %.1f %.1f\n",_mode,initG,_y);
 		// 負責位置的調整
-		moveY();
+		//moveY();
 		switch (stateNow) {
 		// 走路狀態
 		case 1: {
 			if (_dir[0]) {
 				Face_to_Left = true;
-				_x -= 4;
+				_x -= wlaking_speed;
 			}
 			if (_dir[1]) {
 				Face_to_Left = false;
-				_x += 4;
+				_x += wlaking_speed;
 			}
 			if (_dir[2]) {
-				_z -= float(1.3);
+				_z -= wlaking_speed_z;
 			}
 			if (_dir[3]) {
-				_z += float(1.3);
+				_z += wlaking_speed_z;
 			}
 			break;
 		}
 		// 跑步狀態
 		case 2: {
 			if (Face_to_Left) {
-				_x -= 8;
+				_x -= running_speed;
 			}
 			else {
-				_x += 8;
+				_x += running_speed;
 			}
 			if (_dir[2]) {
-				_z -= 1;
+				_z -= running_speed_z;
 			}
 			if (_dir[3]) {
-				_z += 1;
+				_z += running_speed_z;
 			}
 			break;
 		}
@@ -647,6 +729,7 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
+			moveY();
 			if (_y > 0) {
 				_y = 0;backToRandon();
 			}
@@ -654,6 +737,7 @@ namespace game_framework {
 		}
 		//大跳
 		case 5: {
+			moveY();
 			if (_y > 0) {
 				_y = 0;backToRandon();
 			}
@@ -689,7 +773,6 @@ namespace game_framework {
 		}
 		}
 		
-		
 		useSupperAtt = false;
 		bcount();
 		checkbeenatt();
@@ -698,7 +781,7 @@ namespace game_framework {
 
 	}
 	
-	//人物顯示
+		//人物顯示
 	void man::OnShow() {
 		int index;
 		if (Face_to_Left) index = 0;
@@ -707,7 +790,7 @@ namespace game_framework {
 		//TRACE("%d\n", (*Frams)[_mode]._pic);
 	}
 
-	//處理指令輸入時間間隔
+		//處理指令輸入時間間隔
 	void man::setCountDwon() {
 		_Double_Tap_Gap = 75;
 	}
@@ -717,14 +800,32 @@ namespace game_framework {
 	}
 
 
-
-
+	//
+	//------------------------------武器的部分------------------------------------------
+	//
 	void weapon::OnShow() {
 
 	}
 
 
+	//
+	//------------------------------氣功的部分------------------------------------------
+	//
 
+	void wp::OnShow() {
+
+	}
+
+	void wp::OnMove() {
+		int index;
+		if (Face_to_Left) index = 0;
+		else index = 1;
+		lib->selectByNum(oid, (*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+	}
+
+	//
+	//	主控
+	//
 
 	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
 		lib = l;

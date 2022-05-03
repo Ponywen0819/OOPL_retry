@@ -906,7 +906,7 @@
 <frame> 122 catching
    pic: 51  state: 9  wait: 5  next: 123  dvx: 0  dvy: 0  dvz: 0  centerx: 38  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
-      kind: 1  x: 61  y: 39 vaction: 130  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 7 
+      kind: 1  x: 61  y: 39 vaction: 130  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: -7 
    cpoint_end:
    wpoint:
       kind: 1  x: 56  y: 40  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -919,7 +919,7 @@
 <frame> 123 catching
    pic: 52  state: 9  wait: 3  next: 121  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 14 
    cpoint:
-      kind: 1  x: 58  y: 38 injury: 15  vaction: 132  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: 3 
+      kind: 1  x: 58  y: 38 injury: 15  vaction: 132  throwvz: -842150451  hurtable: 1 throwinjury: -842150451 decrease: -3 
    cpoint_end:
    wpoint:
       kind: 1  x: 56  y: 40  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 

@@ -341,6 +341,8 @@ namespace game_framework {
 			_dvx = f._dvx;
 			_dvy = f._dvy;
 			hit_a = f.hit_a;
+			hit_d = f.hit_d;
+			hit_j = f.hit_j;
 
 			_Num_of_hitbox = f._Num_of_hitbox;
 			_hitbox = new hitbox[_Num_of_hitbox];
@@ -375,6 +377,8 @@ namespace game_framework {
 				_dvx = f._dvx; 
 				_dvy = f._dvy;
 				hit_a = f.hit_a;
+				hit_d = f.hit_d;
+				hit_j = f.hit_j;
 
 				_Num_of_hitbox = f._Num_of_hitbox;
 				_hitbox = new hitbox[_Num_of_hitbox];
@@ -425,8 +429,10 @@ namespace game_framework {
 			_centerx = data[6];
 			_centery = data[7];
 			hit_a = data[8];
-			_mp = data[9];
-			_sound = data[10];
+			hit_d = data[9];
+			hit_j = data[10];
+			_mp = data[11];
+			_sound = data[12];
 			delete data;
 		}
 
@@ -495,6 +501,8 @@ namespace game_framework {
 		int _sound;		// 聲音
 		int _dvx, _dvy;	// 移動 
 		int hit_a;		// 按下A的動作
+		int hit_d;		// 按下D的動作
+		int hit_j;		// 按下J的動作
 
 		int _Num_of_hitbox;	//hitbox的數量
 		hitbox* _hitbox;

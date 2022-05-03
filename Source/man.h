@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Bitmaplib.h"
-#include "skills.h"
 #include "Area.h"
 #include "CStateBar.h"
 #include <string>
@@ -59,17 +58,20 @@ namespace game_framework {
 		// 物品各自有自己移動的方式
 		virtual void OnMove() = 0;
 		virtual void OnShow() = 0;
-
+		
+		
+		//
 		// 動作更新函式
+		//
 		virtual void backToRandon() {};
 		virtual void toMotion(int next) {};
 		virtual void nextFrame() {};
 
-		// 鍵盤動作
+		// 鍵盤動作 =>只有人物有(會改掉)
 		virtual void	setComm(UINT comm) {}			// 設定指令
 		virtual void	cComm(UINT comm) {}				// 取消指令					
 
-		// init
+		// 取得資料庫
 		void init(Bitmaplib *l,obj** a,int n, std::map<int, Frame> *f) {
 			Frams = f;
 			this->all = a;
@@ -95,6 +97,10 @@ namespace game_framework {
 				Ry = Ly + i.getH();
 			}
 			int n = (*Frams)[_mode]._Num_of_hitbox;
+			
+			if (abs(z - _z) > 12) {
+				return true;
+			}
 
 			for (int i = 0; i < n; i++) {
 				hitbox hit = *((*Frams)[_mode]._hitbox + i);
@@ -127,6 +133,26 @@ namespace game_framework {
 			return false;
 		}
 
+		bool touch(obj * o) {
+			if (abs(o->_z - this->_z) > 10) {
+				return false;
+			}
+			//
+			// 建立攻擊方判定區域
+			//
+			area att;
+			att.init(o->_x, o->_y+o->_z, (*(o->Frams))[o->_mode]._i.getX(), (*(o->Frams))[o->_mode]._i.getY(),
+				(*(o->Frams))[o->_mode]._i.getW(), (*(o->Frams))[o->_mode]._i.getH(), o->Face_to_Left, o->max);
+			for (int i = 0; i < (*Frams)[_mode]._Num_of_hitbox; i++) {
+				hitbox hit = *((*Frams)[_mode]._hitbox + i);
+				area n;
+				n.init(_x, _y+_z, hit.getX(), hit.getY(), hit.getW(), hit.getH(), this->Face_to_Left, this->max);
+				if (n.touch(att)) {
+					return true;
+				}
+			}
+			return false;
+		}
 		//不重要
 		void addBeaten(obj *who);
 		bool checkBeenBeaten(obj *who);
@@ -134,9 +160,13 @@ namespace game_framework {
 		void bcount();
 		void del(int n);
 		
-		std::map<int, Frame> *Frams;
-		obj** all;
-		int numOfObj;
+
+		std::map<int, Frame> *Frams;	// 動作資料表
+		//
+		obj** all;						// 所有物品的列表
+		int numOfObj;					// 所有物品的個數
+		//	應該會改掉
+		
 		Bitmaplib *	lib;			// 圖片輸出
 
 		bool	inMotion;			// 是否在特殊動作裡
@@ -146,6 +176,9 @@ namespace game_framework {
 
 		obj*	Caught;				// 被抓住的人
 		obj**	beatenList;			// 被打到的人
+
+
+		int		max;				// 此物品圖片大小
 		int*	beatenCount;		// 多久之後才可以再打一次
 		int		numOfBeaten;		// 有多少人被打到
 		int		cc;					// 抓人計數
@@ -170,22 +203,42 @@ namespace game_framework {
 			for (int i = 0; i < 4; i++)	_dir[i] = false;
 			first_att_animation = true;
 			inSpecialMotion = false;
-			jumpType = false;
 			walk_Ani_dir = true;
 			run_Ani_dir = true;
 			JumpUp = false;
 			JumpDown = false;
 			JumpFront = false;
+
+			max = 79;
+			//
+			//	人物基本動作參數設定
+			//
+			wlaking_speed = 4;
+			wlaking_speed_z = 2;
+
+			running_speed = 8;
+			running_speed_z = 1.3;
+
+			heavy_walking = 3;
+			heavy_walking_z = 1.5;
+
+			heavy_running = 5;
+			heavy_running_z = 0.8;
+
+			jump_height = -16.3;
+			jump_distance = 8;
+			jump_distance_z = 3;
+
+			dash_distance = 15;
+			dash_distance_z = 3.75;
 		}
-		
 		man(int ch) :man() {
 			charector = ch;
-			//"LL","RR","FRA","FRJ","FUJ","FDJ","FDA","FUJA"
 			switch (ch){
 			case 0: {
 				SkillsMotion[2] = 235;
 				SkillsMotion[3] = 290;
-				SkillsMotion[4] = 266;
+				//SkillsMotion[4] = 266; // 不做了
 				SkillsMotion[6] = 260;
 				break;
 			}
@@ -207,56 +260,26 @@ namespace game_framework {
 				break;
 			}
 		}
-		
 		~man() {
 
 		}	
-
-		void	getAllObj(obj** a, int n) {
-			all = a;
-			numOfObj = n;
-		}
-
-		void	setInitPosotion(int x, int y);		// 設定初始位置	
 
 		void	setComm(UINT comm);					// 設定指令
 		void	cComm(UINT comm);					// 取消指令					
 
 		void	checkbeenatt();						// 被攻擊偵測
+		void	checkbeenatt(obj**, int);
 		void	OnMove();							// 改變位置
 		void	OnShow();							// 顯示
-
-		void	setCH(int ch) {						//設定是哪個腳色
-			charector = ch;
-		}
-
-		bool	out() { return inMotion; }
-		int		gotMode() { return _mode; }
-		int		getx() { return int(_x); }
-		int		gety() { return int(_y); }
-		int		getz() { return int(_z); }
-		int		getNext() { return (*Frams)[_mode]._next; }
-		int		getState() { return (*Frams)[_mode]._state; }
-
 	protected:
-		int		getNextWalkMotion() {
-			if (walk_Ani_dir) {
-				if (++Walk_Ani_num == 9) {
-					Walk_Ani_num = 7;
-					walk_Ani_dir = !walk_Ani_dir;
-				}
-			}
-			else {
-				if (--Walk_Ani_num == 4) {
-					Walk_Ani_num = 6;
-					walk_Ani_dir = !walk_Ani_dir;
-				}
-			}
-			return Walk_Ani_num;
-		}
-		void	adjustPosition(int f_now,int f_next);
 
-		void setPosotion(int n);
+		void getAllObj(obj** a, int n) {
+			all = a;
+			numOfObj = n;
+		}		// 取得在場上的所有物品
+
+		// 跳躍處理
+
 		void setYstep(double G, double x, double z) {
 			_y += G++; initG = G; stepx = x; stepz = z;
 		}
@@ -277,12 +300,15 @@ namespace game_framework {
 				}
 			}
 		}
+		void adjustPosition(int f_now,int f_next);
 
+
+		//案件觸發處理
 		void checkFlag();
 		void checkBuff();
 		void specialEvent();
-		void readCommand();
 
+		// 狀態更新處理
 		void backToRandon();						// 回到原始的狀態
 		void toMotion(int next);					// 處發動作
 		void nextFrame();							// 動作中的下一個Frame
@@ -302,11 +328,52 @@ namespace game_framework {
 		void resetCountDown();						//連點倒數歸零
 		void CountDown() { if (_Double_Tap_Gap > 0)_Double_Tap_Gap--; }
 
+		int	 getNextWalkMotion() {
+			if (walk_Ani_dir) {
+				if (++Walk_Ani_num == 9) {
+					Walk_Ani_num = 7;
+					walk_Ani_dir = !walk_Ani_dir;
+				}
+			}
+			else {
+				if (--Walk_Ani_num == 4) {
+					Walk_Ani_num = 6;
+					walk_Ani_dir = !walk_Ani_dir;
+				}
+			}
+			return Walk_Ani_num;
+		}
 	private:
 		double	initG;								// 設定上升速度
 		double	stepx, stepz;						// 跳躍移動距離
 		double	fall;								// 暈眩值
 
+
+		//
+		//	腳色基本設定參數
+		//
+		double	wlaking_speed;
+		double	wlaking_speed_z;
+
+		double	running_speed;
+		double	running_speed_z;
+
+
+		double	heavy_walking;
+		double	heavy_walking_z;
+
+		double	heavy_running;
+		double	heavy_running_z;
+
+		double	jump_height;
+		double	jump_distance;
+		double	jump_distance_z;
+
+		double	dash_distance;
+		double	dash_distance_z;
+
+		
+		
 		int		Walk_Ani_num;						// 下一個走路動作的號碼
 		int		charector;							// 選擇之腳色
 		int		_Double_Tap_Gap;					// 連點間隔
@@ -316,7 +383,6 @@ namespace game_framework {
 		bool	inSpecialMotion;					// 在特殊動作中
 		bool	useSupperAtt;						// 可以使用終結季
 		bool	JumpUp, JumpDown,JumpFront,JumpBack;// 斜跳
-		bool	jumpType;
 		bool	_dir[4];							// 方向
 		bool	flag[7];							// keyboard input flag
 		bool	first_att_animation;				// 是不是出左拳
@@ -324,6 +390,8 @@ namespace game_framework {
 		bool	walk_Ani_dir;						// 走路動作的方向
 		bool	run_Ani_dir;						// 跑步動作的方向
 			
+
+
 		std::string commandBuffer;					// input command buffer
 		
 	};
@@ -348,6 +416,15 @@ namespace game_framework {
 		man*	holding;		//誰再拿他
 		bool	IsHolding;		//有被拾取
 		int hp;
+	};
+
+	class wp :public obj {
+	public:
+		void OnMove();
+		void OnShow();
+	private:
+		int oid;			// 氣功的種類
+		int time;			// 持續的時間
 	};
 
 	class ObjContainer {

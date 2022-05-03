@@ -4,13 +4,13 @@ namespace game_framework {
 	class area {
 	private:
 		/* data */
-		int _Lx, _Ly, _w, _h;
-		int _Rx, _Ry;
+		double _Lx, _Ly, _w, _h;
+		double _Rx, _Ry;
 	public:
 		area(/* args */);
 		bool touch(const area &other);
 
-		void init(int x, int y, int w, int h);
+		void init(double x1, double y1, double x2, double y2, double w, double h,bool f ,int);
 		void	setPosetion(int x, int y) {
 			_Lx = x; _Ly = y;
 			_Rx = _Lx + _w;
@@ -18,10 +18,10 @@ namespace game_framework {
 		}
 
 
-		int get_x() {
+		double get_x() {
 			return _Lx;
 		}
-		int get_y() {
+		double get_y() {
 			return _Ly;
 		}
 	};

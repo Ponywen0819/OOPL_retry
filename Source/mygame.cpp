@@ -59,7 +59,6 @@
 #include "gamelib.h"
 #include "mygame.h"
 #include "man.h"
-#include "skills.h"
 #include "Bitmaplib.h"
 
 namespace game_framework {

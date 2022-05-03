@@ -121,8 +121,9 @@ namespace game_framework {
 						}
 						a._id = std::stoi(id);
 						std::getline(ifs, s);
-						std::string g[11] = { "pic","state","wait","next","dvx","dvy","centerx","centery","hit_a","mp","sound"};
-						int *temp_basic = extra(s, g, 11);
+						std::string g[13] = { "pic","state","wait","next","dvx","dvy","centerx","centery",
+							"hit_a","hit_d","hit_j","mp","sound"};
+						int *temp_basic = extra(s, g, 13);
 						a.setBasic(temp_basic); 
 
 						std::getline(ifs, s);       //´«¤U¤@¦æ
