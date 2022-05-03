@@ -17,10 +17,10 @@ namespace game_framework {
 		void LoadBitmap(char *qwwq, COLORREF = RGB(0,0,0));
 		
 		void calShow();
-		void onShow();
+		void onShow(int,int);
 		void onShow(int a);
-	
-		void delay();
+		int map_pos();
+		void delay(int,int);
 
 	private:
 
@@ -38,6 +38,6 @@ namespace game_framework {
 
 		int delay1 = 10;
 		int temp2 = 0;
-
+		int last_pos = 0;
 	};
 }

@@ -24,7 +24,6 @@ namespace game_framework{
 		land[3].LoadBitmap("./Bitmaps/bg/lf/green.bmp");
 
 		forests.set(map_width, 800, 0, 128);
-		land[3].set(map_width, 800, 0, 356);
 		forestm[0].set(map_width, 1100, 0, 147);
 		forestm[1].set(map_width, 1100, 800, 147);
 		forestm[2].set(map_width, 1400, 0, 170);
@@ -33,6 +32,7 @@ namespace game_framework{
 		land[0].set(map_width, 2950, 0, 356,520);
 		land[1].set(map_width, 3070, 300, 385,530);
 		land[2].set(map_width, 3200, 600, 420,570);
+		land[3].set(map_width, 800, 0, 356);
 
 		forests.calShow();
 		land[3].calShow();
@@ -46,17 +46,21 @@ namespace game_framework{
 		land[2].calShow();
 	}
 
-	void lf::showmap(int man_pos) {
-		forests.onShow();
-		land[3].onShow();
-		forestm[0].onShow();
-		forestm[1].onShow();
-		forestm[2].onShow();
-		forestm[3].onShow();
-		forestt.onShow();
-		land[0].onShow();
-		land[1].onShow();
-		land[2].onShow();
+	void lf::showmap(int _man_pos1,int _man_pos2) {
+		forests.onShow(_man_pos1,_man_pos2);
+		land[3].onShow(_man_pos1, _man_pos2);
+		forestm[0].onShow(_man_pos1, _man_pos2);
+		forestm[1].onShow(_man_pos1, _man_pos2);
+		forestm[2].onShow(_man_pos1, _man_pos2);
+		forestm[3].onShow(_man_pos1, _man_pos2);
+		forestt.onShow(_man_pos1, _man_pos2);
+		land[0].onShow(_man_pos1, _man_pos2);
+		land[1].onShow(_man_pos1, _man_pos2);
+		land[2].onShow(_man_pos1, _man_pos2);
+	}
+
+	int lf::map_pos() {
+		return forests.map_pos();
 	}
 
 }

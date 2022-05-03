@@ -66,7 +66,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,pos = 0;
+int player1 = -1, player2 = -1,v = 0;
 boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
@@ -252,8 +252,8 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
-	Man[0].setInitPosotion(300, 450);
-	Man[1].setInitPosotion(550, 450);
+	Man[0].setInitPosotion(0, 450);
+	Man[1].setInitPosotion(0, 450);
 	Man[0].setCH(3);
 	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(3));
 	
@@ -374,6 +374,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player2HPState(20, 10);
 	bar.Player2MPState(90);
+	v = 1;
 }
 
 // 處理滑鼠的動作
@@ -383,7 +384,15 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // 顯示
 void CGameStateRun::OnShow() {
 
-	lf.showmap(pos);
+	if (v == 0) {
+		temp1.showmap(Man[0].getx(), Man[1].getx());
+		TRACE("~~~%d~~~!! \n", temp1.map_pos());
+	}
+	else {
+		temp1.showmap(Man[0].getx(), Man[0].getx());
+		TRACE("~~~%d~~~ \n", temp1.map_pos());
+	}
+	
 
 	Man[0].onShow();
 	Man[1].onShow();
