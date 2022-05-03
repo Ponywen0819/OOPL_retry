@@ -39,10 +39,14 @@ namespace game_framework {
 		}
 	}
 
-	void temp1::showmap(int man_pos) {
+	void temp1::showmap(int _man_pos) {
 		for (int i = 0; i < 8; i++) {
-			pic[i].onShow();
+			pic[i].onShow(_man_pos);
 		}
+	}
+
+	int temp1::map_pos() {
+		return pic[0].map_pos();
 	}
 
 }

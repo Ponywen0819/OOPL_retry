@@ -65,7 +65,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,pos = 0;
+int player1 = -1, player2 = -1,v = 0;
 boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
@@ -250,7 +250,9 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
+
 	allobj.init(player1, player2, &Blib,&Flib);
+
 }	
 
 void CGameStateRun::OnMove(){
@@ -304,6 +306,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player2HPState(20, 10);
 	bar.Player2MPState(90);
+	v = 1;
 }
 
 // 處理滑鼠的動作
@@ -312,7 +315,8 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 
 // 顯示
 void CGameStateRun::OnShow() {
-	lf.showmap(pos);
+
+	lf.showmap(0);
 	bar.OnShowBar(player1, player2);
 	allobj.OnShow();	
 }

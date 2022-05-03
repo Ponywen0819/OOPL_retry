@@ -17,6 +17,7 @@ namespace game_framework {
 		layer_width = lw;
 		_x = x;
 		_y = y;
+	
 	}
 
 	void gamemap::set(double mw, double lw, int x, int y, int loop) {
@@ -41,20 +42,32 @@ namespace game_framework {
 		}
 		// TRACE("!!!%.3f %.3f %.3f %d %.3f\n",  move_pixel_right, layer_dis, layer_width, back_ground.Width(), temp);
 	}
-	void gamemap::onShow() {
-
-
-
-		if (move_pixel_right != 0 && temp2 > move_pixel_right) {
-			
-			if (move_pixel_right < temp * (layer_dis - 1)) {
-				_x--;
-				move_pixel_right += temp;
-				move_pixel_left += temp;
-				// TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
+	void gamemap::onShow(int _man_pos) {
+		int total_pos = _man_pos;
+		if (total_pos % 2 == 1)total_pos += 1;
+		if (total_pos / 2 > last_pos) {
+			for (temp2; temp2 <= last_pos; temp2++) {
+				if (move_pixel_right != 0 && temp2 > move_pixel_right && temp2 >= 0) {
+					if (move_pixel_right < temp * (layer_dis - 1)) {
+						_x--;
+						move_pixel_right += temp;
+						move_pixel_left += temp;
+					}
+				}
 			}
+			last_pos = total_pos / 2;
 		}
-
+		if (total_pos / 2 < last_pos) {
+			for (temp2; temp2 >= last_pos; temp2--) {
+				if (move_pixel_left != 0 && temp2 < move_pixel_left && temp2 >= 0) {
+					_x++;
+					move_pixel_right -= temp;
+					move_pixel_left -= temp;
+				}
+			}
+			last_pos = total_pos / 2;
+		}
+		//TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
 		back_ground.SetTopLeft(_x, _y);
 		back_ground.ShowBitmap();
 
@@ -66,38 +79,31 @@ namespace game_framework {
 				temp_loop += _loop;
 			}
 		}
-		delay();
-
+		//delay(_man_pos1, _man_pos2);
 	}
-	void gamemap::onShow(int man_position) {
-		
 
-		
-		if (move_pixel_right != 0 && man_position > move_pixel_right) {
-			_x--;
-			if (move_pixel_right < temp * (layer_dis - 1)) {
-				move_pixel_right += temp;
-				move_pixel_left += temp;
-				// TRACE("%d %d\n", man_position, move_pixel_right);
+	void gamemap::delay(int _man_pos1, int _man_pos2) {
+		int total_pos = _man_pos1 + _man_pos2;
+		if (total_pos % 2 == 1)total_pos += 1;
+		if (total_pos / 2 > last_pos) {
+			for (temp2; temp2<= last_pos; temp2++) {
+				
 			}
+			last_pos = total_pos / 2;
+			
 		}
-
-		/*if (move_pixel_left != 0 && man_position < move_pixel_left) {
-			_x++;
-			move_pixel_right -= temp;
-			move_pixel_left -= temp;
-		}*/
-		back_ground.SetTopLeft(_x, _y);
-		back_ground.ShowBitmap();
-
-
+		else if (total_pos / 2 < last_pos) {
+			for (temp2; temp2 >= last_pos; temp2--) {
+				
+			}
+			last_pos = total_pos / 2;
+		}
+		//TRACE("last_pos: %d \n",last_pos);
+		//TRACE("%d %d %1.f\n", _man_pos1 ,_man_pos2, temp * (layer_dis - 1));
 	}
 
-	void gamemap::delay() {
-		if (--delay1 < 0) {
-			temp2++;
-			delay1 = 0;
-		
-		}
+
+	int gamemap::map_pos() {
+		return temp2;
 	}
 }
