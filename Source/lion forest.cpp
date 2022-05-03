@@ -46,17 +46,17 @@ namespace game_framework{
 		land[2].calShow();
 	}
 
-	void lf::showmap(int _man_pos1,int _man_pos2) {
-		forests.onShow(_man_pos1,_man_pos2);
-		land[3].onShow(_man_pos1, _man_pos2);
-		forestm[0].onShow(_man_pos1, _man_pos2);
-		forestm[1].onShow(_man_pos1, _man_pos2);
-		forestm[2].onShow(_man_pos1, _man_pos2);
-		forestm[3].onShow(_man_pos1, _man_pos2);
-		forestt.onShow(_man_pos1, _man_pos2);
-		land[0].onShow(_man_pos1, _man_pos2);
-		land[1].onShow(_man_pos1, _man_pos2);
-		land[2].onShow(_man_pos1, _man_pos2);
+	void lf::showmap(int _man_pos) {
+		forests.onShow(_man_pos);
+		land[3].onShow(_man_pos);
+		forestm[0].onShow(_man_pos);
+		forestm[1].onShow(_man_pos);
+		forestm[2].onShow(_man_pos);
+		forestm[3].onShow(_man_pos);
+		forestt.onShow(_man_pos);
+		land[0].onShow(_man_pos);
+		land[1].onShow(_man_pos);
+		land[2].onShow(_man_pos);
 	}
 
 	int lf::map_pos() {

@@ -114,11 +114,8 @@ namespace game_framework {
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		obj**			all;		// 在場上的所有東西
-		int				numOfObj;	// 在場的物品總數
-
-		man				Man[2];		// 人物1
-		skillsContainer skills;
+		ObjContainer	allobj;		// 場上所有的東西
+		
 		Bitmaplib		Blib;
 		Framelib		Flib;
 		CStateBar       bar;

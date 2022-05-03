@@ -6,7 +6,7 @@ namespace game_framework {
 	public:
 		
 		void init();
-		void showmap(int ,int);
+		void showmap(int);
 		int map_pos();
 	private:
 		gamemap forests;

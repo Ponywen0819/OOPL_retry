@@ -248,24 +248,16 @@ CGameStateRun::CGameStateRun(CGame *g)
 }
 
 CGameStateRun::~CGameStateRun(){
-	delete[] all;
 }
 
 void CGameStateRun::OnBeginState(){
-	Man[0].setInitPosotion(0, 450);
-	Man[1].setInitPosotion(0, 450);
-	Man[0].setCH(3);
-	Man[0].init(&Blib, Man,2,&bar,Flib.getFrame(3));
-	
-	Man[1].setCH(0);
-	Man[1].init(&Blib, Man,2,&bar,Flib.getFrame(0));
+
+	allobj.init(player1, player2, &Blib,&Flib);
+
 }	
 
 void CGameStateRun::OnMove(){
-	skills.check();
-	Man[0].OnMove();
-	Man[1].OnMove();
-	skills.onMove();
+	allobj.OnMove();
 }
 
 void CGameStateRun::OnInit(){
@@ -274,83 +266,24 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(33);	
 	Blib.LoadBitmap();
 
-	ShowInitProgress(70);
+	ShowInitProgress(65);
 	Flib.init();
-	
-	all = new obj*[2];
-	numOfObj = 2;
-	all[0] = Man;
-	all[1] = (Man + 1);
 
-	Man[0].getAllObj(all, 2);
-	Man[1].getAllObj(all, 2);
 	lf.init();
 	temp1.init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
-	const char KEY_LEFT  = 0x25;	// keyboard左箭頭
-	const char KEY_UP    = 0x26;	// keyboard上箭頭
-	const char KEY_RIGHT = 0x27;	// keyboard右箭頭
-	const char KEY_DOWN  = 0x28;	// keyboard下箭頭
-	const char KEY_SPACE = 0x20;	// keyboard空白鍵
-	const char KEY_Z = 90;			// keyboard Z
-
-	// TRACE("button key  %d", nChar);
-
-	if (nChar == KEY_LEFT) {
-		Man[0].setComm(1);
-	}
-	else if (nChar == KEY_RIGHT) {
-		Man[0].setComm(2);
-	}
-	else if (nChar == KEY_UP) {
-		Man[0].setComm(3);
-	}
-	else if (nChar == KEY_DOWN) {
-		Man[0].setComm(4);
-	}
-	else if (nChar == KEY_SPACE) {
-		Man[0].setComm(5);
-	}
-	else if (nChar == KEY_Z) {
-		Man[0].setComm(6);
-	}
+	allobj.KeyDown(nChar);
 }
 
-void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
-	const char KEY_LEFT =	0x25;	// keyboard左箭頭
-	const char KEY_UP =		0x26;	// keyboard上箭頭
-	const char KEY_RIGHT =	0x27;	// keyboard右箭頭
-	const char KEY_DOWN =	0x28;	// keyboard下箭頭
-	const char KEY_SPACE =	0x20;	// keyboard空白鍵
-	const char KEY_Z =		90;		// keyboard Z
-
-		
+void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){	
 	//haha
 	//Hie
 	//豬威比ＮＩＣＩ
 	//SIMPLELIFE超柔抽取衛生紙
 	//臣女喜歡忠貞之鳥
-	
-	if (nChar == KEY_LEFT) {
-		Man[0].cComm(1);
-	}
-	else if (nChar == KEY_RIGHT) {
-		Man[0].cComm(2);
-	}
-	else if (nChar == KEY_UP) {
-		Man[0].cComm(3);
-	}
-	else if (nChar == KEY_DOWN) {
-		Man[0].cComm(4);
-	}
-	else if (nChar == KEY_SPACE) {
-		Man[0].cComm(5);
-	}
-	else if (nChar == KEY_Z) {
-		Man[0].cComm(6);
-	}
+	allobj.KeyUp(nChar);
 }
 
 // 處理滑鼠的動作
@@ -384,35 +317,9 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // 顯示
 void CGameStateRun::OnShow() {
 
-	if (v == 0) {
-		temp1.showmap(Man[0].getx(), Man[1].getx());
-		TRACE("~~~%d~~~!! \n", temp1.map_pos());
-	}
-	else {
-		temp1.showmap(Man[0].getx(), Man[0].getx());
-		TRACE("~~~%d~~~ \n", temp1.map_pos());
-	}
-	
-
-	Man[0].onShow();
-	Man[1].onShow();
-	skills.onShow();
+	lf.showmap(0);
 	bar.OnShowBar(player1, player2);
-	
-	CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
-	CFont f, *fp;
-	f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
-	fp = pDC->SelectObject(&f);					// 選用 font f
-	pDC->SetBkColor(RGB(0, 0, 0));
-	pDC->SetTextColor(RGB(255, 255, 0));
-	char str[500];								// Demo 數字對字串的轉換
-	sprintf(str, "MAN1 _out : %d  X : %d Y : %d Z : %d  mode : %d next : %d state: %d"
-		, Man[0].out(), Man[0].getx(), Man[0].gety(), Man[0].getz(),Man[0].gotMode(),Man[0].getNext(),Man[0].getState());
-	pDC->TextOut(0, 50, str);
-	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
-	CDDraw::ReleaseBackCDC();
-
-	
+	allobj.OnShow();	
 }
 
 }

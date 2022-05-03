@@ -39,9 +39,9 @@ namespace game_framework {
 		}
 	}
 
-	void temp1::showmap(int _man_pos1,int _man_pos2) {
+	void temp1::showmap(int _man_pos) {
 		for (int i = 0; i < 8; i++) {
-			pic[i].onShow(_man_pos1, _man_pos2);
+			pic[i].onShow(_man_pos);
 		}
 	}
 

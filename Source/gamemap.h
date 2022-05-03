@@ -17,7 +17,6 @@ namespace game_framework {
 		void LoadBitmap(char *qwwq, COLORREF = RGB(0,0,0));
 		
 		void calShow();
-		void onShow(int,int);
 		void onShow(int a);
 		int map_pos();
 		void delay(int,int);
