@@ -60,6 +60,10 @@ namespace game_framework {
 		virtual void OnMove() = 0;
 		virtual void OnShow() = 0;
 		
+		void updateObj(obj** list, int n) {
+			all = list;
+			numOfObj = n;
+		}
 		//
 		// 動作更新函式
 		//
@@ -437,11 +441,22 @@ namespace game_framework {
 			_mode = mode;
 		}
 		
-		void init(std::map<int, Frame> *f, Bitmaplib* b) {
+		void init(std::map<int, Frame> *f, Bitmaplib* b, int x, int y,int z,bool fa) {
 			lib = b;
 			Frams = f;
-			TRACE("%d\n", Frams);
+			_x = x;
+			_y = y;
+			_z = z;
+			Face_to_Left = fa;
+			if (Face_to_Left) {
+
+			}
+			else {
+				_x -= (*Frams)[_mode]._centerx;
+				_y -= (*Frams)[_mode]._centery;
+			}
 		}
+
 
 		void backToRandon();
 		void toMotion(int next);
@@ -457,6 +472,7 @@ namespace game_framework {
 			if (time > 0) time--;
 		}
 		bool isTime() { return time == 0; }
+
 
 		int oid;			// 氣功的種類
 		int time;			// 持續的時間

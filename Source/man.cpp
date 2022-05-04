@@ -169,7 +169,7 @@ namespace game_framework {
 			_x -= (*Frams)[_mode]._dvx;
 		}
 		else {
-			_x -= (*Frams)[_mode]._dvx;
+			_x += (*Frams)[_mode]._dvx;
 		}
 		_z += (*Frams)[_mode]._dvy;
 
@@ -201,7 +201,7 @@ namespace game_framework {
 		if ((*Frams)[_mode]._have_opiont) {
 			int i = (*Frams)[_mode]._op.getOid();
 			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction());
-			temp->init(fl->getobjFrame(i),lib);
+			temp->init(fl->getobjFrame(i),lib,int(_x)- (*Frams)[_mode]._op.getX(),int(_y)- (*Frams)[_mode]._op.getY(),int(_z),Face_to_Left);
 			skills = temp;
 		}
 	}
@@ -586,7 +586,6 @@ namespace game_framework {
 	}
 
 	void man::checkbeenatt() {
-		TRACE("%d\n", numOfObj);
 		for (int i = 0; i < numOfObj; i++) {
 			if ((*(all + i)) == this) {
 				continue;
@@ -1222,6 +1221,7 @@ namespace game_framework {
 			if (temp != nullptr) {
 				addobj(temp);
 			}
+			all[i]->updateObj(all,numOfObj);
 		}
 	}
 
