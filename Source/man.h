@@ -23,6 +23,7 @@ namespace game_framework {
 			inMotion = false;
 			Caught = nullptr;
 			arestC = 0;
+			Alive = true;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
@@ -58,7 +59,6 @@ namespace game_framework {
 		// 物品各自有自己移動的方式
 		virtual void OnMove() = 0;
 		virtual void OnShow() = 0;
-		
 		
 		//
 		// 動作更新函式
@@ -161,14 +161,17 @@ namespace game_framework {
 		void del(int n);
 		
 
+		virtual obj*	usingSkills() {
+			return nullptr;
+		}
+
 		std::map<int, Frame> *Frams;	// 動作資料表
 		//
 		obj** all;						// 所有物品的列表
 		int numOfObj;					// 所有物品的個數
 		//	應該會改掉
-		
-		Bitmaplib *	lib;			// 圖片輸出
 
+		Bitmaplib *	lib;			// 圖片輸出
 		bool	inMotion;			// 是否在特殊動作裡
 		int		_mode;				// 現在的模式
 		double	_x, _y, _z;			// 現在的位置
@@ -177,13 +180,13 @@ namespace game_framework {
 		obj*	Caught;				// 被抓住的人
 		obj**	beatenList;			// 被打到的人
 
-
 		int		max;				// 此物品圖片大小
 		int*	beatenCount;		// 多久之後才可以再打一次
 		int		numOfBeaten;		// 有多少人被打到
 		int		cc;					// 抓人計數
 		int		time;				// 計數
 		int		arestC;				// 多久之後才可以打人
+		bool	Alive;				
 	};
 
 	class man:public obj{
@@ -208,7 +211,7 @@ namespace game_framework {
 			JumpUp = false;
 			JumpDown = false;
 			JumpFront = false;
-
+			skills = nullptr;
 			max = 79;
 			//
 			//	人物基本動作參數設定
@@ -264,8 +267,18 @@ namespace game_framework {
 
 		}	
 
+		void	getFl(Framelib* a) {
+			fl = a;
+		}
 		void	setComm(UINT comm);					// 設定指令
 		void	cComm(UINT comm);					// 取消指令					
+
+		obj*	usingSkills() {
+			obj* a = skills;
+			//TRACE("%d\n", a);
+			skills = nullptr;
+			return a;
+		}
 
 		void	checkbeenatt();						// 被攻擊偵測
 		void	checkbeenatt(obj**, int);
@@ -301,7 +314,6 @@ namespace game_framework {
 			}
 		}
 		void adjustPosition(int f_now,int f_next);
-
 
 		//案件觸發處理
 		void checkFlag();
@@ -348,7 +360,6 @@ namespace game_framework {
 		double	stepx, stepz;						// 跳躍移動距離
 		double	fall;								// 暈眩值
 
-
 		//
 		//	腳色基本設定參數
 		//
@@ -357,7 +368,6 @@ namespace game_framework {
 
 		double	running_speed;
 		double	running_speed_z;
-
 
 		double	heavy_walking;
 		double	heavy_walking_z;
@@ -372,8 +382,6 @@ namespace game_framework {
 		double	dash_distance;
 		double	dash_distance_z;
 
-		
-		
 		int		Walk_Ani_num;						// 下一個走路動作的號碼
 		int		charector;							// 選擇之腳色
 		int		_Double_Tap_Gap;					// 連點間隔
@@ -389,11 +397,10 @@ namespace game_framework {
 		bool	Alive;								// 是否活著
 		bool	walk_Ani_dir;						// 走路動作的方向
 		bool	run_Ani_dir;						// 跑步動作的方向
-			
 
-
+		Framelib*	fl;
+		obj*	skills;								// 出技能
 		std::string commandBuffer;					// input command buffer
-		
 	};
 
 	class weapon:public obj{
@@ -420,9 +427,37 @@ namespace game_framework {
 
 	class wp :public obj {
 	public:
+		wp() {
+			oid = 0;
+			time = 0;
+		}
+
+		wp(int id,int mode):wp(){
+			oid = id;
+			_mode = mode;
+		}
+		
+		void init(std::map<int, Frame> *f, Bitmaplib* b) {
+			lib = b;
+			Frams = f;
+			TRACE("%d\n", Frams);
+		}
+
+		void backToRandon();
+		void toMotion(int next);
+		void nextFrame();
+
 		void OnMove();
 		void OnShow();
 	private:
+		void adjustPosition(int f_now, int f_next);
+		// 計數器
+		void setTimmer(int t) { time = t; }
+		void Count() {
+			if (time > 0) time--;
+		}
+		bool isTime() { return time == 0; }
+
 		int oid;			// 氣功的種類
 		int time;			// 持續的時間
 	};
@@ -451,6 +486,5 @@ namespace game_framework {
 
 		Bitmaplib* lib;				
 		Framelib* fl;
-		
 	};
 }

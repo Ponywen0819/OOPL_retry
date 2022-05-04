@@ -52,6 +52,25 @@ namespace game_framework {
 			path = ".\\Bitmaps\\freeze\\" + std::to_string(170 + i) + ".bmp";
 			FreezePic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
+
+		for (int i = 0; i < 4; i++) {
+			path = ".\\Bitmaps\\freeze_ball\\" + std::to_string(i) + ".bmp";
+			freeze_ball[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 4; i++) {
+			path = ".\\Bitmaps\\freeze_ball\\" + std::to_string(4 + i) + ".bmp";
+			freeze_ball[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 4; i++) {
+			path = ".\\Bitmaps\\deep_ball\\" + std::to_string(i) + ".bmp";
+			deep_ball[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 4; i++) {
+			path = ".\\Bitmaps\\deep_ball\\" + std::to_string(4 + i) + ".bmp";
+			deep_ball[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
 	}
 
 	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
@@ -78,6 +97,22 @@ namespace game_framework {
 		}
 	}
 
+	void Bitmaplib::selectOpiont(int ch, int n, int index, int x, int y) {
+		switch (ch){
+		case 203: {
+			deep_ball[index][n].SetTopLeft(x, y);
+			deep_ball[index][n].ShowBitmap();
+			break;
+		}
+		case 209: {
+			freeze_ball[index][n].SetTopLeft(x, y);
+			freeze_ball[index][n].ShowBitmap();
+			break;
+		}
+		default:
+			break;
+		}
+	}
 	void Framelib::init() {
 		loadFrame();
 	}
@@ -101,10 +136,13 @@ namespace game_framework {
 	}
 
 	void Framelib::loadFrame() {
-		std::string path[7] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",
-			".\\data\\freeze.txt",".\\data\\weapon0.txt",".\\data\\weapon1.txt",".\\data\\weapon7.txt" };
-		std::map<int, Frame>* f[7] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze,&Frams_weapon0,&Frams_weapon1,&Frams_weapon7};
-		for (int ch = 0; ch < 7; ch++) {
+		std::string path[9] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt",
+			".\\data\\weapon0.txt",".\\data\\weapon1.txt",".\\data\\weapon7.txt",
+			".\\data\\deep_ball.txt",".\\data\\freeze_ball.txt" };
+		std::map<int, Frame>* f[9] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze,
+			&Frams_weapon0,&Frams_weapon1,&Frams_weapon7,
+			&deep_ball ,&freeze_ball };
+		for (int ch = 0; ch < 9; ch++) {
 			std::ifstream ifs(path[ch].c_str(), std::ios::in);
 			if (!ifs.is_open()) {
 				TRACE("Failed to open file.");
@@ -166,5 +204,6 @@ namespace game_framework {
 			}
 			ifs.close();
 		}
+		TRACE("%d\n", deep_ball[0]._pic);
 	}
 }

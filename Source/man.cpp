@@ -101,6 +101,79 @@ namespace game_framework {
 		numOfBeaten--;
 	}
 
+	//
+	//------------------------------猌竟场だ------------------------------------------
+	//
+
+	void weapon::OnShow() {
+
+	}
+
+
+	//
+	//------------------------------场だ------------------------------------------
+	//
+
+	void wp::adjustPosition(int f_now, int f_next) {
+		if (!Face_to_Left) _x = _x + (*Frams)[f_now]._centerx - (*Frams)[f_next]._centerx;
+		else _x = _x - (*Frams)[f_now]._centerx + (*Frams)[f_next]._centerx;
+	}
+
+	void wp::backToRandon() {
+		inMotion = false;
+		_mode = 0;
+		setTimmer((*Frams)[_mode]._wait);
+	}
+
+	void wp::toMotion(int f) {
+		adjustPosition(_mode, f);
+		_mode = f;
+		inMotion = true;
+		setTimmer((*Frams)[_mode]._wait);
+		if ((*Frams)[_mode]._have_opiont) {
+			wp* temp = new wp;
+
+		}
+	}
+
+	void wp::nextFrame() {
+		int temp = (*Frams)[_mode]._next;
+		if (temp == 1000) {
+			
+		}
+		else if (temp == 999) {
+			adjustPosition(_mode, 0);
+			_mode = 0;
+			setTimmer((*Frams)[_mode]._wait);
+		}
+		else {
+			adjustPosition(_mode, temp);
+			_mode = temp;
+			setTimmer((*Frams)[_mode]._wait);
+		}
+	}
+
+	void wp::OnShow() {
+		int index;
+		if (Face_to_Left) index = 0;
+		else index = 1;
+		lib->selectOpiont(oid, (*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+	}
+
+	void wp::OnMove() {
+		//if (!Alive) return;
+		if (isTime()) {
+			nextFrame();
+		}
+		if (Face_to_Left) {
+			_x -= (*Frams)[_mode]._dvx;
+		}
+		else {
+			_x -= (*Frams)[_mode]._dvx;
+		}
+		_z += (*Frams)[_mode]._dvy;
+
+	}
 
 	//
 	//------------------------------场だ------------------------------------------
@@ -125,6 +198,12 @@ namespace game_framework {
 		_mode = f;
 		inMotion = true;
 		setTimmer((*Frams)[_mode]._wait);
+		if ((*Frams)[_mode]._have_opiont) {
+			int i = (*Frams)[_mode]._op.getOid();
+			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction());
+			temp->init(fl->getobjFrame(i),lib);
+			skills = temp;
+		}
 	}
 
 	void man::nextFrame() {
@@ -150,9 +229,7 @@ namespace game_framework {
 			}
 		}
 		else if(temp != 0){
-			adjustPosition(_mode, temp);
-			_mode = temp;
-			setTimmer((*Frams)[_mode]._wait);
+			toMotion(temp);
 			if ((*Frams)[_mode]._state == 9) {
 				Caught->_mode = (*Frams)[_mode]._cp.getVaction();
 			}
@@ -177,10 +254,7 @@ namespace game_framework {
 				break;
 			}
 			case 3: {
-				if (_mode == 267) {
-					toMotion(268);
-				}
-				break;
+				
 			}
 			case 4: {
 				setTimmer((*Frams)[_mode]._wait);
@@ -512,6 +586,7 @@ namespace game_framework {
 	}
 
 	void man::checkbeenatt() {
+		TRACE("%d\n", numOfObj);
 		for (int i = 0; i < numOfObj; i++) {
 			if ((*(all + i)) == this) {
 				continue;
@@ -799,32 +874,8 @@ namespace game_framework {
 		_Double_Tap_Gap = -1;
 	}
 
-
 	//
-	//------------------------------猌竟场だ------------------------------------------
-	//
-	void weapon::OnShow() {
-
-	}
-
-
-	//
-	//------------------------------场だ------------------------------------------
-	//
-
-	void wp::OnShow() {
-
-	}
-
-	void wp::OnMove() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		lib->selectByNum(oid, (*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
-	}
-
-	//
-	//	北
+	//------------------------------北场だ------------------------------------------
 	//
 
 	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
@@ -833,8 +884,11 @@ namespace game_framework {
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
 			all = new obj*[2];
-			all[0] = new man(p1);
-			all[1] = new man(p2);
+			man* temp1 = new man(p1);
+			man* temp2 = new man(p2);
+			temp1->getFl(f); temp2->getFl(f);
+			all[0] = temp1;
+			all[1] = temp2;
 			numOfObj = 2;
 			all[0]->init(l, all, numOfObj, f->getFrame(p1));
 			all[1]->init(l, all, numOfObj, f->getFrame(p2));
@@ -848,7 +902,9 @@ namespace game_framework {
 		else if ((p1 != -1) && (p2 == -1)) {
 			state = 1;
 			all = new obj*[1];
-			all[0] = new man(p1);
+			man* temp1 = new man(p1);
+			temp1->getFl(f);
+			all[0] = temp1;
 			numOfObj = 1;
 			all[0]->init(l, all, numOfObj, f->getFrame(p1));
 
@@ -859,7 +915,9 @@ namespace game_framework {
 		else if ((p1 == -1) && (p2 != -1)) {
 			state = 2;
 			all = new obj*[1];
-			all[0] = new man(p2);
+			man* temp1 = new man(p1);
+			temp1->getFl(f);
+			all[0] = temp1;
 			numOfObj = 1;
 			all[0]->init(l, all, numOfObj, f->getFrame(p2));
 			
@@ -1160,10 +1218,15 @@ namespace game_framework {
 	void ObjContainer::OnMove() {
 		for (int i = 0; i < numOfObj; i++) {
 			all[i]->OnMove();
+			obj* temp = all[i]->usingSkills();
+			if (temp != nullptr) {
+				addobj(temp);
+			}
 		}
 	}
 
 	void ObjContainer::OnShow() {
+		//TRACE("%d\n", numOfObj);
 		for (int i = 0; i < numOfObj; i++) {
 			all[i]->OnShow();
 		}
@@ -1176,6 +1239,15 @@ namespace game_framework {
 	}
 
 	void ObjContainer::addobj(obj* n) {
+		obj** temp = new obj*[numOfObj + 1];
+		int i;
+		for (i = 0; i < numOfObj; i++) {
+			*(temp + i) = *(all + i);
+		}
+		*(temp + i) = n;
+		numOfObj++;
 
+		delete all;
+		all = temp;
 	}
 }

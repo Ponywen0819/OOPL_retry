@@ -7,6 +7,8 @@ namespace game_framework {
 		void LoadBitmap();
 
 		void selectByNum(int ch, int n,int index,int x, int y);
+
+		void selectOpiont(int ch, int n, int index, int x, int y);
 	private:
 		CMovingBitmap tempPic[2][140];	//人物的圖片
 		CMovingBitmap FirenPic[2][190];	//人物的圖片
@@ -14,6 +16,9 @@ namespace game_framework {
 		CMovingBitmap FreezePic[2][170];	//人物的圖片
 
 		CMovingBitmap weapon[2][35];	//球棒的圖片
+
+		CMovingBitmap deep_ball[2][8];	
+		CMovingBitmap freeze_ball[2][8];
 	};
 
 	class Framelib {
@@ -61,6 +66,22 @@ namespace game_framework {
 			}
 		}
 	
+		std::map<int, Frame>* getobjFrame(int n) {
+			switch (n) {
+			case 203: {
+				return &deep_ball;
+				break;
+			}
+			case 209: {
+				return &freeze_ball;
+				break;
+			}
+			default: {
+				return &deep_ball;
+				break;
+			}
+			}
+		}
 	private:
 		int * extra(std::string &line, std::string *tar, int number);
 		void  loadFrame();
@@ -73,5 +94,8 @@ namespace game_framework {
 		std::map<int, Frame> Frams_weapon0;
 		std::map<int, Frame> Frams_weapon1;
 		std::map<int, Frame> Frams_weapon7;
+
+		std::map<int, Frame> deep_ball;
+		std::map<int, Frame> freeze_ball;
 	};
 }
