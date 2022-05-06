@@ -84,6 +84,18 @@
    pic: 6  state: 3003  wait: 1  next: 33  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
 <frame_end>
 
+<frame> 40 rebounding
+   pic: 4  state: 3003  wait: 1  next: 41  dvx: 0  dvy: 0  dvz: 0  centerx: 43  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
+<frame> 41 rebounding
+   pic: 5  state: 3003  wait: 1  next: 42  dvx: 0  dvy: 0  dvz: 0  centerx: 43  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
+<frame> 42 rebounding
+   pic: 4  state: 3003  wait: 1  next: 31  dvx: 0  dvy: 0  dvz: 0  centerx: 43  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
 <frame> 33 rebounding
    pic: 7  state: 3003  wait: 1  next: 1000  dvx: 0  dvy: 0  centerx: 93  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
 <frame_end>

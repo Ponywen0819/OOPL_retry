@@ -1806,8 +1806,7 @@
 <frame_end>
 
 <frame> 255 burn_run
-   pic: 163  state: 19  wait: 2  next: 256  dvx: 0  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 mp: 75
-  sound: data\003.wav 
+   pic: 163  state: 19  wait: 2  next: 256  dvx: 0  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 mp: 75 sound: 3
    wpoint:
       kind: 1  x: 59  y: 39  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1954,7 +1953,7 @@
 <frame> 271 flame
    pic: 174  state: 3  wait: 1  next: 272  dvx: 0  dvy: 0  dvz: 0  centerx: 22  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 71 
    opoint:
-      kind: 1  x: 42  y: 41  action: 0  dvx: 0  dvy: 0  oid: 211  facing: 0
+      kind: 1  x: 42  y: 41  action: 0  dvx: 0  dvy: 0  oid: 212  facing: 0
    opoint_end:
    wpoint:
       kind: 1  x: 14  y: 57  weaponact: 25  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -1987,7 +1986,7 @@
 <frame> 274 flame
    pic: 173  state: 3  wait: 1  next: 275  dvx: 0  dvy: 0  dvz: 0  centerx: 22  centery: 79  hit_a: 0  hit_d: 283  hit_j: 283 mp: -8
    opoint:
-      kind: 1  x: 42  y: 41  action: 0  dvx: 0  dvy: 0  oid: 211  facing: 0
+      kind: 1  x: 42  y: 41  action: 0  dvx: 0  dvy: 0  oid: 212  facing: 0
    opoint_end:
    wpoint:
       kind: 1  x: 15  y: 57  weaponact: 25  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -2060,7 +2059,7 @@
 <frame> 289 explosion
    pic: 179  state: 18  wait: 1  next: 290  dvx: 0  dvy: 0  dvz: 0  centerx: 46  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 71 
    opoint:
-      kind: 1  x: 48  y: 81  action: 109  dvx: 0  dvy: 0  oid: 211  facing: 1
+      kind: 1  x: 48  y: 81  action: 109  dvx: 0  dvy: 0  oid: 213  facing: 1
    opoint_end:
    wpoint:
       kind: 1  x: 22  y: 57  weaponact: 24  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 

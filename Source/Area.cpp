@@ -12,7 +12,7 @@ namespace game_framework {
 		double min_y = other._Ly > _Ly ? other._Ly : _Ly;
 		double max_x = other._Rx < _Rx ? other._Rx : _Rx;
 		double max_y = other._Ry < _Ry ? other._Ry : _Ry;
-		TRACE("%.1f %.1f %.1f %.1f\n", min_x, min_y, max_x, max_y);
+		//TRACE("%.1f %.1f %.1f %.1f\n", min_x, min_y, max_x, max_y);
 		if (min_x > max_x || min_y > max_y) {
 			return false;
 		}

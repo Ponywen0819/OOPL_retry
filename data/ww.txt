@@ -1,0 +1,64 @@
+<frame> 150 whirlwind
+   pic: 0  state: 15  wait: 2  next: 151  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0 sound: 73 
+<frame_end>
+
+<frame> 151 whirlwind
+   pic: 1  state: 15  wait: 2  next: 152  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   opoint:
+      kind: 1  x: 82  y: 144  action: 170  dvx: 0  dvy: 0  oid: 215  facing: 0
+   opoint_end:
+<frame_end>
+
+<frame> 152 whirlwind
+   pic: 2  state: 15  wait: 1  next: 153  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
+<frame> 153 whirlwind
+   pic: 3  state: 15  wait: 1  next: 154  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 15  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 200  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>
+
+<frame> 154 whirlwind
+   pic: 4  state: 15  wait: 1  next: 155  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 15  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 200  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>
+
+<frame> 155 whirlwind
+   pic: 5  state: 15  wait: 1  next: 156  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 15  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 200  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>
+
+<frame> 156 whirlwind
+   pic: 6  state: 15  wait: 1  next: 157  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 15  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 200  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>
+
+<frame> 157 whirlwind
+   pic: 7  state: 15  wait: 1  next: 154  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 50  hit_d: 158  hit_j: 0
+   itr:
+      kind: 15  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 200  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>
+
+<frame> 158 whirlwind
+   pic: 8  state: 15  wait: 2  next: 159  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
+<frame> 159 whirlwind
+   pic: 9  state: 15  wait: 2  next: 1000  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+<frame_end>
+
+<frame> 170 whirlwind
+   pic: 10  state: 15  wait: 50  next: 1000  dvx: -2  dvy: 0  dvz: 0  centerx: 82  centery: 144  hit_a: 0  hit_d: 0  hit_j: 0
+   itr:
+      kind: 16  x: 15  y: 21  w: 128  h: 170  dvx: -12  dvy: -18  fall: 70  vrest: 100  bdefend: 16  injury: 75  zwidth: 30  
+   itr_end:
+<frame_end>

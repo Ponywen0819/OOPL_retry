@@ -28,6 +28,7 @@ namespace game_framework {
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
 		}
+		
 		~obj() {
 			if (beatenCount != nullptr) {
 				delete beatenCount;
@@ -52,35 +53,36 @@ namespace game_framework {
 			return *this;
 		}
 
-		obj(std::map<int, Frame> *f) {
-			Frams = f;
-		}
-
 		// 物品各自有自己移動的方式
 		virtual void OnMove() = 0;
 		virtual void OnShow() = 0;
 		
+
+		//
+		// 設定
+		//
 		void updateObj(obj** list, int n) {
 			all = list;
 			numOfObj = n;
 		}
+		void setmax(int x, int z) {
+			maxx = x; maxz = z;
+		}
+
+
+
+		virtual void hitSomeOne() {}
 		//
 		// 動作更新函式
 		//
 		virtual void backToRandon() {};
 		virtual void toMotion(int next) {};
-		virtual void nextFrame() {};
+		virtual void nextFrame() {};			
 
-		// 鍵盤動作 =>只有人物有(會改掉)
-		virtual void	setComm(UINT comm) {}			// 設定指令
-		virtual void	cComm(UINT comm) {}				// 取消指令					
-
-		// 取得資料庫
-		void init(Bitmaplib *l,obj** a,int n, std::map<int, Frame> *f) {
-			Frams = f;
+		void init(obj** a,int n) {
 			this->all = a;
 			numOfObj = n;
-			lib = l;
+			Frams = fl->getFrame(id);
 		}
 
 
@@ -146,11 +148,11 @@ namespace game_framework {
 			//
 			area att;
 			att.init(o->_x, o->_y+o->_z, (*(o->Frams))[o->_mode]._i.getX(), (*(o->Frams))[o->_mode]._i.getY(),
-				(*(o->Frams))[o->_mode]._i.getW(), (*(o->Frams))[o->_mode]._i.getH(), o->Face_to_Left, o->max);
+				(*(o->Frams))[o->_mode]._i.getW(), (*(o->Frams))[o->_mode]._i.getH(), o->Face_to_Left, o->maxW);
 			for (int i = 0; i < (*Frams)[_mode]._Num_of_hitbox; i++) {
 				hitbox hit = *((*Frams)[_mode]._hitbox + i);
 				area n;
-				n.init(_x, _y+_z, hit.getX(), hit.getY(), hit.getW(), hit.getH(), this->Face_to_Left, this->max);
+				n.init(_x, _y+_z, hit.getX(), hit.getY(), hit.getW(), hit.getH(), this->Face_to_Left, this->maxW);
 				if (n.touch(att)) {
 					return true;
 				}
@@ -169,41 +171,68 @@ namespace game_framework {
 			return nullptr;
 		}
 
-		std::map<int, Frame> *Frams;	// 動作資料表
-		//
-		obj** all;						// 所有物品的列表
-		int numOfObj;					// 所有物品的個數
-		//	應該會改掉
 
-		Bitmaplib *	lib;			// 圖片輸出
+		int	id;						//代表自己是什麼
+		std::map<int, Frame> *Frams;// 動作資料表
+		obj**	all;				// 所有物品的列表
+		int		numOfObj;			// 所有物品的個數
+
+		Bitmaplib*	lib;			// 圖片輸出
+		Framelib*	fl;				// 為了要創造
 		bool	inMotion;			// 是否在特殊動作裡
 		int		_mode;				// 現在的模式
 		double	_x, _y, _z;			// 現在的位置
 		bool	Face_to_Left;		// 面相方向
+		
 
 		obj*	Caught;				// 被抓住的人
 		obj**	beatenList;			// 被打到的人
 
-		int		max;				// 此物品圖片大小
+		int		maxW,maxH;			// 此物品圖片大小
 		int*	beatenCount;		// 多久之後才可以再打一次
 		int		numOfBeaten;		// 有多少人被打到
 		int		cc;					// 抓人計數
 		int		time;				// 計數
 		int		arestC;				// 多久之後才可以打人
+		int		hp;					// 血量
+		int		maxx, maxz;			// 地圖的最大值
 		bool	Alive;				
+	};
+
+	class allobj {
+	public:
+		allobj() {
+			num = 0;
+			all = nullptr;
+		}
+		~allobj() {
+			delete[] all;
+		}
+
+		
+
+		void add(obj *);
+		void del(int n);
+
+		obj* getobj(int n);
+		int getN() {
+			return num;
+		}
+	private:
+		int num;
+		obj** all;
 	};
 
 	class man:public obj{
 	public:
-		man() {
-			charector = 0;
+		man():obj() {
 			_Double_Tap_Gap = 30;
 			initG = 0;
 			time = 0;
 			Walk_Ani_num = 5;
 			fall = 100;
 			commandBuffer = "";
-
+			
 			for (int i = 0; i < 8; i++)SkillsMotion[i] = -1;
 			SkillsMotion[0] = SkillsMotion[1] = 9;
 			for (int i = 0; i < 7; i++)	flag[i] = false;
@@ -216,7 +245,8 @@ namespace game_framework {
 			JumpDown = false;
 			JumpFront = false;
 			skills = nullptr;
-			max = 79;
+			maxW = maxH = 79;
+			_y = 79;
 			//
 			//	人物基本動作參數設定
 			//
@@ -239,8 +269,11 @@ namespace game_framework {
 			dash_distance = 15;
 			dash_distance_z = 3.75;
 		}
-		man(int ch) :man() {
-			charector = ch;
+		man(int ch, Framelib *f, Bitmaplib* b,allobj* al) :man() {
+			id = ch;
+			lib = b;
+			fl = f;
+			_a = al;
 			switch (ch){
 			case 0: {
 				SkillsMotion[2] = 235;
@@ -266,6 +299,7 @@ namespace game_framework {
 			default:
 				break;
 			}
+			Frams = fl->getFrame(id);
 		}
 		~man() {
 
@@ -279,7 +313,6 @@ namespace game_framework {
 
 		obj*	usingSkills() {
 			obj* a = skills;
-			//TRACE("%d\n", a);
 			skills = nullptr;
 			return a;
 		}
@@ -301,7 +334,7 @@ namespace game_framework {
 			_y += G++; initG = G; stepx = x; stepz = z;
 		}
 		void moveY() {
-			if (_y >= 0) { 
+			if (_y >= maxH) { 
 				return; 
 			}
 			_y += initG++;
@@ -311,7 +344,7 @@ namespace game_framework {
 			if (JumpUp) { _z -= stepz; }
 			if (JumpDown) { _z += stepz; }
 
-			if (charector == 0) {
+			if (id == 0) {
 				if ((initG == 0) && (_mode == 267)) {
 					toMotion(268);
 				}
@@ -387,7 +420,6 @@ namespace game_framework {
 		double	dash_distance_z;
 
 		int		Walk_Ani_num;						// 下一個走路動作的號碼
-		int		charector;							// 選擇之腳色
 		int		_Double_Tap_Gap;					// 連點間隔
 		int		NumOfMan;							// 在場上的人
 		int		SkillsMotion[8];					
@@ -402,7 +434,8 @@ namespace game_framework {
 		bool	walk_Ani_dir;						// 走路動作的方向
 		bool	run_Ani_dir;						// 跑步動作的方向
 
-		Framelib*	fl;
+		
+		allobj* _a;									//場上所有人
 		obj*	skills;								// 出技能
 		std::string commandBuffer;					// input command buffer
 	};
@@ -424,40 +457,74 @@ namespace game_framework {
 		}
 		void OnShow();
 	private:
+		allobj* _a;				//場上所有人
 		man*	holding;		//誰再拿他
 		bool	IsHolding;		//有被拾取
-		int hp;
 	};
 
 	class wp :public obj {
 	public:
-		wp() {
-			oid = 0;
+		wp():obj() {
+			id = 0;
+			hp = 500;
 			time = 0;
+			skills = nullptr;
 		}
 
-		wp(int id,int mode):wp(){
-			oid = id;
+		wp(int n,int mode, Framelib *f, Bitmaplib* b):wp(){
+			fl = f;
+			lib = b;
+			id = n;
 			_mode = mode;
+			switch (id) {
+			case 203: {
+				maxW = 81;
+				maxH = 82;
+				break;
+			}
+			default: {
+				maxW = 81;
+				maxH = 82;
+				break;
+			}
+			}
+			Frams = fl->getFrame(id);
 		}
 		
-		void init(std::map<int, Frame> *f, Bitmaplib* b, int x, int y,int z,bool fa) {
-			lib = b;
-			Frams = f;
+		void init( int x, int y,int z,bool fa) {
 			_x = x;
 			_y = y;
 			_z = z;
 			Face_to_Left = fa;
 			if (Face_to_Left) {
-
+				_x -= (maxW + (*Frams)[_mode]._centerx);
 			}
 			else {
 				_x -= (*Frams)[_mode]._centerx;
-				_y -= (*Frams)[_mode]._centery;
 			}
+				_y += (*Frams)[_mode]._centery;
+		}
+
+		obj*	usingSkills() {
+			obj* a = skills;
+			skills = nullptr;
+			return a;
 		}
 
 
+		void hitSomeOne() {
+			switch (id) {
+			case 203:
+			case 209:
+			case 210: {
+				toMotion(10);
+				break;
+			}
+			default: {
+				break;
+			}
+			}
+		}
 		void backToRandon();
 		void toMotion(int next);
 		void nextFrame();
@@ -471,12 +538,15 @@ namespace game_framework {
 		void Count() {
 			if (time > 0) time--;
 		}
-		bool isTime() { return time == 0; }
+		bool isTime() { return time <= 0; }
 
-
-		int oid;			// 氣功的種類
-		int time;			// 持續的時間
+		allobj* a;				//場上所有人
+		obj*	skills;			// 心放的技能
+		obj*	owner;			// 誰放的		
+		int		stand;			// 持續的時間
 	};
+
+	
 
 	class ObjContainer {
 	public:
@@ -488,19 +558,25 @@ namespace game_framework {
 		}
 		void init(int player1,int player2, Bitmaplib *l, Framelib* f);
 		void creatWeapon(int n);
-		void addobj(obj *n);
 
 		void KeyUp(UINT nChar);
 		void KeyDown(UINT nChar);
 		
+		void check();
+
 		void OnMove();
 		void OnShow();
 	private:
 		int		state;				// 使用者選用腳色的形況
 		int		numOfObj;			// 場上所有物品的數量
 		obj**	all;				// 場上所有物品
+		allobj  a;					// 場上所有物品
 
+		man**	mans;				//人物
 		Bitmaplib* lib;				
 		Framelib* fl;
+		int maxx, maxz;				// 地圖的最大值
 	};
+
+	
 }

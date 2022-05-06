@@ -7,8 +7,6 @@ namespace game_framework {
 		void LoadBitmap();
 
 		void selectByNum(int ch, int n,int index,int x, int y);
-
-		void selectOpiont(int ch, int n, int index, int x, int y);
 	private:
 		CMovingBitmap tempPic[2][140];	//人物的圖片
 		CMovingBitmap FirenPic[2][190];	//人物的圖片
@@ -18,7 +16,15 @@ namespace game_framework {
 		CMovingBitmap weapon[2][35];	//球棒的圖片
 
 		CMovingBitmap deep_ball[2][8];	
+
+		CMovingBitmap fire_ball[2][12];
+		CMovingBitmap gf[2][16];
+		CMovingBitmap fla[2][18];
+		CMovingBitmap exp[2][15];
+
 		CMovingBitmap freeze_ball[2][8];
+		CMovingBitmap clo[2][28];
+		CMovingBitmap ww[2][11];
 	};
 
 	class Framelib {
@@ -42,32 +48,14 @@ namespace game_framework {
 				return &Frams_firen; 
 				break;
 			}
-			default: {
-				return &Frams_t; 
-				break;
-			}
-			}
-		}
-
-		std::map<int, Frame>* getWeaponFrame(int n) {
-			switch (n) {
-			case 0: {
+			case 10: {
 				return &Frams_weapon0;
 				break;
 			}
-			case 1: {
+			case 11: {
 				return &Frams_weapon1;
 				break;
 			}
-			default: {
-				return &Frams_weapon7;
-				break;
-			}
-			}
-		}
-	
-		std::map<int, Frame>* getobjFrame(int n) {
-			switch (n) {
 			case 203: {
 				return &deep_ball;
 				break;
@@ -76,8 +64,32 @@ namespace game_framework {
 				return &freeze_ball;
 				break;
 			}
+			case 210: {
+				return &fire_ball;
+				break;
+			}
+			case 211: {
+				return &gf;
+				break;
+			}
+			case 212: {
+				return &flame;
+				break;
+			} 
+			case 213: {
+				return &explosion;
+				break;
+			}
+			case 214: {
+				return &clo;
+				break;
+			}
+			case 215: {
+				return &ww;
+				break;
+			}
 			default: {
-				return &deep_ball;
+				return &Frams_t; 
 				break;
 			}
 			}
@@ -97,5 +109,12 @@ namespace game_framework {
 
 		std::map<int, Frame> deep_ball;
 		std::map<int, Frame> freeze_ball;
+		std::map<int, Frame> clo;
+		std::map<int, Frame> ww;
+		std::map<int, Frame> explosion;
+		std::map<int, Frame> flame;
+		std::map<int, Frame> gf;
+		std::map<int, Frame> fire_ball;
+
 	};
 }

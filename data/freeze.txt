@@ -1556,8 +1556,7 @@
 <frame_end>
 
 <frame> 246 Down_punch
-   pic: 79  state: 3  wait: 1  next: 247  dvx: 0  dvy: 0  dvz: 0  centerx: 30  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: data\019.wav 
+   pic: 79  state: 3  wait: 1  next: 247  dvx: 0  dvy: 0  dvz: 0  centerx: 30  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 19 
    wpoint:
       kind: 1  x: 35  y: 48  weaponact: 30  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1587,8 +1586,7 @@
 <frame_end>
 
 <frame> 249 Down_punch
-   pic: 89  state: 3  wait: 1  next: 250  dvx: 2  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: data\020.wav 
+   pic: 89  state: 3  wait: 1  next: 250  dvx: 2  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 20
    wpoint:
       kind: 1  x: 35  y: 48  weaponact: 30  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1600,7 +1598,7 @@
 <frame> 250 Down_punch
    pic: 115  state: 3  wait: 2  next: 251  dvx: 1  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    opoint:
-      kind: 1  x: 105  y: 77  action: 100  dvx: 0  dvy: 0  oid: 212  facing: 0
+      kind: 1  x: 105  y: 77  action: 100  dvx: 0  dvy: 0  oid: 214  facing: 0
    opoint_end:
    wpoint:
       kind: 1  x: 35  y: 48  weaponact: 30  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
@@ -1683,7 +1681,7 @@
 <frame> 265 Whirlwind
    pic: 155  state: 3  wait: 2  next: 266  dvx: 0  dvy: 0  dvz: 0  centerx: 33  centery: 71  hit_a: 0  hit_d: 0  hit_j: 0
    opoint:
-      kind: 1  x: 33  y: 71  action: 150  dvx: 0  dvy: 0  oid: 212  facing: 1
+      kind: 1  x: 33  y: 71  action: 150  dvx: 0  dvy: 0  oid: 215  facing: 1
    opoint_end:
    wpoint:
       kind: 1  x: 30  y: 46  weaponact: 30  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
