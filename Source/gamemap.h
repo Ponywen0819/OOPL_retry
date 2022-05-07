@@ -14,8 +14,8 @@ namespace game_framework {
 		void set(double mw, double lw, int x, int y);
 		void set(double mw, double lw, int x, int y, int loop);
 
-		void LoadBitmap(char *qwwq, COLORREF = RGB(0,0,0));
-		
+		void LoadBitmap(char *, COLORREF = RGB(0,0,0));
+		void AddBitmap(char *, COLORREF = RGB(0, 0, 0));
 		void calShow();
 		void onShow(int a);
 		int map_pos();
@@ -23,6 +23,7 @@ namespace game_framework {
 
 	private:
 
+		CAnimation back_ground_ani;
 		CMovingBitmap back_ground;
 		double map_width;
 		double layer_width;

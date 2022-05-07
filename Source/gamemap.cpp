@@ -12,6 +12,10 @@ namespace game_framework {
 		back_ground.LoadBitmap(filename, color);
 	}
 
+	void gamemap::AddBitmap(char *filename, COLORREF color) {
+		back_ground_ani.AddBitmap(filename, color);
+	}
+
 	void gamemap::set(double mw, double lw, int x, int y) {
 		map_width = mw;
 		layer_width = lw;

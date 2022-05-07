@@ -191,6 +191,7 @@ namespace game_framework {
 		int		time;				// 計數
 		int		arestC;				// 多久之後才可以打人
 		bool	Alive;				
+		
 	};
 
 	class man:public obj{
@@ -495,6 +496,7 @@ namespace game_framework {
 		
 		void OnMove();
 		void OnShow();
+	
 	private:
 		int		state;				// 使用者選用腳色的形況
 		int		numOfObj;			// 場上所有物品的數量

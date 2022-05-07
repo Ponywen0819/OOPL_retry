@@ -20,6 +20,7 @@
     <ClCompile Include="Source\gamelib.cpp" />
     <ClCompile Include="Source\mygame.cpp" />
     <ClCompile Include="Source\templete1.cpp" />
+    <ClCompile Include="Source\Stanley_Prison.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Area.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Source\gamelib.h" />
     <ClInclude Include="Source\mygame.h" />
     <ClInclude Include="Source\templete1.h" />
+    <ClInclude Include="Source\Stanley_Prison.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc" />
