@@ -7,8 +7,8 @@ namespace game_framework {
 		void showmap(int);
 		int map_pos();
 	private:
-		gamemap wall;
-		gamemap wall_ani;
+		gamemap wall[2];
 		gamemap fire_ani;
+		gamemap wall_ani;
 	};
 }

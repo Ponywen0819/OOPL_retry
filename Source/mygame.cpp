@@ -317,7 +317,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // Εγ₯ά
 void CGameStateRun::OnShow() {
 
-	sp.showmap(0);
+	sp.showmap(allobj.getX());
 	bar.OnShowBar(player1, player2);
 	allobj.OnShow();	
 }

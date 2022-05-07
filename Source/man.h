@@ -583,7 +583,6 @@ namespace game_framework {
 	class ObjContainer {
 	public:
 		ObjContainer() {
-			numOfObj = 0;
 		}
 		~ObjContainer() {
 		}

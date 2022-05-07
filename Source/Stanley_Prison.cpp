@@ -12,38 +12,41 @@
 namespace game_framework {
 
 	void SP::init() {
-		wall.LoadBitmap("./Bitmaps/bg/SP/wall.bmp");
-		wall[1].LoadBitmap("./Bitmaps/bg/SP/wall2.bmp");
-		wall[2].LoadBitmap("./Bitmaps/bg/SP/wall3.bmp");
-		wall[3].LoadBitmap("./Bitmaps/bg/SP/wall4.bmp");
-		fire[0].LoadBitmap("./Bitmaps/bg/SP/fire1.bmp");
-		fire[1].LoadBitmap("./Bitmaps/bg/SP/fire2.bmp");
-		fire[2].LoadBitmap("./Bitmaps/bg/SP/fire3.bmp");
-		fire[3].LoadBitmap("./Bitmaps/bg/SP/fire4.bmp");
-		fire[4].LoadBitmap("./Bitmaps/bg/SP/fire5.bmp");
-		fire[5].LoadBitmap("./Bitmaps/bg/SP/fire6.bmp");
-		fire[6].LoadBitmap("./Bitmaps/bg/SP/fire7.bmp");
+		wall[0].LoadBitmap("./Bitmaps/bg/SP/wall.bmp");
+		wall[1].LoadBitmap("./Bitmaps/bg/SP/underground.bmp");
+		wall_ani.AddBitmap("./Bitmaps/bg/SP/wall2.bmp");
+		wall_ani.AddBitmap("./Bitmaps/bg/SP/wall3.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire1.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire2.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire3.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire4.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire5.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire6.bmp");
+		fire_ani.AddBitmap("./Bitmaps/bg/SP/fire7.bmp");
 
+		wall[0].set(map_width, 2400, 0, 128, 277);
+		wall[1].set(map_width, 2400, 0, 308,800);
 
-		wall.set(map_width, 2400, 0, 128, 277);
-		wall[1].set(map_width, 2400, -57, 269, 277);
-		//wall[2].set(map_width, 2400, -57, 269, 277);
-		fire[0].set(map_width, 2400, 0, 128, 277);
+		wall_ani.set(map_width, 2400, -57, 269, 277,1);
+		fire_ani.set(map_width, 2400, 0, 128, 277,1);
 
-
-		wall.calShow();
+		wall[0].calShow();
 		wall[1].calShow();
-		fire[0].calShow();
+		wall_ani.calShow();
+		fire_ani.calShow();
+
 	}
 
 	void SP::showmap(int _man_pos) {
-		wall.onShow(_man_pos);
+	
+		wall[0].onShow(_man_pos);
 		wall[1].onShow(_man_pos);
-		fire[0].onShow(_man_pos);
+		wall_ani.onShow(_man_pos);
+		fire_ani.onShow(_man_pos);
 	}
 
 	int SP::map_pos() {
-		return wall.map_pos();
+		return wall[0].map_pos();
 	}
 
 }
