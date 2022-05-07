@@ -132,12 +132,17 @@ namespace game_framework {
 		setTimmer((*Frams)[_mode]._wait);
 		if ((*Frams)[_mode]._have_opiont) {
 			int i = (*Frams)[_mode]._op.getOid();
-			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),fl,lib);
+			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),fl,lib,getOwner());
+			bool ftl;
+			if ((*Frams)[_mode]._op.getFacing() == 1) ftl = !Face_to_Left;
+			else ftl = Face_to_Left;
+
+			Frame tempF = (*Frams)[_mode];
 			if (Face_to_Left) {
-				temp->init(int(_x) + maxW - (*Frams)[_mode]._op.getX(), int(_y) - (*Frams)[_mode]._op.getY(), int(_z), Face_to_Left);
+				temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
 			else {
-				temp->init(int(_x) + (*Frams)[_mode]._op.getX(), int(_y) - (*Frams)[_mode]._op.getY(), int(_z), Face_to_Left);
+				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
 			temp->setmax(3200, 500);
 			skills = temp;
@@ -146,7 +151,7 @@ namespace game_framework {
 
 	void wp::nextFrame() {
 		int temp = (*Frams)[_mode]._next;
-
+		//TRACE("%d %d\n",temp,_mode);
 		if (temp == 1000) {
 			Alive = false;
 		}
@@ -158,12 +163,25 @@ namespace game_framework {
 		}
 	}
 
+	void wp::hitSomeOne() {
+		switch (id) {
+		case 203:
+		case 209:
+		case 210:
+			toMotion(10);
+			break;
+		default: {
+			break;
+		}
+		}
+	}
+
 	void wp::OnShow() {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
 		//TRACE("%d %d %d\n", (*Frams)[_mode]._pic,_mode,id);
-		lib->selectByNum( id, (*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z) +maxH);
+		lib->selectByNum( id, (*Frams)[_mode]._pic, index, int(_x), -int(_y)+int(_z));
 	}
 
 	void wp::OnMove() {
@@ -179,11 +197,12 @@ namespace game_framework {
 		}
 		_z += (*Frams)[_mode]._dvy;
 		hp -= (*Frams)[_mode].hit_a;
-		if (hp <= 0 && (*Frams)[_mode]._state != 3004) {
+		if (hp <= 0 && (*Frams)[_mode].hit_d != 0) {
+			hp = 500;
 			toMotion((*Frams)[_mode].hit_d);
 		}
 
-		if (_x > maxx) {
+		if (_x > maxx || _x<0) {
 			Alive = false;
 		}
 
@@ -212,15 +231,21 @@ namespace game_framework {
 		adjustPosition(_mode,f);
 		_mode = f;
 		inMotion = true;
-		setTimmer((*Frams)[_mode]._wait);
-		if ((*Frams)[_mode]._have_opiont) {
-			int i = (*Frams)[_mode]._op.getOid();
-			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(), fl, lib);
+		Frame tempF = (*Frams)[_mode];
+		setTimmer(tempF._wait);
+		if (tempF._have_opiont) {
+			wp* temp = new wp(tempF._op.getOid(), tempF._op.getAction(), fl, lib,getOwner());
+			bool ftl;
+			if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
+			else ftl = Face_to_Left;
+			
 			if (Face_to_Left) {
-				temp->init(int(_x) + maxW - (*Frams)[_mode]._op.getX(), int(_y) - (*Frams)[_mode]._op.getY(), int(_z), Face_to_Left);
+				//TRACE("%d \n", maxW - tempF._op.getX());
+				temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
 			else {
-				temp->init(int(_x) + (*Frams)[_mode]._op.getX(), int(_y) - (*Frams)[_mode]._op.getY(), int(_z), Face_to_Left);
+				//TRACE("%d \n", tempF._op.getX());
+				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
 			temp->setmax(3200, 500);
 			skills = temp;
@@ -240,7 +265,7 @@ namespace game_framework {
 					backToRandon();
 				}
 			}
-			else if ( _y < maxH) {
+			else if ( _y > maxH) {
 				adjustPosition(_mode, 212);
 				toMotion(212);
 			}
@@ -256,6 +281,7 @@ namespace game_framework {
 			}
 		}
 		else{
+			//TRACE("right %d\n", (*Frams)[_mode]._state);
 			// 特殊動作
 			switch ((*Frams)[_mode]._state){
 			case 2: {
@@ -314,21 +340,22 @@ namespace game_framework {
 			}
 			case 12: {
 				if (_mode == 185) {
-					adjustPosition(_mode, 230);
-					_mode = 230;
-					setTimmer((*Frams)[_mode]._wait);
-				}
-				else if (_mode == 190) {
-					if (_y == maxH) {
-						adjustPosition(_mode, 231);
-						_mode = 231;
-						setTimmer((*Frams)[_mode]._wait);
+					if (int(_y) <= maxH) {
+						_y = maxH;
+						toMotion(230);
 					}
 				}
+				else if (_mode == 190) {
+					if (int(_y) <= maxH) {
+						_y = maxH;
+						toMotion(191);
+					}
+				}
+				else if (_mode == 191) {
+					toMotion(231);
+				}
 				else {
-					adjustPosition(_mode, _mode + 1);
-					_mode++;
-					setTimmer((*Frams)[_mode]._wait);
+					toMotion(_mode + 1);
 				}
 				break;
 			}
@@ -512,12 +539,11 @@ namespace game_framework {
 			}
 		}
 		int hj = (*Frams)[_mode].hit_j;
-		if ((*Frams)[_mode].hit_j != 0) {
+		if (hj != 0) {
 			if (flag[4]) {
 				toMotion(hj);
 			}
 		}
-		// TRACE("%d %d %d %d\n", ha, hd, hj, _mode);
 		switch (stateNow){
 		case 1: {
 			if (flag[6]) {
@@ -607,6 +633,7 @@ namespace game_framework {
 	}
 
 	void man::checkbeenatt() {
+		Frame myF = (*Frams)[_mode];
 		for (int i = 0; i < _a->getN(); i++) {
 			obj* temp_obj = _a->getobj(i);
 			if (temp_obj == this) {
@@ -653,13 +680,27 @@ namespace game_framework {
 						}
 
 
+						setYstep(tempf._i.getDvy(), tempf._i.getDvx(),0);
 						if (temp_obj->Face_to_Left) {
-							_x -= tempf._i.getDvx();
+							JumpFront = false; JumpBack = true;
 						}
 						else {
-							_x += tempf._i.getDvx();
+							JumpFront = true; JumpBack = false;
 						}
 
+						switch (tempf._i.get_effect()){
+						
+						case 2: 
+							toMotion(203);
+							break;
+						
+						case 30:
+							toMotion(200);
+							break;
+						
+						default:
+							break;
+						}
 						temp_obj->addBeaten(this);
 						temp_obj->hitSomeOne();
 					}
@@ -680,6 +721,12 @@ namespace game_framework {
 					useSupperAtt = true;
 					break;
 				}
+				case 15: {
+					break;
+				}
+				case 16: {
+					break;
+				}
 				default: {
 					break;
 				}
@@ -691,12 +738,13 @@ namespace game_framework {
 	
 	//人物狀態更新
 	void man::OnMove() {
+		//TRACE("%d\n",_mode);
 		//負責動作的變更
 		if (isTime()) {
 			nextFrame();
 		}
 		Count();
-
+		moveY();
 		int stateNow = (*Frams)[_mode]._state;
 		// 負責位置的調整
 		//moveY();
@@ -737,7 +785,7 @@ namespace game_framework {
 		}
 		// 普通拳腳攻擊
 		case 3: {
-			if (_y > maxH) {
+			if (_y < maxH) {
 				_y = maxH;
 				backToRandon();
 			}
@@ -750,16 +798,14 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
-			moveY();
-			if (_y > maxH) {
+			if (_y < maxH) {
 				_y = maxH;backToRandon();
 			}
 			break;
 		}
 		//大跳
 		case 5: {
-			moveY();
-			if (_y > maxH) {
+			if (_y < maxH) {
 				_y = maxH;backToRandon();
 			}
 			break;
@@ -779,8 +825,13 @@ namespace game_framework {
 		case 10: {
 			break;
 		}
+		// 跌倒的部分
+		case 12: {
+			
+			break;
+		}
 		default: {
-			if (_y > maxH) {
+			if (_y < maxH) {
 				_y = maxH;
 				backToRandon();
 			}
@@ -807,7 +858,8 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z)+ maxH);
+		
+		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
 		//TRACE("%d\n", (*Frams)[_mode]._pic);
 	}
 

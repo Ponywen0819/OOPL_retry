@@ -70,6 +70,10 @@ namespace game_framework {
 		}
 
 
+		virtual obj* getOwner() {
+			return this;
+		}
+
 
 		virtual void hitSomeOne() {}
 		//
@@ -318,7 +322,6 @@ namespace game_framework {
 		}
 
 		void	checkbeenatt();						// 被攻擊偵測
-		void	checkbeenatt(obj**, int);
 		void	OnMove();							// 改變位置
 		void	OnShow();							// 顯示
 	protected:
@@ -331,13 +334,14 @@ namespace game_framework {
 		// 跳躍處理
 
 		void setYstep(double G, double x, double z) {
-			_y += G++; initG = G; stepx = x; stepz = z;
+			_y -= G++; initG = G; stepx = x; stepz = z;
 		}
 		void moveY() {
-			if (_y >= maxH) { 
+			//TRACE("%.1f %d \n", _y,maxH);
+			if (int(_y) <= maxH) { 
 				return; 
 			}
-			_y += initG++;
+			_y -= initG++;
 			initG += 1;
 			if (JumpFront) {_x += stepx;}
 			if (JumpBack) {_x -= stepx;}
@@ -471,15 +475,51 @@ namespace game_framework {
 			skills = nullptr;
 		}
 
-		wp(int n,int mode, Framelib *f, Bitmaplib* b):wp(){
+		wp(int n,int mode, Framelib *f, Bitmaplib* b,obj* ow):wp(){
 			fl = f;
 			lib = b;
 			id = n;
 			_mode = mode;
+			owner = ow;
 			switch (id) {
 			case 203: {
 				maxW = 81;
 				maxH = 82;
+				break;
+			}
+			case 209: {
+				maxW = 81;
+				maxH = 82;
+				break;
+			}
+			case 210: {
+				maxW = 81;
+				maxH = 82;
+				break;
+			}
+			case 211: {
+				maxW = 35;
+				maxH = 49;
+				break;
+			}
+			case 212: {
+				maxW = 59;
+				maxH = 63;
+				break;
+			}
+			case 213: {
+				maxW =159;
+				maxH = 159;
+				break;
+			}
+			case 214: {
+				maxW = 109;
+				maxH = 109;
+				break;
+			}
+			case 215: {
+				maxW = 159;
+				maxH = 159;
 				break;
 			}
 			default: {
@@ -496,8 +536,8 @@ namespace game_framework {
 			_y = y;
 			_z = z;
 			Face_to_Left = fa;
-			if (Face_to_Left) {
-				_x -= (maxW + (*Frams)[_mode]._centerx);
+			if (fa) {
+				_x = x - (maxW - (*Frams)[_mode]._centerx);
 			}
 			else {
 				_x -= (*Frams)[_mode]._centerx;
@@ -511,20 +551,11 @@ namespace game_framework {
 			return a;
 		}
 
-
-		void hitSomeOne() {
-			switch (id) {
-			case 203:
-			case 209:
-			case 210: {
-				toMotion(10);
-				break;
-			}
-			default: {
-				break;
-			}
-			}
+		obj* getOwner() {
+			return owner;
 		}
+
+		void hitSomeOne();
 		void backToRandon();
 		void toMotion(int next);
 		void nextFrame();
@@ -554,22 +585,27 @@ namespace game_framework {
 			numOfObj = 0;
 		}
 		~ObjContainer() {
-			delete[] all;
 		}
 		void init(int player1,int player2, Bitmaplib *l, Framelib* f);
 		void creatWeapon(int n);
 
 		void KeyUp(UINT nChar);
 		void KeyDown(UINT nChar);
-		
+		int  getX() {
+			if (state == 0) {
+				return int(a.getobj(0)->_x + a.getobj(1)->_x) / 2;
+			}
+			else {
+				return int(a.getobj(0)->_x);
+			}
+		}
+
 		void check();
 
 		void OnMove();
 		void OnShow();
 	private:
 		int		state;				// 使用者選用腳色的形況
-		int		numOfObj;			// 場上所有物品的數量
-		obj**	all;				// 場上所有物品
 		allobj  a;					// 場上所有物品
 
 		man**	mans;				//人物

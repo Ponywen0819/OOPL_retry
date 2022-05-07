@@ -18,6 +18,7 @@ namespace game_framework {
 			_injury = 0;
 			_catchingact = 0;
 			_caughtact = 0;
+			_effect = 0;
 		}
 		itr(int kind, int x, int y, int w, int h, int z_width,
 			int dvx, int dvy, int fall, int vrest, int arest,int bdefend, int injury, int effect,int catchingact,int caughtact) :
@@ -82,6 +83,7 @@ namespace game_framework {
 		int getInjury() { return _injury; }
 		int getCatching() { return _catchingact; }
 		int getCaught() {return _caughtact;}
+		int get_effect() { return _effect; }
 
 	private:
 		int _kind;
