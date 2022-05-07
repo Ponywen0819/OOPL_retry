@@ -131,25 +131,48 @@ namespace game_framework {
 		inMotion = true;
 		setTimmer((*Frams)[_mode]._wait);
 		if ((*Frams)[_mode]._have_opiont) {
-			wp* temp = new wp;
+			int i = (*Frams)[_mode]._op.getOid();
+			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),fl,lib,getOwner());
+			bool ftl;
+			if ((*Frams)[_mode]._op.getFacing() == 1) ftl = !Face_to_Left;
+			else ftl = Face_to_Left;
 
+			Frame tempF = (*Frams)[_mode];
+			if (Face_to_Left) {
+				temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+			}
+			else {
+				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+			}
+			temp->setmax(3200, 500);
+			skills = temp;
 		}
 	}
 
 	void wp::nextFrame() {
 		int temp = (*Frams)[_mode]._next;
+		//TRACE("%d %d\n",temp,_mode);
 		if (temp == 1000) {
-			
+			Alive = false;
 		}
 		else if (temp == 999) {
-			adjustPosition(_mode, 0);
-			_mode = 0;
-			setTimmer((*Frams)[_mode]._wait);
+			toMotion(0);
 		}
 		else {
-			adjustPosition(_mode, temp);
-			_mode = temp;
-			setTimmer((*Frams)[_mode]._wait);
+			toMotion(temp);
+		}
+	}
+
+	void wp::hitSomeOne() {
+		switch (id) {
+		case 203:
+		case 209:
+		case 210:
+			toMotion(10);
+			break;
+		default: {
+			break;
+		}
 		}
 	}
 
@@ -157,11 +180,12 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		lib->selectOpiont(oid, (*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+		//TRACE("%d %d %d\n", (*Frams)[_mode]._pic,_mode,id);
+		lib->selectByNum( id, (*Frams)[_mode]._pic, index, int(_x), -int(_y)+int(_z));
 	}
 
 	void wp::OnMove() {
-		//if (!Alive) return;
+		
 		if (isTime()) {
 			nextFrame();
 		}
@@ -172,7 +196,17 @@ namespace game_framework {
 			_x += (*Frams)[_mode]._dvx;
 		}
 		_z += (*Frams)[_mode]._dvy;
+		hp -= (*Frams)[_mode].hit_a;
+		if (hp <= 0 && (*Frams)[_mode].hit_d != 0) {
+			hp = 500;
+			toMotion((*Frams)[_mode].hit_d);
+		}
 
+		if (_x > maxx || _x<0) {
+			Alive = false;
+		}
+
+		Count();
 	}
 
 	//
@@ -197,11 +231,23 @@ namespace game_framework {
 		adjustPosition(_mode,f);
 		_mode = f;
 		inMotion = true;
-		setTimmer((*Frams)[_mode]._wait);
-		if ((*Frams)[_mode]._have_opiont) {
-			int i = (*Frams)[_mode]._op.getOid();
-			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction());
-			temp->init(fl->getobjFrame(i),lib,int(_x)- (*Frams)[_mode]._op.getX(),int(_y)- (*Frams)[_mode]._op.getY(),int(_z),Face_to_Left);
+		Frame tempF = (*Frams)[_mode];
+		setTimmer(tempF._wait);
+		if (tempF._have_opiont) {
+			wp* temp = new wp(tempF._op.getOid(), tempF._op.getAction(), fl, lib,getOwner());
+			bool ftl;
+			if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
+			else ftl = Face_to_Left;
+			
+			if (Face_to_Left) {
+				//TRACE("%d \n", maxW - tempF._op.getX());
+				temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+			}
+			else {
+				//TRACE("%d \n", tempF._op.getX());
+				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+			}
+			temp->setmax(3200, 500);
 			skills = temp;
 		}
 	}
@@ -219,7 +265,7 @@ namespace game_framework {
 					backToRandon();
 				}
 			}
-			else if ( _y < 0) {
+			else if ( _y > maxH) {
 				adjustPosition(_mode, 212);
 				toMotion(212);
 			}
@@ -235,6 +281,7 @@ namespace game_framework {
 			}
 		}
 		else{
+			//TRACE("right %d\n", (*Frams)[_mode]._state);
 			// 特殊動作
 			switch ((*Frams)[_mode]._state){
 			case 2: {
@@ -274,12 +321,12 @@ namespace game_framework {
 			case 10: {
 				if (_mode >= 133) {
 					if (_mode == 138) {
-						if (_y == 0) {
+						if (_y == maxH) {
 							toMotion(230);
 						}
 					}
 					else if (_mode == 144) {
-						if (_y == 0) {
+						if (_y == maxH) {
 							toMotion(231);
 						}
 					}
@@ -293,21 +340,22 @@ namespace game_framework {
 			}
 			case 12: {
 				if (_mode == 185) {
-					adjustPosition(_mode, 230);
-					_mode = 230;
-					setTimmer((*Frams)[_mode]._wait);
-				}
-				else if (_mode == 190) {
-					if (_y == 0) {
-						adjustPosition(_mode, 231);
-						_mode = 231;
-						setTimmer((*Frams)[_mode]._wait);
+					if (int(_y) <= maxH) {
+						_y = maxH;
+						toMotion(230);
 					}
 				}
+				else if (_mode == 190) {
+					if (int(_y) <= maxH) {
+						_y = maxH;
+						toMotion(191);
+					}
+				}
+				else if (_mode == 191) {
+					toMotion(231);
+				}
 				else {
-					adjustPosition(_mode, _mode + 1);
-					_mode++;
-					setTimmer((*Frams)[_mode]._wait);
+					toMotion(_mode + 1);
 				}
 				break;
 			}
@@ -491,12 +539,11 @@ namespace game_framework {
 			}
 		}
 		int hj = (*Frams)[_mode].hit_j;
-		if ((*Frams)[_mode].hit_j != 0) {
+		if (hj != 0) {
 			if (flag[4]) {
 				toMotion(hj);
 			}
 		}
-		// TRACE("%d %d %d %d\n", ha, hd, hj, _mode);
 		switch (stateNow){
 		case 1: {
 			if (flag[6]) {
@@ -586,27 +633,29 @@ namespace game_framework {
 	}
 
 	void man::checkbeenatt() {
-		for (int i = 0; i < numOfObj; i++) {
-			if ((*(all + i)) == this) {
+		Frame myF = (*Frams)[_mode];
+		for (int i = 0; i < _a->getN(); i++) {
+			obj* temp_obj = _a->getobj(i);
+			if (temp_obj == this) {
 				continue;
 			}
-			int mode = (*(*(all + i)))._mode;
-			Frame tempf = (*((*(all + i))->Frams))[mode];
-			if ((*(all + i))->arestC > 0) {
+			int mode = temp_obj->_mode;
+			Frame tempf = (*(temp_obj->Frams))[mode];
+			if (temp_obj->arestC > 0) {
 				continue;
 			}
-			bool t = touch((*(all + i)));
+			bool t = touch(temp_obj);
 			if(tempf._have_itr && t){				// 這個東西具有攻擊性並且有碰到
 				switch (tempf._i.getKind()) {
 				case 0: {
-					if (!((*(all + i))->checkBeenBeaten(this))) {
+					if (!(temp_obj->checkBeenBeaten(this))) {
 						int fa = tempf._i.getFall();
 
 						if (fa == 0) { fall -= 18; }
 						else { fall -= fa; }
 
 						if (fall < 35) {			// 擊飛
-							if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+							if (temp_obj->Face_to_Left != this->Face_to_Left) {
 								toMotion(180);
 							}
 							else {
@@ -619,7 +668,7 @@ namespace game_framework {
 							toMotion(226);
 						}
 						else if (fall < 60) {		// 被打到第二下
-							if ((*(*(all + i))).Face_to_Left != this->Face_to_Left) {
+							if (temp_obj->Face_to_Left != this->Face_to_Left) {
 								toMotion(222);
 							}
 							else {
@@ -631,30 +680,51 @@ namespace game_framework {
 						}
 
 
-						if ((*(*(all + i))).Face_to_Left) {
-							_x -= tempf._i.getDvx();
+						setYstep(tempf._i.getDvy(), tempf._i.getDvx(),0);
+						if (temp_obj->Face_to_Left) {
+							JumpFront = false; JumpBack = true;
 						}
 						else {
-							_x += tempf._i.getDvx();
+							JumpFront = true; JumpBack = false;
 						}
 
-						(*(all + i))->addBeaten(this);
+						switch (tempf._i.get_effect()){
+						
+						case 2: 
+							toMotion(203);
+							break;
+						
+						case 30:
+							toMotion(200);
+							break;
+						
+						default:
+							break;
+						}
+						temp_obj->addBeaten(this);
+						temp_obj->hitSomeOne();
 					}
 					break;
 				}
 				case 1: {
 					if ((*Frams)[_mode]._state == 16) {
-						(*(all + i))->toMotion(tempf._i.getCatching());
-						(*(all + i))->Caught = this;
+						temp_obj->toMotion(tempf._i.getCatching());
+						temp_obj->Caught = this;
 						this->toMotion(tempf._i.getCaught());
 
-						Face_to_Left = !(*(all + i))->Face_to_Left;
-						(*(all + i))->cc = 301;
+						Face_to_Left = !temp_obj->Face_to_Left;
+						temp_obj->cc = 301;
 					}
 					break;
 				}
 				case 6: {
 					useSupperAtt = true;
+					break;
+				}
+				case 15: {
+					break;
+				}
+				case 16: {
 					break;
 				}
 				default: {
@@ -665,91 +735,16 @@ namespace game_framework {
 		}
 	}
 
-	void man::checkbeenatt(obj ** a,int n) {
-		for (int i = 0; i < n; i++) {
-			if ((*(a + i)) == this) {
-				continue;
-			}
-			int mode = (*(*(a + i)))._mode;
-			Frame tempf = (*((*(a + i))->Frams))[mode];
-			if ((*(a + i))->arestC > 0) {
-				continue;
-			}
-			if (tempf._have_itr) {				// 這個東西具有攻擊性
-				bool t = touch(tempf._i, (*(*(a + i))).Face_to_Left, (*(*(a + i)))._x, (*(*(a + i)))._y, (*(*(a + i)))._z);
-				if (t) {
-					switch (tempf._i.getKind()) {
-					case 0: {
-						if (!((*(a + i))->checkBeenBeaten(this))) {
-							int fa = tempf._i.getFall();
-							if (fa == 0) { fall -= 18; }
-							else { fall -= fa; }
-							if (fall < 35) {			// 擊飛
-								if ((*(*(a + i))).Face_to_Left != this->Face_to_Left) {
-									toMotion(180);
-								}
-								else {
-									toMotion(186);
-								}
-								time = (*Frams)[_mode]._wait;
-								fall = 100;
-							}
-							else if (fall < 55) {		// 暈眩
-								toMotion(226);
-							}
-							else if (fall < 60) {		// 被打到第二下
-								if ((*(*(a + i))).Face_to_Left != this->Face_to_Left) {
-									toMotion(222);
-								}
-								else {
-									toMotion(224);
-								}
-							}
-							else {						// 被打到第一下
-								toMotion(220);
-							}
-							if ((*(*(a + i))).Face_to_Left) {
-								_x -= tempf._i.getDvx();
-							}
-							else {
-								_x += tempf._i.getDvx();
-							}
-
-							(*(a + i))->addBeaten(this);
-						}
-						break;
-					}
-					case 1: {
-						if ((*Frams)[_mode]._state == 16) {
-							(*(a + i))->toMotion(tempf._i.getCatching());
-							(*(a + i))->Caught = this;
-							this->toMotion(tempf._i.getCaught());
-
-							Face_to_Left = !(*(all + i))->Face_to_Left;
-							(*(a + i))->cc = 301;
-						}
-						break;
-					}
-					case 6: {
-						useSupperAtt = true;
-						break;
-					}
-					default: {
-						break;
-					}
-					}
-				}
-			}
-		}
-	}
-		//人物狀態更新
+	
+	//人物狀態更新
 	void man::OnMove() {
+		//TRACE("%d\n",_mode);
 		//負責動作的變更
 		if (isTime()) {
 			nextFrame();
 		}
 		Count();
-
+		moveY();
 		int stateNow = (*Frams)[_mode]._state;
 		// 負責位置的調整
 		//moveY();
@@ -790,8 +785,8 @@ namespace game_framework {
 		}
 		// 普通拳腳攻擊
 		case 3: {
-			if (_y > 0) {
-				_y = 0;
+			if (_y < maxH) {
+				_y = maxH;
 				backToRandon();
 			}
 			else{
@@ -803,17 +798,15 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
-			moveY();
-			if (_y > 0) {
-				_y = 0;backToRandon();
+			if (_y < maxH) {
+				_y = maxH;backToRandon();
 			}
 			break;
 		}
 		//大跳
 		case 5: {
-			moveY();
-			if (_y > 0) {
-				_y = 0;backToRandon();
+			if (_y < maxH) {
+				_y = maxH;backToRandon();
 			}
 			break;
 		}
@@ -832,9 +825,14 @@ namespace game_framework {
 		case 10: {
 			break;
 		}
+		// 跌倒的部分
+		case 12: {
+			
+			break;
+		}
 		default: {
-			if (_y > 0) {
-				_y = 0;
+			if (_y < maxH) {
+				_y = maxH;
 				backToRandon();
 			}
 			if (Face_to_Left)
@@ -855,16 +853,17 @@ namespace game_framework {
 
 	}
 	
-		//人物顯示
+	//人物顯示
 	void man::OnShow() {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		lib->selectByNum(charector,(*Frams)[_mode]._pic, index, int(_x), int(_y) + int(_z) - (*Frams)[_mode]._centery);
+		
+		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
 		//TRACE("%d\n", (*Frams)[_mode]._pic);
 	}
 
-		//處理指令輸入時間間隔
+	//處理指令輸入時間間隔
 	void man::setCountDwon() {
 		_Double_Tap_Gap = 75;
 	}
@@ -872,6 +871,51 @@ namespace game_framework {
 	void man::resetCountDown() {
 		_Double_Tap_Gap = -1;
 	}
+
+	//
+	//------------------------------我也不知道的部分------------------------------------------
+	//
+
+	void allobj::add(obj* a) {
+		if (all == nullptr) {
+			all = new obj*[1];
+			all[0] = a;
+		}
+		else {
+			obj** temp = new obj*[num + 1];
+			int i;
+			for (i = 0; i < num; i++) {
+				*(temp + i) = *(all + i);
+			}
+			*(temp + i) = a;
+
+			delete all;
+			all = temp;
+		}
+		num++;
+	}
+
+	void allobj::del(int n) {
+		obj** temp = new obj*[num - 1];
+		int i;
+		int no = 0;
+		for (i = 0; i < num; i++) {
+			if (i != n) {
+				*(temp + no) = *(all + i);
+				no++;
+			}
+		}
+		num--;
+		delete all;
+		all = temp;
+	}
+
+	obj* allobj::getobj(int n) {
+		return (*(all + n));
+	}
+
+
+
 
 	//
 	//------------------------------主控的部分------------------------------------------
@@ -882,52 +926,40 @@ namespace game_framework {
 		fl = f;
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
-			all = new obj*[2];
-			man* temp1 = new man(p1);
-			man* temp2 = new man(p2);
-			temp1->getFl(f); temp2->getFl(f);
-			all[0] = temp1;
-			all[1] = temp2;
-			numOfObj = 2;
-			all[0]->init(l, all, numOfObj, f->getFrame(p1));
-			all[1]->init(l, all, numOfObj, f->getFrame(p2));
+			mans = new man*[2];
+			mans[0] = new man(p1,f,l,&a);
+			mans[1] = new man(p2,f,l,&a);
 
-			all[0]->_x = 100;
-			all[1]->_x = 100;
+			a.add(mans[0]);
+			a.add(mans[1]);
 
-			all[0]->_z = 400;
-			all[1]->_z = 500;
+			mans[0]->_x = 100;
+			mans[0]->_z = 400;
+
+			mans[1]->_x = 100;
+			mans[1]->_z = 500;
 		}
 		else if ((p1 != -1) && (p2 == -1)) {
 			state = 1;
-			all = new obj*[1];
-			man* temp1 = new man(p1);
-			temp1->getFl(f);
-			all[0] = temp1;
-			numOfObj = 1;
-			all[0]->init(l, all, numOfObj, f->getFrame(p1));
+			mans = new man*[1];
+			mans[0] = new man(p1, f, l, &a);
+			a.add(mans[0]);
 
-			all[0]->_x = 100;
-			
-			all[0]->_z = 400;
+			mans[0]->_x = 100;
+			mans[0]->_z = 400;
 		}
 		else if ((p1 == -1) && (p2 != -1)) {
 			state = 2;
-			all = new obj*[1];
-			man* temp1 = new man(p1);
-			temp1->getFl(f);
-			all[0] = temp1;
-			numOfObj = 1;
-			all[0]->init(l, all, numOfObj, f->getFrame(p2));
-			
-			all[0]->_x = 100;
-			
-			all[0]->_z = 400;
+			mans = new man*[1];
+			mans[0] = new man(p1, f, l, &a);
+			a.add(mans[0]);
+
+			mans[0]->_x = 100;
+			mans[0]->_z = 400;
 		}
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
-		//TRACE("%d\n", nChar);
 		const char KEY_A = 65;
 		const char KEY_W = 87;
 		const char KEY_S = 83;
@@ -940,59 +972,59 @@ namespace game_framework {
 		if (state == 0) {
 			switch (nChar){
 			case KEY_A: {
-				all[0]->setComm(1);
+				mans[0]->setComm(1);
 				break;
 			}
 			case KEY_D: {
-				all[0]->setComm(2);
+				mans[0]->setComm(2);
 				break;
 			}
 			case KEY_W: {
-				all[0]->setComm(3);
+				mans[0]->setComm(3);
 				break;
 			}
 			case KEY_X:{
-				all[0]->setComm(4);
+				mans[0]->setComm(4);
 				break;
 			}
 			case KEY_TAB: {
-				all[0]->setComm(5);
+				mans[0]->setComm(5);
 				break;
 			}
 			case KEY_S: {
-				all[0]->setComm(6);
+				mans[0]->setComm(6);
 				break;
 			}
 			case 192: {
-				all[0]->setComm(7);
+				mans[0]->setComm(7);
 				break;
 			}
 			case 74: {
-				all[1]->setComm(1);
+				mans[1]->setComm(1);
 				break;
 			}
 			case 76: {
-				all[1]->setComm(2);
+				mans[1]->setComm(2);
 				break;
 			}
 			case 73: {
-				all[1]->setComm(3);
+				mans[1]->setComm(3);
 				break;
 			}
 			case 188: {
-				all[1]->setComm(4);
+				mans[1]->setComm(4);
 				break;
 			}
-			case  75: {
-				all[1]->setComm(5);
+			case  32: {
+				mans[1]->setComm(5);
 				break;
 			}
-			case 32: {
-				all[1]->setComm(6);
+			case 75: {
+				mans[1]->setComm(6);
 				break;
 			}
 			case 190: {
-				all[1]->setComm(7);
+				mans[1]->setComm(7);
 				break;
 			}
 			default:
@@ -1003,31 +1035,31 @@ namespace game_framework {
 		else if (state == 1) {
 			switch (nChar) {
 			case KEY_A: {
-				all[0]->setComm(1);
+				mans[0]->setComm(1);
 				break;
 			}
 			case KEY_D: {
-				all[0]->setComm(2);
+				mans[0]->setComm(2);
 				break;
 			}
 			case KEY_W: {
-				all[0]->setComm(3);
+				mans[0]->setComm(3);
 				break;
 			}
 			case KEY_X: {
-				all[0]->setComm(4);
+				mans[0]->setComm(4);
 				break;
 			}
 			case KEY_TAB: {
-				all[0]->setComm(5);
+				mans[0]->setComm(5);
 				break;
 			}
 			case KEY_S: {
-				all[0]->setComm(6);
+				mans[0]->setComm(6);
 				break;
 			}
 			case 192: {
-				all[0]->setComm(7);
+				mans[0]->setComm(7);
 				break;
 			}
 			default:
@@ -1037,31 +1069,31 @@ namespace game_framework {
 		else {
 			switch (nChar) {
 			case 74: {
-				all[0]->setComm(1);
+				mans[0]->setComm(1);
 				break;
 			}
 			case 76: {
-				all[0]->setComm(2);
+				mans[0]->setComm(2);
 				break;
 			}
 			case 73: {
-				all[0]->setComm(3);
+				mans[0]->setComm(3);
 				break;
 			}
 			case 188: {
-				all[0]->setComm(4);
+				mans[0]->setComm(4);
 				break;
 			}
-			case  75: {
-				all[0]->setComm(5);
+			case  32: {
+				mans[0]->setComm(5);
 				break;
 			}
-			case 32: {
-				all[0]->setComm(6);
+			case 75: {
+				mans[0]->setComm(6);
 				break;
 			}
 			case 190: {
-				all[0]->setComm(7);
+				mans[0]->setComm(7);
 				break;
 			}
 			default: {
@@ -1083,59 +1115,59 @@ namespace game_framework {
 		if (state == 0) {
 			switch (nChar) {
 			case KEY_A: {
-				all[0]->cComm(1);
+				mans[0]->cComm(1);
 				break;
 			}
 			case KEY_D: {
-				all[0]->cComm(2);
+				mans[0]->cComm(2);
 				break;
 			}
 			case KEY_W: {
-				all[0]->cComm(3);
+				mans[0]->cComm(3);
 				break;
 			}
 			case KEY_X: {
-				all[0]->cComm(4);
+				mans[0]->cComm(4);
 				break;
 			}
 			case KEY_TAB: {
-				all[0]->cComm(5);
+				mans[0]->cComm(5);
 				break;
 			}
 			case KEY_S: {
-				all[0]->cComm(6);
+				mans[0]->cComm(6);
 				break;
 			}
 			case 192: {
-				all[0]->cComm(7);
+				mans[0]->cComm(7);
 				break;
 			}
 			case 74: {
-				all[1]->cComm(1);
+				mans[1]->cComm(1);
 				break;
 			}
 			case 76: {
-				all[1]->cComm(2);
+				mans[1]->cComm(2);
 				break;
 			}
 			case 73: {
-				all[1]->cComm(3);
+				mans[1]->cComm(3);
 				break;
 			}
 			case 188: {
-				all[1]->cComm(4);
+				mans[1]->cComm(4);
 				break;
 			}
-			case  75: {
-				all[1]->cComm(5);
+			case  32: {
+				mans[1]->cComm(5);
 				break;
 			}
-			case 32: {
-				all[1]->cComm(6);
+			case 75: {
+				mans[1]->cComm(6);
 				break;
 			}
 			case 190: {
-				all[1]->cComm(7);
+				mans[1]->cComm(7);
 				break;
 			}
 			default:
@@ -1146,31 +1178,31 @@ namespace game_framework {
 		else if (state == 1) {
 			switch (nChar) {
 			case KEY_A: {
-				all[0]->cComm(1);
+				mans[0]->cComm(1);
 				break;
 			}
 			case KEY_D: {
-				all[0]->cComm(2);
+				mans[0]->cComm(2);
 				break;
 			}
 			case KEY_W: {
-				all[0]->cComm(3);
+				mans[0]->cComm(3);
 				break;
 			}
 			case KEY_X: {
-				all[0]->cComm(4);
+				mans[0]->cComm(4);
 				break;
 			}
 			case KEY_TAB: {
-				all[0]->cComm(5);
+				mans[0]->cComm(5);
 				break;
 			}
 			case KEY_S: {
-				all[0]->cComm(6);
+				mans[0]->cComm(6);
 				break;
 			}
 			case 192: {
-				all[0]->cComm(7);
+				mans[0]->cComm(7);
 				break;
 			}
 			default:
@@ -1180,31 +1212,31 @@ namespace game_framework {
 		else {
 			switch (nChar) {
 			case 74: {
-				all[0]->cComm(1);
+				mans[0]->cComm(1);
 				break;
 			}
 			case 76: {
-				all[0]->cComm(2);
+				mans[0]->cComm(2);
 				break;
 			}
 			case 73: {
-				all[0]->cComm(3);
+				mans[0]->cComm(3);
 				break;
 			}
 			case 188: {
-				all[0]->cComm(4);
+				mans[0]->cComm(4);
 				break;
 			}
-			case  75: {
-				all[0]->cComm(5);
+			case  32: {
+				mans[0]->cComm(5);
 				break;
 			}
-			case 32: {
-				all[0]->cComm(6);
+			case 75: {
+				mans[0]->cComm(6);
 				break;
 			}
 			case 190: {
-				all[0]->cComm(7);
+				mans[0]->cComm(7);
 				break;
 			}
 			default: {
@@ -1215,20 +1247,19 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
-		for (int i = 0; i < numOfObj; i++) {
-			all[i]->OnMove();
-			obj* temp = all[i]->usingSkills();
+		for (int i = 0; i < a.getN(); i++) {
+			(a.getobj(i))->OnMove();
+			obj* temp = (a.getobj(i))->usingSkills();
 			if (temp != nullptr) {
-				addobj(temp);
+				a.add(temp);
 			}
-			all[i]->updateObj(all,numOfObj);
 		}
+		check();
 	}
 
 	void ObjContainer::OnShow() {
-		//TRACE("%d\n", numOfObj);
-		for (int i = 0; i < numOfObj; i++) {
-			all[i]->OnShow();
+		for (int i = 0; i < a.getN(); i++) {
+			(a.getobj(i))->OnShow();
 		}
 	}
 
@@ -1238,16 +1269,23 @@ namespace game_framework {
 
 	}
 
-	void ObjContainer::addobj(obj* n) {
-		obj** temp = new obj*[numOfObj + 1];
+	void ObjContainer::check() {
 		int i;
-		for (i = 0; i < numOfObj; i++) {
-			*(temp + i) = *(all + i);
+		if (state == 0) {
+			i = 2;
 		}
-		*(temp + i) = n;
-		numOfObj++;
-
-		delete all;
-		all = temp;
+		else {
+			i = 1;
+		}
+		while (i < a.getN()) {
+			//TRACE("%d %d\n", i, (all[i]->Alive));
+			if (!((a.getobj(i))->Alive)) {
+				a.del(i);
+			}
+			else {
+				i++;
+			}
+		}
 	}
+
 }
