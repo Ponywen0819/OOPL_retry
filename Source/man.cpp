@@ -554,7 +554,18 @@ namespace game_framework {
 			else if (flag[5]) {
 				flag[5] = false;
 				if (useSupperAtt) {
-					toMotion(70);
+					if (holdinglt) {
+						if (first_att_animation) {
+							toMotion(20);
+						}
+						else {
+							toMotion(25);
+						}
+						first_att_animation = !first_att_animation;
+					}
+					else {
+						toMotion(70);
+					}
 				}
 				else {
 					if (first_att_animation) {
@@ -597,9 +608,6 @@ namespace game_framework {
 	}
 
 	void man::checkBuff() {
-		/*if (inMotion) {
-			return;
-		}*/
 		if (_Double_Tap_Gap <= 0) {
 			_Double_Tap_Gap = 55;
 			commandBuffer = "";
@@ -611,13 +619,10 @@ namespace game_framework {
 			// 檢查是否有在技能表裡面
 			bool match = false;
 			for (int i = 0; i < 8; i++) {
-				//TRACE("%d\n", SkillsMotion[i]);
 				if (SkillsMotion[i] == -1) continue;
 				else if (commandBuffer == commandList[i]) {
-					//TRACE("matched\n");
 					int temp_state = (*Frams)[_mode]._state;
 					if (( temp_state <= 1) || (temp_state==7)) {
-						//TRACE("%d %s\n", (*Frams)[_mode]._state, commandBuffer.c_str());
 						if (i == 0) {
 							if (Face_to_Left) {
 								toMotion(SkillsMotion[0]);
@@ -696,7 +701,12 @@ namespace game_framework {
 				toMotion(213);
 			}
 			else if (flag[5]) {
-				toMotion(85);
+				if (holdinglt) {
+					toMotion(35);
+				}
+				else {
+					toMotion(85);
+				}
 			}
 			break;
 		}
@@ -705,7 +715,12 @@ namespace game_framework {
 			if (flag[1])Face_to_Left = false;
 
 			if (flag[5]) {
-				toMotion(80);
+				if (holdinglt) {
+					toMotion(30);
+				}
+				else {
+					toMotion(80);
+				}
 			}
 			break;
 		}
@@ -727,7 +742,12 @@ namespace game_framework {
 				}
 			}
 			if (flag[5]) {
-				toMotion(90);
+				if (holdinglt) {
+					toMotion(40);
+				}
+				else {
+					toMotion(90);
+				}
 			}
 			break;
 		}
