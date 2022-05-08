@@ -49,6 +49,7 @@
 #include "lion forest.h"
 #include "Stanley_Prison.h"
 #include "templete1.h"
+#include "great wall.h"
 
 
 namespace game_framework {
@@ -122,6 +123,7 @@ namespace game_framework {
 		lf				lf;
 		temp1			temp1;
 		SP				sp;
+		GW				gw;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
