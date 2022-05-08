@@ -23,7 +23,7 @@ namespace game_framework {
 
 	void area::init(double x1, double y1, double x2, double y2, double w, double h, bool f, int max) {
 		_Lx = x1;
-		_Ly = y1;
+		_Ly = -y1;
 		if (f) {
 			_Rx = _Lx - x2 + max;
 			_Lx = _Rx - w;

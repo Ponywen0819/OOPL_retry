@@ -170,6 +170,7 @@ namespace game_framework {
 		int getX() { return _x; }
 		int getY() { return _y; }
 		int getf() { return _weaponact; }
+		int get_weaponact() { return _weaponact; }
 		int getattcking() { return _attacking; }
 		int getcover() { return _cover; }
 		int getdvx() { return _dvx; }

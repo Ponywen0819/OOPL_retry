@@ -408,7 +408,6 @@
    pic: 10  state: 3  wait: 2  next: 61  dvx: 1  dvy: 0  dvz: 0  centerx: 42  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
       kind: 2  x: 21  y: 57  w: 37  h: 24  vrest: 1  
-      
    itr_end:
    bdy:
       kind: 0  x: 26  y: 12  w: 27  h: 68
@@ -429,7 +428,6 @@
    pic: 12  state: 3  wait: 2  next: 66  dvx: 1  dvy: 0  dvz: 0  centerx: 35  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
       kind: 2  x: 16  y: 59  w: 35  h: 21  vrest: 1  
-      
    itr_end:
    bdy:
       kind: 0  x: 26  y: 12  w: 27  h: 68
@@ -1753,7 +1751,7 @@
 <frame> 275 Sword
    pic: 165  state: 3  wait: 3  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 52  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    opoint:
-      kind: 2  x: 42  y: 51  action: 35  dvx: 0  dvy: 0  oid: 213  facing: 0
+      kind: 2  x: 42  y: 51  action: 35  dvx: 0  dvy: 0  oid: 12  facing: 0
    opoint_end:
    wpoint:
       kind: 1  x: 42  y: 51  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 

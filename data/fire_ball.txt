@@ -1,8 +1,7 @@
 <frame> 0 flying
    pic: 0  state: 3000  wait: 1  next: 1  dvx: 23  dvy: 0  centerx: 51  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27
@@ -12,8 +11,7 @@
 <frame> 1 flying
    pic: 1  state: 3000  wait: 1  next: 2  dvx: 23  dvy: 0  centerx: 53  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27
@@ -23,8 +21,7 @@
 <frame> 2 flying
    pic: 2  state: 3000  wait: 1  next: 3  dvx: 23  dvy: 0  centerx: 51  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27
@@ -34,8 +31,7 @@
 <frame> 3 flying
    pic: 3  state: 3000  wait: 1  next: 4  dvx: 23  dvy: 0  centerx: 54  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27
@@ -45,8 +41,7 @@
 <frame> 4 flying
    pic: 4  state: 3000  wait: 1  next: 5  dvx: 23  dvy: 0  centerx: 55  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27
@@ -56,8 +51,7 @@
 <frame> 5 flying
    pic: 5  state: 3000  wait: 1  next: 999  dvx: 23  dvy: 0  centerx: 54  centery: 41  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45  
-      effect: 2  
+      kind: 0  x: 22  y: 27  w: 55  h: 27  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
    itr_end:
    bdy:
       kind: 0  x: 22  y: 27  w: 55  h: 27

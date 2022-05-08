@@ -89,14 +89,15 @@ namespace game_framework {
 			ww[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 
-		for (int i = 0; i < 8; i++) {
-			path = ".\\Bitmaps\\deep_ball\\" + std::to_string(i) + ".bmp";
-			deep_ball[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
-		}
+		
 
 		//
 		//	deep ªº§Þ¯à
 		//
+		for (int i = 0; i < 8; i++) {
+			path = ".\\Bitmaps\\deep_ball\\" + std::to_string(i) + ".bmp";
+			deep_ball[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
 
 		for (int i = 0; i < 8; i++) {
 			path = ".\\Bitmaps\\deep_ball\\" + std::to_string(8 + i) + ".bmp";
@@ -143,6 +144,39 @@ namespace game_framework {
 			path = ".\\Bitmaps\\exp\\" + std::to_string(15 + i) + ".bmp";
 			exp[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
+
+		//
+		// weapon
+		//
+
+		for (int i = 0; i < 40; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon0\\" + std::to_string(i) + ".bmp";
+			weapon0[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 40; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon0\\" + std::to_string(40 + i) + ".bmp";
+			weapon0[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 6; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon1\\" + std::to_string(i) + ".bmp";
+			weapon1[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 6; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon1\\" + std::to_string(6 + i) + ".bmp";
+			weapon1[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 40; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon7\\" + std::to_string(i) + ".bmp";
+			weapon7[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 40; i++) {
+			path = ".\\Bitmaps\\weapon\\weapon7\\" + std::to_string(40 + i) + ".bmp";
+			weapon7[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		
 	}
 
 	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
@@ -160,6 +194,21 @@ namespace game_framework {
 		case 2: {
 			FirenPic[index][n].SetTopLeft(x, y);
 			FirenPic[index][n].ShowBitmap();
+			break;
+		}
+		case 10: {
+			weapon0[index][n].SetTopLeft(x, y);
+			weapon0[index][n].ShowBitmap();
+			break;
+		}
+		case 11: {
+			weapon1[index][n].SetTopLeft(x, y);
+			weapon1[index][n].ShowBitmap();
+			break;
+		}
+		case 12: {
+			weapon7[index][n].SetTopLeft(x, y);
+			weapon7[index][n].ShowBitmap();
 			break;
 		}
 		case 203: {

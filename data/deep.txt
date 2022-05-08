@@ -566,7 +566,7 @@
 <frame> 71 super_punch
    pic: 29  state: 3  wait: 1  next: 72  dvx: 4  dvy: 0  dvz: 0  centerx: 15  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 41  y: 4  w: 36  h: 50  dvx: -3  dvy: 12  bdefend: 60  injury: 60  
+      kind: 0  x: 41  y: 4  w: 36  h: 50  dvx: -3  dvy: 0break  bdefend: 60  injury: 60  
       effect: 1  
    itr_end:
    bdy:
@@ -641,7 +641,7 @@
 <frame> 87 run_attack
    pic: 104  state: 3  wait: 3  next: 88  dvx: 0  dvy: 0  dvz: 0  centerx: 14  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 43  y: 37  w: 40  h: 42  dvx: 5  dvy: 12  fall: 70  vrest: 15  bdefend: 16  injury: 15  
+      kind: 0  x: 43  y: 37  w: 40  h: 42  dvx: 5  dvy: 0  fall: 70  vrest: 15  bdefend: 16  injury: 15  
       effect: 1  
    itr_end:
    bdy:
@@ -672,7 +672,7 @@
 <frame> 91 dash_attack
    pic: 107  state: 15  wait: 2  next: 92  dvx: 0  dvy: 0  dvz: 0  centerx: 15  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 22  y: 5  w: 58  h: 64  dvx: 12  dvy: 12  fall: 70  vrest: 12  bdefend: 60  injury: 70  
+      kind: 0  x: 22  y: 5  w: 58  h: 64  dvx: 12  dvy: 0  fall: 70  vrest: 12  bdefend: 60  injury: 70  
       effect: 1  
    itr_end:
    bdy:

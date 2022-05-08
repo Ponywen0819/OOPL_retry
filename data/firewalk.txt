@@ -12,8 +12,7 @@
 <frame> 52 ground_fire
    pic: 2  state: 3003  wait: 1  next: 53  dvx: 0  dvy: 0  centerx: 16  centery: 46  hit_a: 0  hit_d: 0  hit_j: 0
    itr:
-      kind: 0  x: 0  y: 15  w: 36  h: 32  dvx: -1  dvy: -6  fall: 70  vrest: 20  bdefend: 3  injury: 20  
-      effect: 20  
+      kind: 0  x: 0  y: 15  w: 36  h: 32  dvx: -1  dvy: -6  fall: 70  vrest: 20  bdefend: 3  injury: 20   effect: 20  
    itr_end:
 <frame_end>
 

@@ -12,6 +12,7 @@
 #include "CStateBar.h"
 #include "Frame.h"
 #include <map>
+#include <algorithm>
 #include "man.h"
 
 namespace game_framework {
@@ -61,6 +62,7 @@ namespace game_framework {
 		}
 		return false;
 	}
+	
 	void obj::restList() {
 		numOfBeaten = 0;
 		delete beatenList;
@@ -78,6 +80,7 @@ namespace game_framework {
 			i++;
 		}
 	}
+	
 	void obj::del(int n) {
 		if (n >= numOfBeaten) return;
 		if (numOfBeaten == 1) {
@@ -101,15 +104,116 @@ namespace game_framework {
 		numOfBeaten--;
 	}
 
+	void obj::setArest(int n) {
+		arestC = n;
+	}
+	int	 obj::getArest() {
+		return arestC;
+	}
+
 	//
 	//------------------------------武器的部分------------------------------------------
 	//
 
-	void weapon::OnShow() {
-
+	void weapon::backToRandon() {
+		inMotion = false;
+		_mode = 0;
+		setTimmer((*Frams)[_mode]._wait);
 	}
 
+	void weapon::toMotion(int f) {
+		adjustPosition(_mode, f);
+		_mode = f;
+		inMotion = true;
+		setTimmer((*Frams)[_mode]._wait);
+	}
 
+	void weapon::nextFrame() {
+		int temp = (*Frams)[_mode]._next;
+		//TRACE("%d %d\n",temp,_mode);
+		if (temp == 999) {
+			toMotion(0);
+		}
+		else if (temp ==0) {
+			if ((*Frams)[_mode]._state != 1004) {
+
+			}
+		}
+		else {
+			toMotion(temp);
+		}
+	}
+
+	void weapon::OnShow() {
+		int index;
+		if (Face_to_Left) index = 0;
+		else index = 1;
+		//TRACE("%d %d %d\n", (*Frams)[_mode]._pic,_mode,id);
+		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
+	}
+
+	void weapon::OnMove() {
+		if (holding == nullptr) {
+			moveY();
+			if (isTime()) {
+				nextFrame();
+			}
+			int state = (*Frams)[_mode]._state;
+			switch (state){
+			case 1000: {
+				if (_y <= maxH) {
+					toMotion(70);
+				}
+				break;
+			}
+			case 1003: {
+
+				break;
+			}
+			case 1004: {
+
+				break;
+			}
+			default:
+				break;
+			}
+
+			checkbeenatt();
+		}
+		else{
+			
+		}
+		Count();
+	}
+
+	void weapon::checkbeenatt() {
+		Frame myF = (*Frams)[_mode];
+		for (int i = 0; i < _a->getN(); i++) {
+			obj* temp_obj = _a->getobj(i);
+			if (temp_obj == this || holding == temp_obj) {
+				continue;
+			}
+			int mode = temp_obj->_mode;
+			Frame tempf = (*(temp_obj->Frams))[mode];
+			bool t = touch(temp_obj);
+			//TRACE("fuck %d \n",t);
+			if (tempf._have_itr && t) {				// 這個東西具有攻擊性並且有碰到
+				switch (tempf._i.getKind()) {
+				case 2: {
+					holding = temp_obj;
+					temp_obj->toMotion(219);
+					temp_obj->holdingSth(this);
+					temp_obj->holdinglt = true;
+					break;
+				}
+				default: {
+					break;
+				}
+				}
+				temp_obj->setArest(tempf._i.getArest());
+			}
+		}
+	}
 	//
 	//------------------------------氣功的部分------------------------------------------
 	//
@@ -163,7 +267,7 @@ namespace game_framework {
 		}
 	}
 
-	void wp::hitSomeOne() {
+	void wp::hitSomeOne(obj* other) {
 		switch (id) {
 		case 203:
 		case 209:
@@ -174,6 +278,9 @@ namespace game_framework {
 			break;
 		}
 		}
+		who = other;
+		stop = true;
+		
 	}
 
 	void wp::OnShow() {
@@ -222,9 +329,13 @@ namespace game_framework {
 	//狀態調整
 
 	void man::backToRandon() {
+
 		inMotion = false;
 		_mode = 0;
 		setTimmer((*Frams)[_mode]._wait);
+		if (cantBrTouchCount == 0) {
+			cantBeTouch = false;
+		}
 	}
 
 	void man::toMotion(int f) {
@@ -253,6 +364,7 @@ namespace game_framework {
 	}
 
 	void man::nextFrame() {
+		hit = false;
 		restList();
 		int ast = (*Frams)[_mode]._i.getArest();
 		if ((*Frams)[_mode]._have_itr && ast!=0) {
@@ -275,6 +387,10 @@ namespace game_framework {
 			}
 		}
 		else if(temp != 0){
+			if ((*Frams)[_mode]._state == 14) {
+				cantBeTouch = true;
+				cantBrTouchCount = 20;
+			}
 			toMotion(temp);
 			if ((*Frams)[_mode]._state == 9) {
 				Caught->_mode = (*Frams)[_mode]._cp.getVaction();
@@ -441,10 +557,21 @@ namespace game_framework {
 					toMotion(70);
 				}
 				else {
-					if (first_att_animation)
-						toMotion(60);
+					if (first_att_animation) {
+						if (holdinglt) {
+							toMotion(20);
+						}
+						else {
+							toMotion(60);
+						}
+					}
 					else {
-						toMotion(65);
+						if (holdinglt) {
+							toMotion(25);
+						}
+						else {
+							toMotion(65);
+						}
 					}
 					first_att_animation = !first_att_animation;
 				}
@@ -634,18 +761,22 @@ namespace game_framework {
 
 	void man::checkbeenatt() {
 		Frame myF = (*Frams)[_mode];
+		if (cantBeTouch) return;
 		for (int i = 0; i < _a->getN(); i++) {
 			obj* temp_obj = _a->getobj(i);
-			if (temp_obj == this) {
+			if (temp_obj == this || temp_obj == holding) {
 				continue;
 			}
 			int mode = temp_obj->_mode;
 			Frame tempf = (*(temp_obj->Frams))[mode];
-			if (temp_obj->arestC > 0) {
+			if (temp_obj->getArest() > 0) {
 				continue;
 			}
 			bool t = touch(temp_obj);
 			if(tempf._have_itr && t){				// 這個東西具有攻擊性並且有碰到
+				if (myF._state == 12 && tempf._i.getFall() < 60) {
+					continue;
+				}
 				switch (tempf._i.getKind()) {
 				case 0: {
 					if (!(temp_obj->checkBeenBeaten(this))) {
@@ -680,7 +811,7 @@ namespace game_framework {
 						}
 
 
-						setYstep(tempf._i.getDvy(), tempf._i.getDvx(),0);
+						setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
 						if (temp_obj->Face_to_Left) {
 							JumpFront = false; JumpBack = true;
 						}
@@ -688,22 +819,30 @@ namespace game_framework {
 							JumpFront = true; JumpBack = false;
 						}
 
-						switch (tempf._i.get_effect()){
-						
-						case 2: 
+						switch (tempf._i.get_effect()) {
+						case 2:
 							toMotion(203);
 							break;
-						
-						case 30:
+						case 3:
 							toMotion(200);
 							break;
-						
+						case 20:
+							cantBeTouch = true;
+							toMotion(203);
+							break;
+						case 30:
+							cantBeTouch = true;
+							toMotion(200);
+							break;
+
 						default:
 							break;
 						}
 						temp_obj->addBeaten(this);
-						temp_obj->hitSomeOne();
+						temp_obj->hitSomeOne(this);
+						hit = true;
 					}
+
 					break;
 				}
 				case 1: {
@@ -715,6 +854,127 @@ namespace game_framework {
 						Face_to_Left = !temp_obj->Face_to_Left;
 						temp_obj->cc = 301;
 					}
+					break;
+				}
+				case 5: {
+					int dvx;
+					Frame weapont = (*(temp_obj->getOwner()->Frams))[temp_obj->getOwner()->_mode];
+					int att = weapont._wp.getattcking();
+					switch (att){
+					case 0: {
+						return;
+						break;
+					}
+					case 1: {
+						if (temp_obj->id == 10) {
+							dvx = 2;
+							this->fall -= 40.0;
+						}
+						else if (temp_obj->id == 11) {
+							dvx = 2;
+						}
+						else {
+							dvx = 2;
+						}
+						break;
+					}
+					case 2: {
+						if (temp_obj->id == 10) {
+							dvx = 7;
+							fall -= 70;
+						}
+						else if (temp_obj->id == 11) {
+
+						}
+						else {
+
+						}
+						break;
+					}
+					case 3: {
+						if (temp_obj->id == 10) {
+							dvx = 10;
+							fall -= 70;
+						}
+						else if (temp_obj->id == 11) {
+
+						}
+						else {
+
+						}
+						break;
+					}
+					case 4: {
+						if (temp_obj->id == 10) {
+							dvx = 12;
+							fall -= 70;
+						}
+						else if (temp_obj->id == 11) {
+
+						}
+						else {
+
+						}
+						break;
+					}
+					default:
+						break;
+					}
+					if (fall < 35) {			// 擊飛
+						if (temp_obj->Face_to_Left != this->Face_to_Left) {
+							toMotion(180);
+						}
+						else {
+							toMotion(186);
+						}
+						time = (*Frams)[_mode]._wait;
+						fall = 100;
+					}
+					else if (fall < 55) {		// 暈眩
+						toMotion(226);
+					}
+					else if (fall < 60) {		// 被打到第二下
+						if (temp_obj->Face_to_Left != this->Face_to_Left) {
+							toMotion(222);
+						}
+						else {
+							toMotion(224);
+						}
+					}
+					else {						// 被打到第一下
+						toMotion(220);
+					}
+
+					setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
+					if (temp_obj->Face_to_Left) {
+						JumpFront = false; JumpBack = true;
+					}
+					else {
+						JumpFront = true; JumpBack = false;
+					}
+
+					switch (tempf._i.get_effect()) {
+					case 2:
+						toMotion(203);
+						break;
+					case 3:
+						toMotion(200);
+						break;
+					case 20:
+						cantBeTouch = true;
+						toMotion(203);
+						break;
+					case 30:
+						cantBeTouch = true;
+						toMotion(200);
+						break;
+
+					default:
+						break;
+					}
+
+					temp_obj->addBeaten(this);
+					temp_obj->getOwner()->hitSomeOne(this);
 					break;
 				}
 				case 6: {
@@ -731,6 +991,7 @@ namespace game_framework {
 					break;
 				}
 				}
+				temp_obj->setArest(tempf._i.getArest());
 			}
 		}
 	}
@@ -739,13 +1000,21 @@ namespace game_framework {
 	//人物狀態更新
 	void man::OnMove() {
 		//TRACE("%d\n",_mode);
+		if (stop) {
+			if (who->hit) {
+				return;
+			}
+			else {
+				stop = false;
+			}
+		}
 		//負責動作的變更
 		if (isTime()) {
 			nextFrame();
 		}
 		Count();
-		moveY();
 		int stateNow = (*Frams)[_mode]._state;
+		moveY();
 		// 負責位置的調整
 		//moveY();
 		switch (stateNow) {
@@ -785,7 +1054,8 @@ namespace game_framework {
 		}
 		// 普通拳腳攻擊
 		case 3: {
-			if (_y < maxH) {
+			if (_y <= maxH && jumping) {
+				jumping = false;
 				_y = maxH;
 				backToRandon();
 			}
@@ -798,15 +1068,19 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
-			if (_y < maxH) {
-				_y = maxH;backToRandon();
+			if (_y <= maxH && jumping) {
+				jumping = false;
+				_y = maxH;
+				backToRandon();
 			}
 			break;
 		}
 		//大跳
 		case 5: {
-			if (_y < maxH) {
-				_y = maxH;backToRandon();
+			if (_y <= maxH && jumping) {
+				jumping = false;
+				_y = maxH;
+				backToRandon();
 			}
 			break;
 		}
@@ -825,32 +1099,77 @@ namespace game_framework {
 		case 10: {
 			break;
 		}
+		case 11: {
+
+			break;
+		}
 		// 跌倒的部分
 		case 12: {
 			
 			break;
 		}
+		case 13: {
+			break;
+		}
+		// 可被同盟攻擊
+		case 14: {
+			break;
+		}
+		case 15: {
+			if (_y <= maxH && jumping) {
+				jumping = false;
+				_y = maxH;
+				if(_mode>202 && _mode <200)
+					backToRandon();
+			}
+		}
+		case 16: {
+			break;
+		}
 		default: {
-			if (_y < maxH) {
+			if (_y <= maxH && jumping) {
+				jumping = false;
 				_y = maxH;
 				backToRandon();
 			}
-			if (Face_to_Left)
-				_x -= (*Frams)[_mode]._dvx;
-			else
-				_x += (*Frams)[_mode]._dvx;
-			_z += (*Frams)[_mode]._dvy;
-
+			else {
+				int dvx = (*Frams)[_mode]._dvx;
+				if (Face_to_Left) { _x -= dvx; }
+				else { _x += dvx; }
+			}
 			break;
 		}
 		}
-		
+
+		if (holdinglt || holdingheavy) {
+			wpoint temp = this->getNoFrame()._wp;
+			holding->_mode = temp.get_weaponact();
+
+			wpoint ht = holding->getNoFrame()._wp;
+			double x = _x;
+			double y = _y;
+			double z = _z;
+
+			if (Face_to_Left) {
+				x += maxW - temp.getX();
+				holding->_x = x - (holding->maxW - ht.getX());
+				holding->Face_to_Left = true;
+			}
+			else {
+				x += temp.getX();
+				holding->_x = x - ht.getX();
+				holding->Face_to_Left = false;
+			}
+			holding->_y = y - temp.getY() + ht.getY();
+
+			holding->_z = _z;
+		}
+
 		useSupperAtt = false;
 		bcount();
 		checkbeenatt();
 		checkFlag();
 		checkBuff();
-
 	}
 	
 	//人物顯示
@@ -858,7 +1177,6 @@ namespace game_framework {
 		int index;
 		if (Face_to_Left) index = 0;
 		else index = 1;
-		
 		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
 		//TRACE("%d\n", (*Frams)[_mode]._pic);
 	}
@@ -893,6 +1211,7 @@ namespace game_framework {
 			all = temp;
 		}
 		num++;
+		so();
 	}
 
 	void allobj::del(int n) {
@@ -914,6 +1233,18 @@ namespace game_framework {
 		return (*(all + n));
 	}
 
+	obj* allobj::getSortObj(int n) {
+		return (*(s + n));
+	}
+
+	void allobj::so() {
+		s = new obj*[num];
+		for (int i = 0; i < num; i++) {
+			(*(s + i)) = *(all + i);
+		}
+
+		std::sort(s, s + num, [](obj* a, obj* b) {return (a)->_z < (b)->_z; });
+	}
 
 
 
@@ -957,6 +1288,8 @@ namespace game_framework {
 			mans[0]->_x = 100;
 			mans[0]->_z = 400;
 		}
+
+		creatWeapon(10);
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
@@ -1255,18 +1588,22 @@ namespace game_framework {
 			}
 		}
 		check();
+		a.so();
 	}
 
 	void ObjContainer::OnShow() {
 		for (int i = 0; i < a.getN(); i++) {
-			(a.getobj(i))->OnShow();
+			(a.getSortObj(i))->OnShow();
 		}
 	}
 
 	void ObjContainer::creatWeapon(int n) {
-		weapon* temp = new weapon;
+		weapon* temp = new weapon(n,0,fl,lib,nullptr,&a);
 
-
+		temp->init(400, 300,400,false);
+		
+		temp->setmax(3200, 500);
+		a.add(temp);
 	}
 
 	void ObjContainer::check() {
@@ -1287,5 +1624,6 @@ namespace game_framework {
 			}
 		}
 	}
+
 
 }

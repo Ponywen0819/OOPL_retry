@@ -13,8 +13,11 @@ namespace game_framework {
 		CMovingBitmap DeepPic[2][180];	//人物的圖片
 		CMovingBitmap FreezePic[2][170];	//人物的圖片
 
-		CMovingBitmap weapon[2][35];	//球棒的圖片
+		CMovingBitmap weapon0[2][40];	//球棒的圖片
+		CMovingBitmap weapon1[2][6];	//石頭的圖片
+		CMovingBitmap weapon7[2][40];	//冰劍的圖片
 
+		
 		CMovingBitmap deep_ball[2][8];	
 
 		CMovingBitmap fire_ball[2][12];
@@ -54,6 +57,10 @@ namespace game_framework {
 			}
 			case 11: {
 				return &Frams_weapon1;
+				break;
+			}
+			case 12: {
+				return &Frams_weapon7;
 				break;
 			}
 			case 203: {
