@@ -734,6 +734,7 @@ namespace game_framework {
 
 		void OnMove();
 		void OnShow();
+	
 	private:
 		int		state;				// 使用者選用腳色的形況
 		allobj  a;					// 場上所有物品

@@ -12,6 +12,10 @@ namespace game_framework {
 		back_ground.LoadBitmap(filename, color);
 	}
 
+	void gamemap::AddBitmap(char *filename, COLORREF color) {
+		back_ground_ani.AddBitmap(filename, color);
+	}
+
 	void gamemap::set(double mw, double lw, int x, int y) {
 		map_width = mw;
 		layer_width = lw;
@@ -26,6 +30,17 @@ namespace game_framework {
 		_x = x;
 		_y = y;
 		_loop = loop;
+	}
+
+	void gamemap::set(double mw, double lw, int x, int y, int loop,int cc) {
+		map_width = mw;
+		layer_width = lw;
+		_x = x;
+		_y = y;
+		_loop = loop;
+		_cc = cc;
+		/*_c1 = c1;
+		_c2 = c2;*/
 	}
 
 	void gamemap::calShow() {
@@ -68,14 +83,31 @@ namespace game_framework {
 			last_pos = total_pos / 2;
 		}
 		//TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
-		back_ground.SetTopLeft(_x, _y);
-		back_ground.ShowBitmap();
+
+		if (_cc) {
+			back_ground_ani.SetTopLeft(_x , _y);
+			back_ground_ani.OnMove();
+			back_ground_ani.OnShow();
+		}
+		else {
+			back_ground.SetTopLeft(_x, _y);
+			back_ground.ShowBitmap();
+		}
+		
 
 		if (_loop) {
 			int temp_loop = _loop;
 			for (int i = 0; i < map_width / _loop; i++) {
-				back_ground.SetTopLeft(_x + temp_loop, _y);
-				back_ground.ShowBitmap();
+				if (_cc) {
+					back_ground_ani.SetTopLeft(_x + temp_loop, _y);
+					back_ground_ani.OnMove();
+					back_ground_ani.OnShow();
+				}
+				else {
+					back_ground.SetTopLeft(_x + temp_loop, _y);
+					back_ground.ShowBitmap();
+				}
+				
 				temp_loop += _loop;
 			}
 		}

@@ -270,6 +270,7 @@ void CGameStateRun::OnInit(){
 
 	lf.init();
 	temp1.init();
+	sp.init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -316,7 +317,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // Εγ₯ά
 void CGameStateRun::OnShow() {
 
-	lf.showmap(0);
+	sp.showmap(allobj.getX());
 	bar.OnShowBar(player1, player2);
 	allobj.OnShow();	
 }

@@ -47,6 +47,7 @@
 #include "Bitmaplib.h"
 #include "gamemap.h"
 #include "lion forest.h"
+#include "Stanley_Prison.h"
 #include "templete1.h"
 
 
@@ -120,6 +121,7 @@ namespace game_framework {
 		CStateBar       bar;
 		lf				lf;
 		temp1			temp1;
+		SP				sp;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
