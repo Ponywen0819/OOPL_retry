@@ -183,8 +183,8 @@ namespace game_framework {
 		virtual obj*	usingSkills() {
 			return nullptr;
 		}
-
-
+		virtual void	setYstep(double G, double x, double z) {}
+		virtual void	setdir(bool f) {}
 		int	id;						//代表自己是什麼
 		std::map<int, Frame> *Frams;// 動作資料表
 		obj**	all;				// 所有物品的列表
@@ -362,7 +362,7 @@ namespace game_framework {
 			if (JumpUp) { _z -= stepz; }
 			if (JumpDown) { _z += stepz; }
 
-			if (_y <= maxH) {
+			if (_y <= (*Frams)[_mode]._centery) {
 				stepx = stepz = initG = 0;
 				JumpFront = JumpBack = JumpUp = JumpDown = false;
 			}
@@ -412,6 +412,35 @@ namespace game_framework {
 		void resetCountDown();						//連點倒數歸零
 		void CountDown() { if (_Double_Tap_Gap > 0)_Double_Tap_Gap--; }
 
+
+		void thw_obj();
+		void injuredMotion(bool f) {
+			if (fall < 35) {			// 擊飛
+				if (f != this->Face_to_Left) {
+					toMotion(180);
+				}
+				else {
+					toMotion(186);
+				}
+				time = (*Frams)[_mode]._wait;
+				fall = 100;
+			}
+			else if (fall < 55) {		// 暈眩
+				toMotion(226);
+			}
+			else if (fall < 60) {		// 被打到第二下
+				if (f != this->Face_to_Left) {
+					toMotion(222);
+				}
+				else {
+					toMotion(224);
+				}
+			}
+			else {						// 被打到第一下
+				toMotion(220);
+			}
+
+		}
 		int	 getNextWalkMotion() {
 			if (walk_Ani_dir) {
 				if (++Walk_Ani_num == 9) {
@@ -431,7 +460,7 @@ namespace game_framework {
 		double	initG;								// 設定上升速度
 		double	stepx, stepz;						// 跳躍移動距離
 		double	fall;								// 暈眩值
-
+		double	defend;								//防禦直
 		//
 		//	腳色基本設定參數
 		//
@@ -544,20 +573,36 @@ namespace game_framework {
 
 		void OnMove();
 		void OnShow();
-	private:
+
 		void setYstep(double G, double x, double z) {
 			initG = G; stepx = x; stepz = z; jumping = true;
 
 		}
+		
+		void setdir(bool f) {
+			if (!f) JumpFront = true;
+			else JumpBack = true;
+		}
+
+		void	holdingSth(obj* thing) {
+			holding = thing;
+		}
+	private:
 		void moveY() {
-			_y -= initG;
-
-			if (JumpFront) { _x += stepx; }
-			if (JumpBack) { _x -= stepx; }
-			if (JumpUp) { _z -= stepz; }
-			if (JumpDown) { _z += stepz; }
-
-			if (_y <= maxH) {
+			if ((*Frams)[_mode]._state == 1002) {
+				_y-=2;
+				if (Face_to_Left) _x -= stepx;
+				else _x += stepx;
+			}
+			else {
+				_y -= initG;
+				if (JumpFront) { _x += stepx; }
+				if (JumpBack) { _x -= stepx; }
+				if (JumpUp) { _z -= stepz; }
+				if (JumpDown) { _z += stepz; }
+			}
+			
+			if (_y <= (*Frams)[_mode]._centery) {
 				stepx = stepz = initG = 0;
 				JumpFront = JumpBack = JumpUp = JumpDown = false;
 			}

@@ -404,6 +404,66 @@
    bdy_end:
 <frame_end>
 
+<frame> 45 light_weapon_thw
+   pic: 94  state: 15  wait: 3  next: 46  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
+   wpoint:
+      kind: 1  x: 26  y: 44  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 19  y: 15  w: 34  h: 65
+   bdy_end:
+   bdy:
+      kind: 0  x: 9  y: 36  w: 17  h: 18
+   bdy_end:
+<frame_end>
+
+<frame> 46 light_weapon_thw
+   pic: 95  state: 15  wait: 1  next: 47  dvx: 0  dvy: 0  dvz: 0  centerx: 43  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 8
+   wpoint:
+      kind: 1  x: 42  y: 17  weaponact: 32  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 24  y: 22  w: 32  h: 57
+   bdy_end:
+<frame_end>
+
+<frame> 47 light_weapon_thw
+   pic: 96  state: 15  wait: 9  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 32  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
+   wpoint:
+      kind: 1  x: 109  y: 60  weaponact: 35  attacking: 0  cover: 0  dvx: 19  dvy: -4  dvz: 3 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 10  y: 38  w: 54  h: 21
+   bdy_end:
+   bdy:
+      kind: 0  x: 26  y: 55  w: 32  h: 26
+   bdy_end:
+<frame_end>
+
+<frame> 50 heavy_weapon_thw
+   pic: 27  state: 15  wait: 4  next: 51  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
+   wpoint:
+      kind: 1  x: 28  y: 22  weaponact: 10  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 28  y: 19  w: 30  h: 62
+   bdy_end:
+<frame_end>
+
+<frame> 51 heavy_weapon_thw
+   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 27  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0
+  sound: data\007.wav 
+   wpoint:
+      kind: 1  x: 101  y: 38  weaponact: 10  attacking: 0  cover: 0  dvx: 9  dvy: -4  dvz: 2 
+   wpoint_end:
+   bdy:
+      kind: 0  x: 8  y: 39  w: 61  h: 23
+   bdy_end:
+   bdy:
+      kind: 0  x: 19  y: 56  w: 30  h: 24
+   bdy_end:
+<frame_end>
+
 <frame> 60 punch
    pic: 10  state: 3  wait: 2  next: 61  dvx: 1  dvy: 0  dvz: 0  centerx: 42  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    itr:

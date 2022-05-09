@@ -161,10 +161,15 @@ namespace game_framework {
 			int state = (*Frams)[_mode]._state;
 			switch (state){
 			case 1000: {
-				if (_y <= maxH) {
+				if (_y <= ((*Frams)[_mode]._centery)) {
 					toMotion(70);
 				}
 				break;
+			}
+			case 1002: {
+				if (_y <= ((*Frams)[_mode]._centery)) {
+					toMotion(70);
+				}
 			}
 			case 1003: {
 
@@ -177,7 +182,7 @@ namespace game_framework {
 			default:
 				break;
 			}
-
+			TRACE("%.1f %.1f %.1f %d\n",_x,_y,_z,maxH);
 			checkbeenatt();
 		}
 		else{
@@ -615,35 +620,25 @@ namespace game_framework {
 		else{
 			_Double_Tap_Gap--;
 			std::string commandList[] = { "LL","RR","FRA","FRJ","FUJ","FDJ","FDA","FUJA"};
-			//TRACE("%s\n",commandBuffer.c_str());
+
 			// 檢查是否有在技能表裡面
 			bool match = false;
 			for (int i = 0; i < 8; i++) {
 				if (SkillsMotion[i] == -1) continue;
+
 				else if (commandBuffer == commandList[i]) {
 					int temp_state = (*Frams)[_mode]._state;
+					
 					if (( temp_state <= 1) || (temp_state==7)) {
-						if (i == 0) {
-							if (Face_to_Left) {
-								toMotion(SkillsMotion[0]);
-							}
-						}
-						else if (i == 1) {
-							if (!Face_to_Left) {
-								toMotion(SkillsMotion[1]);
-							}
-						}
-						else {
-							toMotion(SkillsMotion[i]);
-						}
+						if (i == 0) { if (Face_to_Left) { toMotion(SkillsMotion[0]); } }
+						else if (i == 1) { if (!Face_to_Left) { toMotion(SkillsMotion[1]); } }
+						else { toMotion(SkillsMotion[i]); }
 						commandBuffer = "";
 					}
 				}
 				else {
 					int len = commandBuffer.size();
-					if (commandList[i].substr(0, len) == commandBuffer) {
-						match = true;
-					}
+					if (commandList[i].substr(0, len) == commandBuffer) { match = true; }
 				}
 			}
 
@@ -685,25 +680,32 @@ namespace game_framework {
 		}
 		case 2: {
 			if (flag[0] && !Face_to_Left) {
-				toMotion(218);
+				if (holdingheavy) { toMotion(19); }
+				else { toMotion(218); }
 			}
 			else if (flag[1] && Face_to_Left) {
-				toMotion(218);
+				if (holdingheavy) { toMotion(19); }
+				else { toMotion(218); }
 			}
 			else if (flag[4]) {
-				if (Face_to_Left) { JumpBack = true; JumpFront = false; }
-				else {  JumpBack = false; JumpFront = true;}
-				if (_dir[2]) { JumpUp = true; }
-				else { JumpUp = false; }
-				if (_dir[3]) { JumpDown = true; }
-				else { JumpDown = false; }
-				setYstep(-11, 15, 3.75);
-				toMotion(213);
+				if (!holdingheavy) {
+					if (Face_to_Left) { JumpBack = true; JumpFront = false; }
+					else { JumpBack = false; JumpFront = true; }
+					if (_dir[2]) { JumpUp = true; }
+					else { JumpUp = false; }
+					if (_dir[3]) { JumpDown = true; }
+					else { JumpDown = false; }
+					setYstep(-11, 15, 3.75);
+					toMotion(213);
+				}
 			}
 			else if (flag[5]) {
 				if (holdinglt) {
-					toMotion(35);
+					if (flag[0] && Face_to_Left) toMotion(45);
+					else if (flag[1] && !Face_to_Left) toMotion(45);
+					else toMotion(35);
 				}
+				else if (holdingheavy) toMotion(50);
 				else {
 					toMotion(85);
 				}
@@ -805,31 +807,7 @@ namespace game_framework {
 						if (fa == 0) { fall -= 18; }
 						else { fall -= fa; }
 
-						if (fall < 35) {			// 擊飛
-							if (temp_obj->Face_to_Left != this->Face_to_Left) {
-								toMotion(180);
-							}
-							else {
-								toMotion(186);
-							}
-							time = (*Frams)[_mode]._wait;
-							fall = 100;
-						}
-						else if (fall < 55) {		// 暈眩
-							toMotion(226);
-						}
-						else if (fall < 60) {		// 被打到第二下
-							if (temp_obj->Face_to_Left != this->Face_to_Left) {
-								toMotion(222);
-							}
-							else {
-								toMotion(224);
-							}
-						}
-						else {						// 被打到第一下
-							toMotion(220);
-						}
-
+						injuredMotion(temp_obj->Face_to_Left);
 
 						setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
 						if (temp_obj->Face_to_Left) {
@@ -888,7 +866,9 @@ namespace game_framework {
 					case 1: {
 						if (temp_obj->id == 10) {
 							dvx = 2;
-							this->fall -= 40.0;
+							fall -= 40.0;
+							hp -= 40;
+							defend -= 16;
 						}
 						else if (temp_obj->id == 11) {
 							dvx = 2;
@@ -902,6 +882,8 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 7;
 							fall -= 70;
+							hp -= 40;
+							defend -= 16;
 						}
 						else if (temp_obj->id == 11) {
 
@@ -915,6 +897,8 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 10;
 							fall -= 70;
+							hp -= 50;
+							defend -= 16;
 						}
 						else if (temp_obj->id == 11) {
 
@@ -928,6 +912,8 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 12;
 							fall -= 70;
+							hp -= 50;
+							defend -= 60;
 						}
 						else if (temp_obj->id == 11) {
 
@@ -940,30 +926,9 @@ namespace game_framework {
 					default:
 						break;
 					}
-					if (fall < 35) {			// 擊飛
-						if (temp_obj->Face_to_Left != this->Face_to_Left) {
-							toMotion(180);
-						}
-						else {
-							toMotion(186);
-						}
-						time = (*Frams)[_mode]._wait;
-						fall = 100;
-					}
-					else if (fall < 55) {		// 暈眩
-						toMotion(226);
-					}
-					else if (fall < 60) {		// 被打到第二下
-						if (temp_obj->Face_to_Left != this->Face_to_Left) {
-							toMotion(222);
-						}
-						else {
-							toMotion(224);
-						}
-					}
-					else {						// 被打到第一下
-						toMotion(220);
-					}
+					
+					injuredMotion(temp_obj->Face_to_Left);
+
 
 					setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
 					if (temp_obj->Face_to_Left) {
@@ -1017,6 +982,17 @@ namespace game_framework {
 	}
 
 	
+	void man::thw_obj() {
+		if (holdinglt) {
+			holding->toMotion(40);
+
+		}
+		else if (holdingheavy) {
+
+		}
+	}
+	
+	
 	//人物狀態更新
 	void man::OnMove() {
 		//TRACE("%d\n",_mode);
@@ -1036,7 +1012,6 @@ namespace game_framework {
 		int stateNow = (*Frams)[_mode]._state;
 		moveY();
 		// 負責位置的調整
-		//moveY();
 		switch (stateNow) {
 		// 走路狀態
 		case 1: {
@@ -1074,7 +1049,7 @@ namespace game_framework {
 		}
 		// 普通拳腳攻擊
 		case 3: {
-			if (_y <= maxH && jumping) {
+			if (_y <= (*Frams)[_mode]._centery && jumping) {
 				jumping = false;
 				_y = maxH;
 				backToRandon();
@@ -1088,7 +1063,7 @@ namespace game_framework {
 		}
 		//原地跳
 		case 4: {
-			if (_y <= maxH && jumping) {
+			if (_y <= (*Frams)[_mode]._centery && jumping) {
 				jumping = false;
 				_y = maxH;
 				backToRandon();
@@ -1097,7 +1072,7 @@ namespace game_framework {
 		}
 		//大跳
 		case 5: {
-			if (_y <= maxH && jumping) {
+			if (_y <= (*Frams)[_mode]._centery && jumping) {
 				jumping = false;
 				_y = maxH;
 				backToRandon();
@@ -1183,6 +1158,24 @@ namespace game_framework {
 			holding->_y = y - temp.getY() + ht.getY();
 
 			holding->_z = _z;
+
+			int weapony = temp.getdvy();
+			int weaponx = temp.getdvx();
+			if (weaponx != 0) {
+				holding->setYstep(weapony, weaponx, 0);
+				setdir(Face_to_Left);
+				if (holdinglt) {
+					holding->toMotion(40);
+				}
+				else if (holdingheavy) {
+					holding->toMotion(0);
+				}
+				holding->holdingSth(nullptr);
+				holding = nullptr;
+				holdinglt = holdingheavy = false;
+			}
+
+			
 		}
 
 		useSupperAtt = false;
