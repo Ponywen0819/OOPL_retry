@@ -443,13 +443,13 @@ namespace game_framework {
 		}
 		int	 getNextWalkMotion() {
 			if (walk_Ani_dir) {
-				if (++Walk_Ani_num == 9) {
+				if (++Walk_Ani_num >= 9) {
 					Walk_Ani_num = 7;
 					walk_Ani_dir = !walk_Ani_dir;
 				}
 			}
 			else {
-				if (--Walk_Ani_num == 4) {
+				if (--Walk_Ani_num <= 4) {
 					Walk_Ani_num = 6;
 					walk_Ani_dir = !walk_Ani_dir;
 				}
@@ -515,6 +515,7 @@ namespace game_framework {
 			_mode = 0; 
 			JumpFront, JumpBack, JumpUp, JumpDown, jumping = false;
 			stepx, stepz, initG = 0;
+			throwing = false;
 
 		}
 		
@@ -582,6 +583,8 @@ namespace game_framework {
 		void setdir(bool f) {
 			if (!f) JumpFront = true;
 			else JumpBack = true;
+
+			throwing = true;
 		}
 
 		void	holdingSth(obj* thing) {
@@ -589,7 +592,8 @@ namespace game_framework {
 		}
 	private:
 		void moveY() {
-			if ((*Frams)[_mode]._state == 1002) {
+			int st = (*Frams)[_mode]._state;
+			if ( st == 1002) {
 				_y-=2;
 				if (Face_to_Left) _x -= stepx;
 				else _x += stepx;
@@ -632,6 +636,7 @@ namespace game_framework {
 		allobj* _a;				//場上所有人
 		obj*	holding;		//誰再拿他
 		bool	IsHolding;		//有被拾取
+		bool	throwing;		
 
 		obj* getOwner() {
 			return holding;

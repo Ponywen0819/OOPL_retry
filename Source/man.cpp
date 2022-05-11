@@ -170,6 +170,7 @@ namespace game_framework {
 				if (_y <= ((*Frams)[_mode]._centery)) {
 					toMotion(70);
 				}
+				break;
 			}
 			case 1003: {
 
@@ -179,9 +180,17 @@ namespace game_framework {
 
 				break;
 			}
+			case 2000: {
+				if (_y <= ((*Frams)[_mode]._centery)) {
+					toMotion(20);
+					throwing = false;
+				}
+				break;
+			}
 			default:
 				break;
 			}
+			TRACE("%d\n",throwing);
 			TRACE("%.1f %.1f %.1f %d\n",_x,_y,_z,maxH);
 			checkbeenatt();
 		}
@@ -206,9 +215,15 @@ namespace game_framework {
 				switch (tempf._i.getKind()) {
 				case 2: {
 					holding = temp_obj;
-					temp_obj->toMotion(219);
 					temp_obj->holdingSth(this);
-					temp_obj->holdinglt = true;
+					if (id == 11) {
+						temp_obj->toMotion(12);
+						temp_obj->holdingheavy = true;
+					}
+					else {
+						temp_obj->toMotion(219);
+						temp_obj->holdinglt = true;
+					}
 					break;
 				}
 				default: {
@@ -260,7 +275,6 @@ namespace game_framework {
 
 	void wp::nextFrame() {
 		int temp = (*Frams)[_mode]._next;
-		//TRACE("%d %d\n",temp,_mode);
 		if (temp == 1000) {
 			Alive = false;
 		}
@@ -297,7 +311,6 @@ namespace game_framework {
 	}
 
 	void wp::OnMove() {
-		
 		if (isTime()) {
 			nextFrame();
 		}
@@ -336,8 +349,14 @@ namespace game_framework {
 	void man::backToRandon() {
 
 		inMotion = false;
-		_mode = 0;
-		setTimmer((*Frams)[_mode]._wait);
+		if (holdingheavy) {
+			_mode = 12;
+			setTimmer((*Frams)[_mode]._wait);
+		}
+		else {
+			_mode = 0;
+			setTimmer((*Frams)[_mode]._wait);
+		}
 		if (cantBrTouchCount == 0) {
 			cantBeTouch = false;
 		}
@@ -407,15 +426,31 @@ namespace game_framework {
 			switch ((*Frams)[_mode]._state){
 			case 2: {
 				if (run_Ani_dir) {
-					if (++_mode == 12) {
-						_mode = 10;
-						run_Ani_dir = !run_Ani_dir;
+					if (holdingheavy) {
+						if (++_mode >= 19) {
+							_mode = 17;
+							run_Ani_dir = !run_Ani_dir;
+						}
+					}
+					else {
+						if (++_mode >= 12) {
+							_mode = 10;
+							run_Ani_dir = !run_Ani_dir;
+						}
 					}
 				}
 				else {
-					if (--_mode == 8) {
-						_mode = 10;
-						run_Ani_dir = !run_Ani_dir;
+					if (holdingheavy) {
+						if (--_mode <= 15) {
+							_mode = 17;
+							run_Ani_dir = !run_Ani_dir;
+						}
+					}
+					else {
+						if (--_mode <= 8) {
+							_mode = 10;
+							run_Ani_dir = !run_Ani_dir;
+						}
 					}
 				}
 				setTimmer((*Frams)[_mode]._wait);
@@ -559,19 +594,19 @@ namespace game_framework {
 			else if (flag[5]) {
 				flag[5] = false;
 				if (useSupperAtt) {
-					if (holdinglt) {
-						if (first_att_animation) {
-							toMotion(20);
+						if (holdinglt) {
+							if (first_att_animation) {
+								toMotion(20);
+							}
+							else {
+								toMotion(25);
+							}
+							first_att_animation = !first_att_animation;
 						}
 						else {
-							toMotion(25);
+							toMotion(70);
 						}
-						first_att_animation = !first_att_animation;
 					}
-					else {
-						toMotion(70);
-					}
-				}
 				else {
 					if (first_att_animation) {
 						if (holdinglt) {
@@ -630,8 +665,18 @@ namespace game_framework {
 					int temp_state = (*Frams)[_mode]._state;
 					
 					if (( temp_state <= 1) || (temp_state==7)) {
-						if (i == 0) { if (Face_to_Left) { toMotion(SkillsMotion[0]); } }
-						else if (i == 1) { if (!Face_to_Left) { toMotion(SkillsMotion[1]); } }
+						if (i == 0) {
+							if (Face_to_Left) { 
+								if (holdingheavy) toMotion(16);
+								else toMotion(SkillsMotion[0]);
+							} 
+						}
+						else if (i == 1) { 
+							if (!Face_to_Left) {
+								if (holdingheavy) toMotion(16);
+								else toMotion(SkillsMotion[1]);
+							}
+						}
 						else { toMotion(SkillsMotion[i]); }
 						commandBuffer = "";
 					}
@@ -673,6 +718,41 @@ namespace game_framework {
 		}
 		switch (stateNow){
 		case 1: {
+			bool button_down = false;
+			// 處理移動
+			
+			for (int i = 0; i < 4; i++) {
+				if (_dir[i]) {
+					button_down = true;
+					break;
+				}
+			}
+			if (button_down && isTime()) {
+				if (holdingheavy) {
+					int Modecc;
+					if (walk_Ani_dir) {
+						Modecc = _mode + 1;
+						if (Modecc >= 16) {
+							toMotion(14);
+							walk_Ani_dir = !walk_Ani_dir;
+						}
+						else { toMotion(Modecc); }
+					}
+					else {
+						Modecc = _mode - 1;
+						if (Modecc <= 11) {
+							toMotion(13);
+							walk_Ani_dir = !walk_Ani_dir;
+						}
+						else { toMotion(Modecc); }
+					}
+				}
+			}
+
+			if (flag[5] && holdingheavy) {
+				flag[5];
+				toMotion(50);
+			}
 			if (flag[6]) {
 				toMotion(102);
 			}
@@ -1136,8 +1216,15 @@ namespace game_framework {
 		}
 		}
 
+		useSupperAtt = false;
+		bcount();
+		checkbeenatt();
+		checkFlag();
+		checkBuff();
+
 		if (holdinglt || holdingheavy) {
 			wpoint temp = this->getNoFrame()._wp;
+			//TRACE("%d %d \n", temp.get_weaponact(), _mode);
 			holding->_mode = temp.get_weaponact();
 
 			wpoint ht = holding->getNoFrame()._wp;
@@ -1163,7 +1250,7 @@ namespace game_framework {
 			int weaponx = temp.getdvx();
 			if (weaponx != 0) {
 				holding->setYstep(weapony, weaponx, 0);
-				setdir(Face_to_Left);
+				holding->setdir(Face_to_Left);
 				if (holdinglt) {
 					holding->toMotion(40);
 				}
@@ -1172,17 +1259,11 @@ namespace game_framework {
 				}
 				holding->holdingSth(nullptr);
 				holding = nullptr;
-				holdinglt = holdingheavy = false;
+				holdinglt = false;
+				holdingheavy = false;
 			}
 
-			
 		}
-
-		useSupperAtt = false;
-		bcount();
-		checkbeenatt();
-		checkFlag();
-		checkBuff();
 	}
 	
 	//人物顯示
@@ -1302,7 +1383,7 @@ namespace game_framework {
 			mans[0]->_z = 400;
 		}
 
-		creatWeapon(10);
+		creatWeapon(11);
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
