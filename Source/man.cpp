@@ -190,8 +190,6 @@ namespace game_framework {
 			default:
 				break;
 			}
-			TRACE("%d\n",throwing);
-			TRACE("%.1f %.1f %.1f %d\n",_x,_y,_z,maxH);
 			checkbeenatt();
 		}
 		else{
@@ -369,21 +367,32 @@ namespace game_framework {
 		Frame tempF = (*Frams)[_mode];
 		setTimmer(tempF._wait);
 		if (tempF._have_opiont) {
-			wp* temp = new wp(tempF._op.getOid(), tempF._op.getAction(), fl, lib,getOwner());
-			bool ftl;
-			if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
-			else ftl = Face_to_Left;
-			
-			if (Face_to_Left) {
-				//TRACE("%d \n", maxW - tempF._op.getX());
-				temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+			int oid = tempF._op.getOid();
+			if (oid == 12) {
+				weapon* temp = new weapon(oid, 0, fl, lib, nullptr, _a);
+				temp->holdingSth(this);
+				holding = temp;
+				holdinglt = true;
+				temp->setmax(3200, 500);
+				_a->add(temp);
 			}
 			else {
-				//TRACE("%d \n", tempF._op.getX());
-				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+				wp* temp = new wp(oid, tempF._op.getAction(), fl, lib, getOwner());
+				bool ftl;
+				if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
+				else ftl = Face_to_Left;
+
+				if (Face_to_Left) {
+					//TRACE("%d \n", maxW - tempF._op.getX());
+					temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+				}
+				else {
+					//TRACE("%d \n", tempF._op.getX());
+					temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+				}
+				temp->setmax(3200, 500);
+				skills = temp;
 			}
-			temp->setmax(3200, 500);
-			skills = temp;
 		}
 	}
 

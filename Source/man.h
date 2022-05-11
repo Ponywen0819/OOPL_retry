@@ -587,7 +587,7 @@ namespace game_framework {
 			throwing = true;
 		}
 
-		void	holdingSth(obj* thing) {
+		void holdingSth(obj* thing) {
 			holding = thing;
 		}
 	private:
