@@ -268,10 +268,7 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(65);
 	Flib.init();
 
-	lf.init();
-	temp1.init();
-	sp.init();
-	gw.init();
+	stage.init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -318,7 +315,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // Εγ₯ά
 void CGameStateRun::OnShow() {
 
-	gw.showmap(allobj.getX());
+	stage.OnShow(allobj.getX());
 	bar.OnShowBar(player1, player2);
 	allobj.OnShow();	
 }

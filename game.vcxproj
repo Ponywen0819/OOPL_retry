@@ -280,8 +280,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="Source\great wall.cpp" />
-    <ClCompile Include="Source\lion forest.cpp" />
     <ClCompile Include="Source\MainFrm.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -289,7 +287,7 @@
     </ClCompile>
     <ClCompile Include="Source\man.cpp" />
     <ClCompile Include="Source\gamemap.cpp" />
-    <ClCompile Include="Source\Stanley_Prison.cpp" />
+    <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StdAfx.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -310,7 +308,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="Source\templete1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Area.h" />
@@ -325,17 +322,14 @@
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameView.h" />
-    <ClInclude Include="Source\great wall.h" />
-    <ClInclude Include="Source\lion forest.h" />
     <ClInclude Include="Source\MainFrm.h" />
     <ClInclude Include="Source\man.h" />
     <ClInclude Include="Source\gamemap.h" />
     <ClInclude Include="Source\Resource.h" />
-    <ClInclude Include="Source\Stanley_Prison.h" />
+    <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StdAfx.h" />
     <ClInclude Include="Source\gamelib.h" />
     <ClInclude Include="Source\mygame.h" />
-    <ClInclude Include="Source\templete1.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc">

@@ -776,7 +776,7 @@ namespace game_framework {
 				return int(a.getobj(0)->_x + a.getobj(1)->_x) / 2;
 			}
 			else {
-				return int(a.getobj(0)->_x);
+				return int(a.getobj(0)->_x*2);
 			}
 		}
 

@@ -46,10 +46,7 @@
 #include "man.h"
 #include "Bitmaplib.h"
 #include "gamemap.h"
-#include "lion forest.h"
-#include "Stanley_Prison.h"
-#include "templete1.h"
-#include "great wall.h"
+#include "Stage.h"
 
 
 namespace game_framework {
@@ -120,10 +117,7 @@ namespace game_framework {
 		Bitmaplib		Blib;
 		Framelib		Flib;
 		CStateBar       bar;
-		lf				lf;
-		temp1			temp1;
-		SP				sp;
-		GW				gw;
+		stage			stage;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

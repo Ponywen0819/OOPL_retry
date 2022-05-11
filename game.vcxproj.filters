@@ -12,16 +12,13 @@
     <ClCompile Include="Source\game.cpp" />
     <ClCompile Include="Source\gameDoc.cpp" />
     <ClCompile Include="Source\gameView.cpp" />
-    <ClCompile Include="Source\lion forest.cpp" />
     <ClCompile Include="Source\MainFrm.cpp" />
     <ClCompile Include="Source\man.cpp" />
     <ClCompile Include="Source\gamemap.cpp" />
     <ClCompile Include="Source\StdAfx.cpp" />
     <ClCompile Include="Source\gamelib.cpp" />
     <ClCompile Include="Source\mygame.cpp" />
-    <ClCompile Include="Source\templete1.cpp" />
-    <ClCompile Include="Source\Stanley_Prison.cpp" />
-    <ClCompile Include="Source\great wall.cpp" />
+    <ClCompile Include="Source\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Area.h" />
@@ -36,7 +33,6 @@
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameView.h" />
-    <ClInclude Include="Source\lion forest.h" />
     <ClInclude Include="Source\MainFrm.h" />
     <ClInclude Include="Source\man.h" />
     <ClInclude Include="Source\gamemap.h" />
@@ -44,9 +40,7 @@
     <ClInclude Include="Source\StdAfx.h" />
     <ClInclude Include="Source\gamelib.h" />
     <ClInclude Include="Source\mygame.h" />
-    <ClInclude Include="Source\templete1.h" />
-    <ClInclude Include="Source\Stanley_Prison.h" />
-    <ClInclude Include="Source\great wall.h" />
+    <ClInclude Include="Source\Stage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc" />
