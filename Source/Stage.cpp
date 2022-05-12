@@ -6,7 +6,7 @@
 #include "gamelib.h"
 #include "gamemap.h"
 #include "Stage.h"
-
+#include <string>
 namespace game_framework {
 
 	void SP::init() {
@@ -47,7 +47,17 @@ namespace game_framework {
 		return wall[0].map_pos();
 	}
 
+	int SP::_map_width() {
+		return map_width;
+	}
 
+	int SP::_upper() {
+		return upper_bound;
+	}
+
+	int SP::_lower() {
+		return lower_bound;
+	}
 
 	void lf::init() {
 		forestm[0].LoadBitmap("./Bitmaps/bg/lf/forestm1.bmp", RGB(0, 0, 0));
@@ -101,6 +111,17 @@ namespace game_framework {
 		return forests.map_pos();
 	}
 
+	int lf::_map_width() {
+		return map_width;
+	}
+
+	int lf::_upper() {
+		return upper_bound;
+	}
+
+	int lf::_lower() {
+		return lower_bound;
+	}
 
 	void GW::init() {
 
@@ -147,6 +168,18 @@ namespace game_framework {
 		return sky.map_pos();
 	}
 
+	int GW::_map_width() {
+		return map_width;
+	}
+
+	int GW::_upper() {
+		return upper_bound;
+	}
+
+	int GW::_lower() {
+		return lower_bound;
+	}
+
 	void temp1::init() {
 		pic[0].LoadBitmap("./Bitmaps/bg/1/pic1.bmp");
 		pic[1].LoadBitmap("./Bitmaps/bg/1/pic2.bmp");
@@ -185,35 +218,211 @@ namespace game_framework {
 		return pic[0].map_pos();
 	}
 
+	int temp1::_map_width() {
+		return map_width;
+	}
+
+	int temp1::_upper() {
+		return upper_bound;
+	}
+
+	int temp1::_lower() {
+		return lower_bound;
+	}
 
 
 
 
-	void stage::init() {
+	void stage::init(int init_stage) {
 		sp1->init();
 		lf1->init();
 		gw1->init();
 		ex1->init();
+		for (int i = 0; i < 16; i++) {
+			path = "./Bitmaps/stage/"+ std::to_string(i) +"~1.bmp";
+			if (i == 1 || i == 6 || i == 11) {
+				trans[i].LoadBitmap((char *)path.c_str());
+			}
+			else {
+				trans[i].LoadBitmap((char *)path.c_str(),RGB(0,0,0));
+			}
+			
+		}
+
+		now_stage = init_stage;
+		if (now_stage == 1) {
+			trans_index = 1;
+		}
+		else if (now_stage == 2) {
+			trans_index = 6;
+		}
+		else if (now_stage == 3) { 
+			trans_index = 11;
+		}
+	}
+
+
+	void stage::info() {
+		if (now_stage == 1) {
+			map = 1;
+			map_width = lf1->_map_width();
+			upper_bound = lf1->_upper();
+			lower_bound = lf1->_lower();
+			switch (trans_index) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			}
+		}
+		if (now_stage == 2) {
+			map = 2;
+			map_width = sp1->_map_width();
+			upper_bound = sp1->_upper();
+			lower_bound = sp1->_lower();
+			switch (trans_index) {
+			case 6:
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
+			case 10:
+				break;
+			}			
+		}
+		if (now_stage == 3) {
+			map = 3;
+			map_width = gw1->_map_width();
+			upper_bound = gw1->_upper();
+			lower_bound = gw1->_lower();
+			switch (trans_index) {
+			case 11:
+				break;
+			case 12:
+				break;
+			case 13:
+				break;
+			case 14:
+				break;
+			case 15:
+				break;
+			}
+		}
+
+	}
+
+	void stage::check(int hp) {
+		if (hp == 0 && map != 0) {
+			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width-10) {
+				if (main) {
+					now_stage++;
+					map = 0;
+					main = FALSE;
+				}
+			}
+
+			else if ((trans_index == 6 || trans_index == 11) && man_pos < map_width - 10) {
+				clean = TRUE;
+			}
+
+			else if(trans_index != 6 && trans_index != 11){
+				branch = TRUE;
+			}
+		}
+	}
+
+	void stage::show_trans() {
+		trans[trans_index].SetTopLeft(0, 140);
+		trans[trans_index].ShowBitmap();
+		delay();
+		if (temp > 10) {
+			temp = 0;
+			info();
+			trans_index++;
+		}
 	}
 
 	void stage::OnShow(int _man_pos) {
-
+		man_pos = _man_pos;
 		if (map == 0) {
-
+			show_trans();
 		}
 		else if(map == 1) {
 			lf1->showmap(_man_pos);
+			map_pos = lf1->map_pos();
+			if (branch) {
+				show_trans();
+				branch = FALSE;
+			}
+			if (clean) {
+				trans[0].SetTopLeft(0, 140);
+				trans[0].ShowBitmap();
+				clean = FALSE;
+			}
 		}
 		else if (map == 2) {
 			sp1->showmap(_man_pos);
+			map_pos = sp1->map_pos();
+			main = TRUE;
+			if (branch) {
+				show_trans();
+				branch = FALSE;
+			}
+			if (clean) {
+				trans[0].SetTopLeft(0, 140);
+				trans[0].ShowBitmap();
+				clean = FALSE;
+			}
 		}
 		else if (map == 3) {
 			gw1->showmap(_man_pos);
+			map_pos = gw1->map_pos();
+			main = TRUE;
+			if (branch) {
+				show_trans();
+				branch = FALSE;
+			}
+			if (clean) {
+				trans[0].SetTopLeft(0, 140);
+				trans[0].ShowBitmap();
+				clean = FALSE;
+			}
 		}
 
 	}
 
 
+	int stage::get_mappos() {
+		return map_pos;
+	}
+	int stage::get_mapwidth() {
+		return map_width;
+	}
+	int stage::get_upbound() {
+		return upper_bound;
+	}
+	int stage::get_downbound() {
+		return lower_bound;
+	}
 
 
+
+	void stage::delay() {
+		for (int i = 0; i < 2; i++) {
+			if (--delay1 < 0) {
+				temp++;
+				delay1 = 10;
+			}
+			TRACE("%d\n", temp);
+		}
+	}
 }

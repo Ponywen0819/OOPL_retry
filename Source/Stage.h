@@ -12,6 +12,9 @@ namespace game_framework {
 		void init();
 		void showmap(int);
 		int map_pos();
+		int _map_width();
+		int _upper();
+		int _lower();
 	private:
 		gamemap wall[2];
 		gamemap fire_ani;
@@ -31,6 +34,9 @@ namespace game_framework {
 		void init();
 		void showmap(int);
 		int map_pos();
+		int _map_width();
+		int _upper();
+		int _lower();
 	private:
 		gamemap forests;
 		gamemap forestm[4];
@@ -51,7 +57,9 @@ namespace game_framework {
 		void init();
 		void showmap(int);
 		int map_pos();
-
+		int _map_width();
+		int _upper();
+		int _lower();
 	private:
 		gamemap pic[8];
 		int map_width;
@@ -69,6 +77,9 @@ namespace game_framework {
 		void init();
 		void showmap(int);
 		int map_pos();
+		int _map_width();
+		int _upper();
+		int _lower();
 	private:
 		gamemap sky;
 		gamemap ground;
@@ -82,13 +93,28 @@ namespace game_framework {
 	class stage {
 	public:
 		stage() {
+			delay1 = 100;
 			now_stage = 0;
-			map = 2;
+			map = 0;
+			temp = 0;
+			trans_index = 1;
+			branch = FALSE;
+			main = TRUE;
+			clean = FALSE;
 		}
 
 
-		void init();
+		void init(int);
 		void OnShow(int);
+		void info();
+		void delay();
+		void check(int);
+		void show_trans();
+
+		int get_mapwidth();
+		int get_upbound();
+		int get_downbound();
+		int get_mappos();
 
 
 	private:
@@ -100,8 +126,22 @@ namespace game_framework {
 		temp1* ex1 = new temp1;
 		GW* gw1 = new GW;
 
+		CMovingBitmap trans[16];
+		std::string path;
+		boolean branch;
+		boolean main;
+		boolean clean;
 		int now_stage;
 		int map;
+		int map_width;
+		int upper_bound;
+		int lower_bound;
+		int map_pos;
+		int a;
+		int man_pos;
+		int delay1;
+		int temp;
+		int trans_index;
 	};
 
 
