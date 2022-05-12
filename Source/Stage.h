@@ -101,6 +101,7 @@ namespace game_framework {
 			branch = FALSE;
 			main = TRUE;
 			clean = FALSE;
+			over = FALSE;
 		}
 
 
@@ -108,7 +109,9 @@ namespace game_framework {
 		void OnShow(int);
 		void info();
 		void delay();
-		void check(int);
+		void test();
+		boolean check(int);
+		boolean overgame();
 		void show_trans();
 
 		int get_mapwidth();
@@ -131,6 +134,8 @@ namespace game_framework {
 		boolean branch;
 		boolean main;
 		boolean clean;
+		boolean over;
+
 		int now_stage;
 		int map;
 		int map_width;

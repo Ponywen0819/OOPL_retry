@@ -257,7 +257,10 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	stage.check(v);
+	a = stage.check(v);
+	if (stage.overgame()) {
+		GotoGameState(GAME_STATE_OVER);
+	}
 }
 
 void CGameStateRun::OnInit(){
@@ -269,7 +272,7 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(65);
 	Flib.init();
 
-	stage.init(2);
+	stage.init(3);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -289,6 +292,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
 	bar.Player1HPState(20, 10);
 	bar.Player1MPState(90);
+	stage.test();
 }
 
 
@@ -322,7 +326,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 
 // Εγ₯ά
 void CGameStateRun::OnShow() {
-
+	
 	
 	bar.OnShowBar(player1, player2);
 	stage.OnShow(allobj.getX());

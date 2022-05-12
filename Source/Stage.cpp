@@ -320,7 +320,7 @@ namespace game_framework {
 
 	}
 
-	void stage::check(int hp) {
+	boolean stage::check(int hp) {
 		if (hp == 0 && map != 0) {
 			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width-10) {
 				if (main) {
@@ -328,9 +328,10 @@ namespace game_framework {
 					map = 0;
 					main = FALSE;
 				}
+				return TRUE;
 			}
 
-			else if ((trans_index == 6 || trans_index == 11) && man_pos < map_width - 10) {
+			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width - 10) {
 				clean = TRUE;
 			}
 
@@ -338,6 +339,7 @@ namespace game_framework {
 				branch = TRUE;
 			}
 		}
+		return FALSE;
 	}
 
 	void stage::show_trans() {
@@ -350,6 +352,15 @@ namespace game_framework {
 			trans_index++;
 		}
 	}
+
+	boolean stage::overgame() {
+		return over;
+	}
+
+	void stage::test() {
+		
+	}
+
 
 	void stage::OnShow(int _man_pos) {
 		man_pos = _man_pos;
@@ -395,9 +406,13 @@ namespace game_framework {
 				trans[0].SetTopLeft(0, 140);
 				trans[0].ShowBitmap();
 				clean = FALSE;
+				delay();
+				if (temp > 10) {
+					over = TRUE;
+					temp = 0;
+				}
 			}
 		}
-
 	}
 
 
@@ -422,7 +437,6 @@ namespace game_framework {
 				temp++;
 				delay1 = 10;
 			}
-			TRACE("%d\n", temp);
 		}
 	}
 }
