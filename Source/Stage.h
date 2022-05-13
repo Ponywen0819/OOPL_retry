@@ -105,7 +105,8 @@ namespace game_framework {
 		}
 
 
-		void init(int);
+		void init(int,ObjContainer*);
+		void load();
 		void OnShow(int);
 		void info();
 		void delay();
@@ -129,6 +130,8 @@ namespace game_framework {
 		temp1* ex1 = new temp1;
 		GW* gw1 = new GW;
 
+		
+
 		CMovingBitmap trans[16];
 		std::string path;
 		boolean branch;
@@ -147,6 +150,7 @@ namespace game_framework {
 		int delay1;
 		int temp;
 		int trans_index;
+		ObjContainer* obj;
 	};
 
 

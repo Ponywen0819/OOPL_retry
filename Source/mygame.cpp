@@ -251,11 +251,12 @@ CGameStateRun::~CGameStateRun(){
 
 void CGameStateRun::OnBeginState(){
 	allobj.init(player1, player2, &Blib,&Flib);
+	stage.init(1, &allobj);
 }	
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	a = stage.check(v);
+	a = stage.check(v);      //-----------v改為敵人總血量就行，0的時候會跳關，a為TRUE時跳大關，人物要重置位置-----我是廢物什麼都不會，也不知道是不是寫在這裡----
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}
@@ -271,7 +272,7 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(65);
 	Flib.init();
 
-	stage.init(3);
+	stage.load();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -303,6 +304,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
+	GotoGameState(GAME_STATE_OVER);
 }
 
 // 處理滑鼠的動作

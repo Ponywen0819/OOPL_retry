@@ -4,6 +4,8 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
+#include "man.h"
+#include "Bitmaplib.h"
 #include "gamemap.h"
 #include "Stage.h"
 #include <string>
@@ -231,9 +233,23 @@ namespace game_framework {
 	}
 
 
+	void stage::init(int init_stage, ObjContainer* _obj) {
+		obj = _obj;
+		now_stage = init_stage;
+		if (now_stage == 1) {
+			trans_index = 1;
+		}
+		else if (now_stage == 2) {
+			trans_index = 6;
+		}
+		else if (now_stage == 3) {
+			trans_index = 11;
+		}
+	}
 
 
-	void stage::init(int init_stage) {
+
+	void stage::load() {
 		sp1->init();
 		lf1->init();
 		gw1->init();
@@ -249,16 +265,7 @@ namespace game_framework {
 			
 		}
 
-		now_stage = init_stage;
-		if (now_stage == 1) {
-			trans_index = 1;
-		}
-		else if (now_stage == 2) {
-			trans_index = 6;
-		}
-		else if (now_stage == 3) { 
-			trans_index = 11;
-		}
+		
 	}
 
 
@@ -270,14 +277,36 @@ namespace game_framework {
 			lower_bound = lf1->_lower();
 			switch (trans_index) {
 			case 1:
+				obj->creatEnemy(0, 1000, 400);
+				obj->creatEnemy(0, 900, 450);
 				break;
 			case 2:
+				obj->creatEnemy(0, 1500, 400);
+				obj->creatEnemy(0, 1400, 300);
+				obj->creatEnemy(0, 1200, 450);
 				break;
 			case 3:
+				obj->creatEnemy(0, 2000, 500);
+				obj->creatEnemy(0, 1800, 400);
+				obj->creatEnemy(0, 1600, 380);
+				obj->creatEnemy(0, 1600, 450);
 				break;
 			case 4:
+				obj->creatEnemy(0, 100, 370);
+				obj->creatEnemy(0, 200, 450);
+				obj->creatEnemy(0, 150, 400);
+				obj->creatEnemy(0, 1600, 375);
+				obj->creatEnemy(0, 1800, 480);
 				break;
 			case 5:
+				obj->creatEnemy(0, 100, 300);
+				obj->creatEnemy(0, 200, 400);
+				obj->creatEnemy(0, 1000, 500);
+				obj->creatEnemy(0, 2000, 330);
+				obj->creatEnemy(0, 3000, 430);
+				obj->creatEnemy(0, 3200, 490);
+				obj->creatEnemy(0, 1800, 440);
+				obj->creatEnemy(0, 2500, 420);
 				break;
 			}
 		}
@@ -288,14 +317,36 @@ namespace game_framework {
 			lower_bound = sp1->_lower();
 			switch (trans_index) {
 			case 6:
+				obj->creatEnemy(0, 1000, 300);
+				obj->creatEnemy(1, 900, 400);
 				break;
 			case 7:
+				obj->creatEnemy(0, 1500, 400);
+				obj->creatEnemy(0, 1400, 300);
+				obj->creatEnemy(1, 1200, 450);
 				break;
 			case 8:
+				obj->creatEnemy(0, 1500, 400);
+				obj->creatEnemy(0, 1400, 300);
+				obj->creatEnemy(1, 1200, 450);
+				obj->creatEnemy(1, 1600, 450);
 				break;
 			case 9:
+				obj->creatEnemy(0, 100, 370);
+				obj->creatEnemy(0, 200, 450);
+				obj->creatEnemy(0, 150, 400);
+				obj->creatEnemy(1, 1600, 375);
+				obj->creatEnemy(1, 1800, 480);
 				break;
 			case 10:
+				obj->creatEnemy(0, 100, 300);
+				obj->creatEnemy(0, 200, 400);
+				obj->creatEnemy(0, 250, 470);
+				obj->creatEnemy(0, 300, 330);
+				obj->creatEnemy(1, 1600, 430);
+				obj->creatEnemy(1, 1800, 490);
+				obj->creatEnemy(1, 2000, 440);
+				obj->creatEnemy(1, 2300, 420);
 				break;
 			}			
 		}
@@ -306,14 +357,42 @@ namespace game_framework {
 			lower_bound = gw1->_lower();
 			switch (trans_index) {
 			case 11:
+				obj->creatEnemy(0, 1000, 330);
+				obj->creatEnemy(0, 900, 400);
+				obj->creatEnemy(1, 1100, 350);
+				obj->creatEnemy(1, 1200, 470);
 				break;
 			case 12:
+				obj->creatEnemy(0, 1500, 400);
+				obj->creatEnemy(0, 1400, 330);
+				obj->creatEnemy(1, 1200, 450);
+				obj->creatEnemy(0, 900, 400);
+				obj->creatEnemy(1, 1100, 350);
 				break;
 			case 13:
+				obj->creatEnemy(0, 100, 370);
+				obj->creatEnemy(0, 200, 450);
+				obj->creatEnemy(0, 150, 400);
+				obj->creatEnemy(1, 1600, 375);
+				obj->creatEnemy(1, 1800, 450);
 				break;
 			case 14:
+				obj->creatEnemy(1, 1200, 450);
+				obj->creatEnemy(0, 900, 400);
+				obj->creatEnemy(1, 1100, 320);
+				obj->creatEnemy(0, 200, 450);
+				obj->creatEnemy(0, 150, 400);
+				obj->creatEnemy(1, 1600, 375);
 				break;
 			case 15:
+				obj->creatEnemy(0, 100, 330);
+				obj->creatEnemy(0, 200, 400);
+				obj->creatEnemy(0, 250, 470);
+				obj->creatEnemy(0, 300, 380);
+				obj->creatEnemy(1, 1600, 430);
+				obj->creatEnemy(1, 1800, 460);
+				obj->creatEnemy(1, 2000, 440);
+				obj->creatEnemy(1, 2300, 420);
 				break;
 			}
 		}
