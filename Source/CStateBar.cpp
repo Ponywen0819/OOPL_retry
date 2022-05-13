@@ -18,12 +18,6 @@ namespace game_framework {
 		p2_hp1 = 500;
 		p2_hp2 = 500;
 		p2_mp = 500;
-
-		delay1_hp = 50;
-		delay1_mp = 40;
-		delay2_hp = 50;
-		delay2_mp = 40;
-		
 	}
 
 	void CStateBar::LoadBitmap() {
@@ -38,12 +32,26 @@ namespace game_framework {
 
 	}
 
-	void CStateBar::OnShowBar(int player1,int player2) {
+	void CStateBar::init(int player1, int player2) {
+		this->p1 = player1;
+		this->p2 = player2;
+		if (player2 == -1) {
+			state = 0;
+		}
+		else if (player1 == -1) {
+			state = 1;
+		}
+		else {
+			state = 2;
+		}
+	}
+
+	void CStateBar::OnShowBar() {
 		bar.SetTopLeft(0, 0);
 		bar.ShowBitmap();
-		if (player1 != -1 ) {
-			character[player1].SetTopLeft(97, 33);
-			character[player1].ShowBitmap();
+		if (p1 != -1 ) {
+			character[p1].SetTopLeft(97, 33);
+			character[p1].ShowBitmap();
 			if (p1_hp1 > 0) {
 				for (int i = 0; i < p1_hp2 / 10; i++) {
 					HP2.SetTopLeft(147 + i * 3, 44);
@@ -60,12 +68,11 @@ namespace game_framework {
 					MP1.ShowBitmap();
 				}
 			}
-			p1regen_hp();
-			p1regen_mp();
 		}
-		if (player2 != -1) {
-			character[player2].SetTopLeft(493, 33);
-			character[player2].ShowBitmap();
+
+		if (p2 != -1) {
+			character[p2].SetTopLeft(493, 33);
+			character[p2].ShowBitmap();
 			if (p2_hp1 > 0) {
 				for (int i = 0; i < p2_hp2 / 10; i++) {
 					HP2.SetTopLeft(543 + i * 3, 44);
@@ -82,98 +89,46 @@ namespace game_framework {
 					MP1.ShowBitmap();
 				}
 			}
-			p2regen_hp();
-			p2regen_mp();
 		}
 	}
 
-	bool CStateBar::Player1HPState(int HP1, int HP2) {
+	void CStateBar::Player1HPState(int HP1, int HP2) {
+		if (HP1 == p1_hp1) return;
 		if (p1_hp1 > 0) {
-			p1_hp1 -= HP1;
-			p1_hp2 -= HP2;
-			delay1_hp = 50;
-			delay1_mp = 40;
-			return TRUE;
+			p1_hp1 = HP1;
+			p1_hp2 = HP2;
+			
 		}
-		return FALSE;
-		
-		
-		
 	}
-	bool CStateBar::Player2HPState(int HP1, int HP2) {
+	void CStateBar::Player2HPState(int HP1, int HP2) {
 		if (p2_hp1 > 0) {
-			p2_hp1 -= HP1;
-			p2_hp2 -= HP2;
-			delay2_hp = 50;
-			delay2_mp = 40;
-			return TRUE;
-		}
-		return FALSE;
-		
-		
-	}
-	bool CStateBar::Player1MPState(int MP) {
-		if (p1_mp >= MP) {
-			p1_mp -= MP;
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	bool CStateBar::Player2MPState(int MP) {
-		if (p2_mp >= MP) {
-			p2_mp -= MP;
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-
-	void CStateBar::p1regen_hp() {
-		//TRACE("%d\n",delay1_hp);
-		if (--delay1_hp < 0 ) {
-			if (p1_hp1 < p1_hp2 && p1_hp1 > 0) {
-				p1_hp1+=3;
-				if (p1_hp1 > p1_hp2) {
-					p1_hp1 = p1_hp2;
-				}
-			}
-			delay1_hp = 50;
-		}
-	}
-	void CStateBar::p1regen_mp() {
-		if (--delay1_mp < 0) {
-			if (p1_mp < 500) {
-				p1_mp += 3;
-				if (p1_mp > 500) {
-					p1_mp = 500;
-				}
-			}
-			delay1_mp = 40;
-		}
-	}
-	void CStateBar::p2regen_hp() {
-		//TRACE("%d\n", delay2_hp);
-		if (--delay2_hp < 0) {
-			if (p2_hp1 < p2_hp2 && p2_hp1 > 0) {
-				p2_hp1 += 3;
-				if (p2_hp1 > p2_hp2) {
-					p2_hp1 = p2_hp2;
-				}
-			}
-			delay2_hp = 50;
-		}
-	}
-	void CStateBar::p2regen_mp() {
-		if (--delay2_mp < 0) {
-			if (p2_mp < 500) {
-				p2_mp += 3;
-				if (p2_mp > 500) {
-					p2_mp = 500;
-				}
-			}
-			delay2_mp = 40;
+			p2_hp1 = HP1;
+			p2_hp2 = HP2;
 		}
 	}
 
+	void CStateBar::setHP(int p,int HP1,int HP2) {
+		if (p == 0) {
+			Player1HPState(HP1, HP2);
+		}
+		else {
+			Player2HPState(HP1, HP2);
+		}
+	}
+	void CStateBar::Player1MPState(int MP) {
+		p1_mp = MP;
+	}
+
+	void CStateBar::Player2MPState(int MP) {
+		p2_mp = MP;
+	}
+
+	void CStateBar::setMP(int p, int MP) {
+		if (p == 0) {
+			Player1MPState(MP);
+		}
+		else {
+			Player2MPState(MP);
+		}
+	}
 }

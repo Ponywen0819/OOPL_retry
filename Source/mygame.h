@@ -116,10 +116,10 @@ namespace game_framework {
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		ObjContainer	allobj;		// 場上所有的東西
+		Bitmaplib		Blib;		// 顯示的東西
+		Framelib		Flib;		// 資料庫
 		
-		Bitmaplib		Blib;
-		Framelib		Flib;
-		CStateBar       bar;
+		CStateBar       bar;		
 		lf				lf;
 		temp1			temp1;
 		SP				sp;

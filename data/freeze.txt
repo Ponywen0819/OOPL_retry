@@ -451,8 +451,7 @@
 <frame_end>
 
 <frame> 51 heavy_weapon_thw
-   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 27  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: data\007.wav 
+   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 27  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7
    wpoint:
       kind: 1  x: 101  y: 38  weaponact: 10  attacking: 0  cover: 0  dvx: 9  dvy: -4  dvz: 2 
    wpoint_end:

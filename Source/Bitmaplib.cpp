@@ -22,15 +22,6 @@ namespace game_framework {
 		// 人物圖片
 		//
 
-		/*for (int i = 0; i < 140; i++) {
-			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(i) + ".bmp";
-			tempPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
-		}
-		for (int i = 0; i < 140; i++) {
-			path = ".\\Bitmaps\\temp\\all\\" + std::to_string(140+i) + ".bmp";
-			tempPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
-		}*/
-
 		for (int i = 0; i < 190; i++) {
 			path = ".\\Bitmaps\\firen\\" + std::to_string(i) + ".bmp";
 			FirenPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));

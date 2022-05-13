@@ -1878,7 +1878,7 @@
       kind: 1  x: 20  y: 48  weaponact: 25  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
    itr:
-      kind: 0  x: 20  y: 11  w: 49  h: 70  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
+      kind: 0  x: 20  y: 11  w: 49  h: 70  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2 
    itr_end:
    bdy:
       kind: 0  x: 16  y: 11  w: 47  h: 69
@@ -1894,8 +1894,8 @@
       kind: 1  x: 54  y: 46  weaponact: 22  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
    itr:
-      kind: 0  x: 20  y: 11  w: 49  h: 70  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2  
-   itr_end:
+      kind: 0  x: 20  y: 11  w: 49  h: 70  dvx: 10  dvy: -10  fall: 70  vrest: 10  bdefend: 16  injury: 45   effect: 2 
+   itr_end
    bdy:
       kind: 0  x: 20  y: 12  w: 47  h: 68
    bdy_end:
