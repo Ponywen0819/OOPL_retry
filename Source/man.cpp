@@ -192,6 +192,13 @@ namespace game_framework {
 			default:
 				break;
 			}
+			
+			int half = int(maxW/2);
+			if (_x <= -(half))  _x = -(half);
+			else if (_x >= (mapdata[0] + 800 - half))_x = (mapdata[0] + 800 - half);
+			if (_z <= mapdata[2])_z = mapdata[2];
+			else if (_z >= mapdata[3]) _z = mapdata[3];
+
 			checkbeenatt();
 		}
 		else{
@@ -440,7 +447,7 @@ namespace game_framework {
 			toMotion((*Frams)[_mode].hit_d);
 		}
 
-		if (_x > maxx || _x<0) {
+		if (_x > mapdata[1] + 1000 || _x< -200) {
 			Alive = false;
 		}
 
@@ -1535,6 +1542,11 @@ namespace game_framework {
 		}
 		}
 
+		if (_x <= -40)  _x = -40;
+		else if (_x >= (mapdata[0] + 760))_x = (mapdata[0] + 760);
+		if (_z <= mapdata[2])_z = mapdata[2];
+		else if (_z >= mapdata[3]) _z = mapdata[3];
+
 		useSupperAtt = false;
 		bcount();
 		checkbeenatt();
@@ -1701,7 +1713,7 @@ namespace game_framework {
 			mans[1] = new man(p2, fl, lib, &a);
 			mans[1]->mapSetting(map_data);
 			mans[1]->_x = 100;
-			mans[1]->_z = 500;
+			mans[1]->_z = 450;
 			mans[1]->setplayer(1, &bar);
 
 			a.add(mans[1]);
@@ -1712,7 +1724,7 @@ namespace game_framework {
 			mans[0] = new man(p1, fl, lib, &a);
 			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
-			mans[0]->_z = 400;
+			mans[0]->_z = 425;
 			mans[0]->setplayer(0, &bar);
 			
 			a.add(mans[0]);
@@ -1723,7 +1735,7 @@ namespace game_framework {
 			mans[0] = new man(p2, fl, lib, &a);
 			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
-			mans[0]->_z = 400;
+			mans[0]->_z = 425;
 			mans[0]->setplayer(1, &bar);
 
 			a.add(mans[0]);

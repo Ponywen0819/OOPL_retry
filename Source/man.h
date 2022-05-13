@@ -229,7 +229,7 @@ namespace game_framework {
 			time = 0;
 			Walk_Ani_num = 5;
 			fall = 100;
-			mp = 0;
+			mp = 500;
 			HpRecover = 500;
 			commandBuffer = "";
 

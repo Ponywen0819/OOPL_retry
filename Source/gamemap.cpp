@@ -135,7 +135,6 @@ namespace game_framework {
 		//TRACE("%d %d %1.f\n", _man_pos1 ,_man_pos2, temp * (layer_dis - 1));
 	}
 
-
 	int gamemap::map_pos() {
 		return temp2;
 	}
