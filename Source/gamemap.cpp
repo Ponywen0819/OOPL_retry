@@ -57,6 +57,7 @@ namespace game_framework {
 		}
 		// TRACE("!!!%.3f %.3f %.3f %d %.3f\n",  move_pixel_right, layer_dis, layer_width, back_ground.Width(), temp);
 	}
+	
 	void gamemap::onShow(int _man_pos) {
 		int total_pos = _man_pos;
 		if (total_pos % 2 == 1)total_pos += 1;

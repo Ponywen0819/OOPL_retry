@@ -250,7 +250,7 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
-	allobj.init(player1, player2, &Blib,&Flib);
+	allobj.init(player1, player2);
 }	
 
 void CGameStateRun::OnMove(){
@@ -261,17 +261,19 @@ void CGameStateRun::OnMove(){
 	}
 }
 
-void CGameStateRun::OnInit(){
+void CGameStateRun::OnInit() {
 
-	allobj.load();
+	allobj.load(&Blib, &Flib);
 
-	ShowInitProgress(33);	
+	ShowInitProgress(33);
 	Blib.LoadBitmap();
 
 	ShowInitProgress(65);
 	Flib.init();
 
 	stage.init(3);
+
+	allobj.mapSetting(stage.getdata());
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -307,6 +309,7 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
+	GotoGameState(GAME_STATE_OVER);
 }
 
 // 顯示
@@ -314,5 +317,4 @@ void CGameStateRun::OnShow() {
 	stage.OnShow(allobj.getX());
 	allobj.OnShow();	
 }
-
 }

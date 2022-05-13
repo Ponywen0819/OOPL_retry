@@ -22,6 +22,8 @@ namespace game_framework {
 	//------------------------------珇场だ------------------------------------------
 	//
 
+
+
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
 		if (beatenList == nullptr) {
@@ -112,6 +114,13 @@ namespace game_framework {
 		return arestC;
 	}
 
+	void obj::OnShow() {
+		int index;
+		if (Face_to_Left) index = 0;
+		else index = 1;
+		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x) - mapdata[1], -int(_y) + int(_z));
+	}
+
 	//
 	//------------------------------猌竟场だ------------------------------------------
 	//
@@ -143,14 +152,6 @@ namespace game_framework {
 		else {
 			toMotion(temp);
 		}
-	}
-
-	void weapon::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		//TRACE("%d %d %d\n", (*Frams)[_mode]._pic,_mode,id);
-		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
 	}
 
 	void weapon::OnMove() {
@@ -387,7 +388,8 @@ namespace game_framework {
 			else {
 				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
-			temp->setmax(3200, 500);
+			temp->setmax(3200);
+			temp->mapSetting(mapdata);
 			skills = temp;
 		}
 	}
@@ -419,13 +421,6 @@ namespace game_framework {
 		who = other;
 		stop = true;
 		
-	}
-
-	void wp::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		lib->selectByNum( id, (*Frams)[_mode]._pic, index, int(_x), -int(_y)+int(_z));
 	}
 
 	void wp::OnMove() {
@@ -506,7 +501,7 @@ namespace game_framework {
 				temp->holdingSth(this);
 				holding = temp;
 				holdinglt = true;
-				temp->setmax(3200, 500);
+				temp->setmax(3200);
 				_a->add(temp);
 			}
 			else {
@@ -523,7 +518,8 @@ namespace game_framework {
 					//TRACE("%d \n", tempF._op.getX());
 					temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 				}
-				temp->setmax(3200, 500);
+				temp->setmax(3200);
+				temp->mapSetting(mapdata);
 				skills = temp;
 			}
 		}
@@ -1597,15 +1593,6 @@ namespace game_framework {
 		bar->setHP(player, hp, HpRecover);
 		bar->setMP(player, mp);
 	}
-	
-	//陪ボ
-	void man::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
-		//TRACE("%d\n", (*Frams)[_mode]._pic);
-	}
 
 	//矪瞶块丁丁筳
 	void man::setCountDwon() {
@@ -1624,6 +1611,14 @@ namespace game_framework {
 	//------------------------------иぃ笵场だ------------------------------------------
 	//
 
+	void allobj::init() {
+		if (all != nullptr) {
+			delete[] all;
+		}
+		all = nullptr;
+		num = 0;
+	}
+	
 	void allobj::add(obj* a) {
 		if (all == nullptr) {
 			all = new obj*[1];
@@ -1680,50 +1675,66 @@ namespace game_framework {
 	//------------------------------北场だ------------------------------------------
 	//
 
-	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
-		lib = l;
-		fl = f;
+	void ObjContainer::init(int p1,int p2) {
+		//
+		// 珇﹍て
+		// 
+		a.init();
+
+		//
+		//﹍て
+		//
+		if (mans != nullptr) delete[] mans;
+		mans = nullptr;
+		
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
 			mans = new man*[2];
-			mans[0] = new man(p1,f,l,&a);
-			mans[1] = new man(p2,f,l,&a);
-
-			a.add(mans[0]);
-			a.add(mans[1]);
-
+			mans[0] = new man(p1, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
 			mans[0]->_z = 400;
 			mans[0]->setplayer(0, &bar);
 
+			a.add(mans[0]);
+
+			mans[1] = new man(p2, fl, lib, &a);
+			mans[1]->mapSetting(map_data);
 			mans[1]->_x = 100;
 			mans[1]->_z = 500;
 			mans[1]->setplayer(1, &bar);
+
+			a.add(mans[1]);
 		}
 		else if ((p1 != -1) && (p2 == -1)) {
 			state = 1;
 			mans = new man*[1];
-			mans[0] = new man(p1, f, l, &a);
-			a.add(mans[0]);
-
+			mans[0] = new man(p1, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
 			mans[0]->_z = 400;
 			mans[0]->setplayer(0, &bar);
+			
+			a.add(mans[0]);
 		}
 		else if ((p1 == -1) && (p2 != -1)) {
 			state = 2;
 			mans = new man*[1];
-			mans[0] = new man(p1, f, l, &a);
-			a.add(mans[0]);
-
+			mans[0] = new man(p2, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
 			mans[0]->_z = 400;
 			mans[0]->setplayer(1, &bar);
+
+			a.add(mans[0]);
 		}
 		bar.init(p1, p2);
 
-
 		creatWeapon(11);
+	}
+	
+	void ObjContainer::mapSetting(int* data){
+		map_data = data;
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
@@ -2015,6 +2026,7 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
+		TRACE("%d\n",map_data[1]);
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
@@ -2038,7 +2050,8 @@ namespace game_framework {
 
 		temp->init(400, 300,400,false);
 		
-		temp->setmax(3200, 500);
+		temp->setmax(3200);
+		temp->mapSetting(map_data);
 		a.add(temp);
 	}
 
@@ -2063,4 +2076,7 @@ namespace game_framework {
 	void ObjContainer::creatEnemy(int type, int x, int y) {
 
 	}
+
+
+
 }

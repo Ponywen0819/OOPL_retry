@@ -28,6 +28,8 @@ namespace game_framework {
 			Alive = true;
 			stop = false;
 			hit = holdinglt = holdingheavy = false;
+
+			maxx = map_pos = upbond = underbond = 0;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
@@ -41,7 +43,6 @@ namespace game_framework {
 				delete beatenList;
 			}
 		}
-
 		obj& operator=(const obj& o) {
 			if (this != &o) {
 				Frams = o.Frams; 
@@ -57,9 +58,12 @@ namespace game_framework {
 			return *this;
 		}
 
+
+
 		// 物品各自有自己移動的方式
 		virtual void OnMove() = 0;
-		virtual void OnShow() = 0;
+
+		void OnShow();
 		
 
 		//
@@ -69,8 +73,13 @@ namespace game_framework {
 			all = list;
 			numOfObj = n;
 		}
-		void setmax(int x, int z) {
-			maxx = x; maxz = z;
+		void setmax(int x) {
+			maxx = x;
+		}
+
+		void mapSetting(int* data) {
+			maxx = data[0]; map_pos = data[1]; upbond = data[2]; underbond = data[3];
+			mapdata = data;
 		}
 
 
@@ -164,10 +173,17 @@ namespace game_framework {
 		int		time;				// 計數
 		int		arestC;				// 多久之後才可以打人
 		int		hp;					// 血量
-		int		maxx, maxz;			// 地圖的最大值
 		int		kind;				// 此物品的種類
 		// 0: 人物 1: 招式 2: 物品
 		
+		//
+		// 地圖設定
+		//
+		
+		int		maxx, map_pos;			 // 地圖的最大值
+		int		upbond, underbond;	 // 地圖的上下界線 
+		
+		int*	mapdata;				//地圖的資料 寬度 現在的位置 上屆 下屆
 		
 		bool	Alive;	
 		bool	stop;	
@@ -187,7 +203,7 @@ namespace game_framework {
 			delete[] all;
 		}
 
-		
+		void init();
 
 		void add(obj *);
 		void del(int n);
@@ -227,10 +243,6 @@ namespace game_framework {
 			run_Ani_dir = true;
 			JumpUp = false;
 			JumpDown = false;
-
-
-
-
 
 			JumpFront = false;
 			skills = nullptr;
@@ -318,19 +330,18 @@ namespace game_framework {
 
 		void	checkbeenatt();						// 被攻擊偵測
 		void	OnMove();							// 改變位置
-		void	OnShow();							// 顯示
 		void	holdingSth(obj* thing) {
 			holding = thing;
 		}
-
-		void	fallMotion();
 		
+		bool	isAlive() {
+			return Alive;
+		}
+
 		void	setplayer(int p, CStateBar* b){
 			player = p;
 			bar = b;
 		}
-
-
 
 	protected:
 		// 跳躍處理
@@ -620,7 +631,6 @@ namespace game_framework {
 		void nextFrame();
 
 		void OnMove();
-		void OnShow();
 
 		void setYstep(double G, double x, double z) {
 			initG = G; stepx = x; stepz = z; jumping = true;
@@ -791,7 +801,6 @@ namespace game_framework {
 		void nextFrame();
 
 		void OnMove();
-		void OnShow();
 	private:
 		void adjustPosition(int f_now, int f_next);
 		// 計數器
@@ -812,13 +821,18 @@ namespace game_framework {
 	class ObjContainer {
 	public:
 		ObjContainer() {
+			mans = nullptr;
 		}
 		~ObjContainer() {
+
 			delete[] mans;
 		}
+		
+		void init(int player1,int player2);
 
-		void init(int player1,int player2, Bitmaplib *l, Framelib* f);
-		void load() {
+		void load(Bitmaplib *l, Framelib* f) {
+			lib = l;
+			fl = f;
 			bar.LoadBitmap();
 		}
 		
@@ -826,17 +840,28 @@ namespace game_framework {
 
 		void KeyUp(UINT nChar);
 		void KeyDown(UINT nChar);
+
 		int  getX() {
 			if (state == 0) {
-				return int(a.getobj(0)->_x + a.getobj(1)->_x) / 2;
+				if (!mans[0]->isAlive()) {
+					return int(mans[0]->_x);
+				}
+				else if (!mans[1]->isAlive()) {
+					return int(mans[0]->_x);
+				}
+				else {
+					return int(mans[0]->_x + mans[1]->_x) / 2;
+				}
 			}
 			else {
-				return int(a.getobj(0)->_x*2);
+				return int(mans[0]->_x);
 			}
 		}
 
 		void check();
 
+
+		void mapSetting(int* data);
 		void OnMove();
 		void OnShow();
 	
@@ -849,6 +874,8 @@ namespace game_framework {
 		Bitmaplib* lib;				
 		Framelib* fl;
 		int maxx, maxz;				// 地圖的最大值
+
+		int* map_data;				// 地圖的最大值
 	};
 
 	
