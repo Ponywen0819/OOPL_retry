@@ -65,7 +65,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,v = 0;
+int player1 = -1, player2 = -1,v = 1;
 boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
@@ -255,6 +255,10 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
+	a = stage.check(v);
+	if (stage.overgame()) {
+		GotoGameState(GAME_STATE_OVER);
+	}
 }
 
 void CGameStateRun::OnInit(){
@@ -267,10 +271,7 @@ void CGameStateRun::OnInit(){
 	ShowInitProgress(65);
 	Flib.init();
 
-	lf.init();
-	temp1.init();
-	sp.init();
-	gw.init();
+	stage.init(3);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -310,8 +311,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 
 // 顯示
 void CGameStateRun::OnShow() {
-	gw.showmap(allobj.getX());
-	
+	stage.OnShow(allobj.getX());
 	allobj.OnShow();	
 }
 

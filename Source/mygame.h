@@ -46,10 +46,7 @@
 #include "man.h"
 #include "Bitmaplib.h"
 #include "gamemap.h"
-#include "lion forest.h"
-#include "Stanley_Prison.h"
-#include "templete1.h"
-#include "great wall.h"
+#include "Stage.h"
 
 
 namespace game_framework {
@@ -118,12 +115,8 @@ namespace game_framework {
 		ObjContainer	allobj;		// 場上所有的東西
 		Bitmaplib		Blib;		// 顯示的東西
 		Framelib		Flib;		// 資料庫
-		
-		CStateBar       bar;		
-		lf				lf;
-		temp1			temp1;
-		SP				sp;
-		GW				gw;
+		CStateBar       bar;
+		stage			stage;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
