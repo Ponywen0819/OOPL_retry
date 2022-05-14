@@ -88,6 +88,7 @@ namespace game_framework {
 		int how;
 		bool CountDown;
 		bool start;
+		bool stage;
 
 	};
 

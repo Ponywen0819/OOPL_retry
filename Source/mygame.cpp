@@ -65,7 +65,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,v = 1;
+int player1 = -1, player2 = -1,v = 1 , chose_stage = 0;
 boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
@@ -90,6 +90,8 @@ void CGameStateInit::OnBeginState(){
 	lock_2 = -1;
 	CountDown = FALSE;
 	start = FALSE;
+	stage = FALSE;
+	chose_stage = 0;
 }
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -128,8 +130,26 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 		}
 	}
 
+	else if (windows == 1 && stage == FALSE) {
+		if (nChar == KEY_RIGHT && chose_stage == 0) {
+			chose_stage = 1;
+		}
+		else if (nChar == KEY_RIGHT && chose_stage == 1) {
+			chose_stage = 2;
+		}
+		else if (nChar == KEY_LEFT && chose_stage ==1) {
+			chose_stage = 0;
+		}
+		else if (nChar == KEY_LEFT && chose_stage == 2) {
+			chose_stage = 1;
+		}
+		if (nChar == KEY_SPACE) {
+			stage = TRUE;
+		}
+	}
 
-	else if (windows == 1 && CountDown == FALSE) {
+
+	else if (windows == 1 && CountDown == FALSE && stage == TRUE) {
 		if (nChar == KEY_S && checkin_1 == 0) {
 			checkin_1 = 1;
 			player1 = 0;
@@ -201,18 +221,23 @@ void CGameStateInit::OnShow(){
 		
 	}
 	else if (windows == 1) {
-		menu.OnShowMenu(2);
-		if (checkin_1 == 1) {
-			menu.OnShowChar1(player1);
+		if (!stage) {
+			menu.OnShowStage(chose_stage);
 		}
-		if (checkin_2 == 1) {
-			menu.OnShowChar2(player2);
-		}
-		menu.OnShowCharLock(lock_1, lock_2);
-		if (CountDown) {
-			start = menu.OnShowCountDown(lock_1, lock_2);
-			if (start) {
-				GotoGameState(GAME_STATE_RUN);
+		else {
+			menu.OnShowMenu(2);
+			if (checkin_1 == 1) {
+				menu.OnShowChar1(player1);
+			}
+			if (checkin_2 == 1) {
+				menu.OnShowChar2(player2);
+			}
+			menu.OnShowCharLock(lock_1, lock_2);
+			if (CountDown) {
+				start = menu.OnShowCountDown(lock_1, lock_2);
+				if (start) {
+					GotoGameState(GAME_STATE_RUN);
+				}
 			}
 		}
 	}
@@ -284,7 +309,7 @@ CGameStateRun::~CGameStateRun(){
 
 void CGameStateRun::OnBeginState(){
 	allobj.init(player1, player2);
-	stage.init(1, &allobj);
+	stage.init(chose_stage+1, &allobj);
 }	
 
 void CGameStateRun::OnMove(){

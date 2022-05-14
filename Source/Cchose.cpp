@@ -47,6 +47,8 @@ namespace game_framework {
 		lock[0].LoadBitmap("./Bitmaps/menu/char/deep_1.bmp");
 		lock[1].LoadBitmap("./Bitmaps/menu/char/Freeze_1.bmp");
 		lock[2].LoadBitmap("./Bitmaps/menu/char/Fizen_1.bmp");
+		stage[0].LoadBitmap("./Bitmaps/menu/stage/stage.bmp");
+		stage[1].LoadBitmap("./Bitmaps/menu/stage/choose.bmp",RGB(0,0,0));
 
 		char *filename[2] = { ".\\Bitmaps\\menu\\char\\CMA.bmp", ".\\Bitmaps\\menu\\char\\CMA2.bmp" };
 
@@ -100,13 +102,12 @@ namespace game_framework {
 		else if (index == 3) {
 			how[0].SetTopLeft((SIZE_X - how[0].Width()) / 2, (SIZE_Y - how[0].Height()) / 2);
 			how[0].ShowBitmap();
-
 		}
 		else if (index == 4) {
 			how[1].SetTopLeft((SIZE_X - how[1].Width()) / 2, (SIZE_Y - how[1].Height()) / 2);
 			how[1].ShowBitmap();
-
 		}
+		
 	}
 
 	void Cchose::OnShowSelect(int index) {
@@ -135,6 +136,22 @@ namespace game_framework {
 			option[3].ShowBitmap();
 		}
 
+	}
+	void Cchose::OnShowStage(int index) {
+		stage[0].SetTopLeft((SIZE_X - stage[0].Width()) / 2, (SIZE_Y - stage[0].Height()) / 2);
+		stage[0].ShowBitmap();
+		if (index == 0) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 120, (SIZE_Y - stage[0].Height()) / 2 +390);
+			stage[1].ShowBitmap();
+		}
+		else if (index == 1) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 340, (SIZE_Y - stage[0].Height()) / 2 + 390);
+			stage[1].ShowBitmap();
+		}
+		else if (index == 2) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 550, (SIZE_Y - stage[0].Height()) / 2 + 390);
+			stage[1].ShowBitmap();
+		}
 	}
 
 	void Cchose::OnShowChar1(int index) {

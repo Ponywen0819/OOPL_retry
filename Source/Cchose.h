@@ -9,6 +9,7 @@ namespace game_framework {
 		void LoadBitmap();
 		void OnShowMenu(int index);											// �N�ϧζK��e��
 		void OnShowSelect(int index);
+		void OnShowStage(int index);
 		void OnShowChar1(int index);
 		void OnShowChar2(int index);
 		void OnShowCharAni(int player1_lock, int player2_lock);
@@ -28,6 +29,7 @@ namespace game_framework {
 		CMovingBitmap player[2];
 		CMovingBitmap lock[3];
 		CMovingBitmap how[2];
+		CMovingBitmap stage[2];
 		CAnimation cma_ani;
 		CAnimation CountDown;
 		CAnimation name[3];
