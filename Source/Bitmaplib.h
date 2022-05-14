@@ -11,7 +11,9 @@ namespace game_framework {
 		CMovingBitmap tempPic[2][140];	//人物的圖片
 		CMovingBitmap FirenPic[2][190];	//人物的圖片
 		CMovingBitmap DeepPic[2][180];	//人物的圖片
-		CMovingBitmap FreezePic[2][170];	//人物的圖片
+		CMovingBitmap FreezePic[2][170];//人物的圖片
+		CMovingBitmap HunterPic[2][140];//人物的圖片
+		CMovingBitmap BanditPic[2][140];//人物的圖片
 
 		CMovingBitmap weapon0[2][40];	//球棒的圖片
 		CMovingBitmap weapon1[2][6];	//石頭的圖片

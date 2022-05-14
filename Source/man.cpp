@@ -14,6 +14,8 @@
 #include <map>
 #include <algorithm>
 #include "CStateBar.h"
+#include <stdlib.h>
+#include <stdlib.h>
 #include "man.h"
 
 namespace game_framework {
@@ -21,6 +23,8 @@ namespace game_framework {
 	//
 	//------------------------------物品的部分------------------------------------------
 	//
+
+
 
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
@@ -112,6 +116,13 @@ namespace game_framework {
 		return arestC;
 	}
 
+	void obj::OnShow() {
+		int index;
+		if (Face_to_Left) index = 0;
+		else index = 1;
+		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x) - mapdata[1], -int(_y) + int(_z));
+	}
+
 	//
 	//------------------------------武器的部分------------------------------------------
 	//
@@ -143,14 +154,6 @@ namespace game_framework {
 		else {
 			toMotion(temp);
 		}
-	}
-
-	void weapon::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		//TRACE("%d %d %d\n", (*Frams)[_mode]._pic,_mode,id);
-		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
 	}
 
 	void weapon::OnMove() {
@@ -191,6 +194,13 @@ namespace game_framework {
 			default:
 				break;
 			}
+			
+			int half = int(maxW/2);
+			if (_x <= -(half))  _x = -(half);
+			else if (_x >= (mapdata[0] + 800 - half))_x = (mapdata[0] + 800 - half);
+			if (_z <= mapdata[2])_z = mapdata[2];
+			else if (_z >= mapdata[3]) _z = mapdata[3];
+
 			checkbeenatt();
 		}
 		else{
@@ -387,7 +397,8 @@ namespace game_framework {
 			else {
 				temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 			}
-			temp->setmax(3200, 500);
+			temp->setmax(3200);
+			temp->mapSetting(mapdata);
 			skills = temp;
 		}
 	}
@@ -421,13 +432,6 @@ namespace game_framework {
 		
 	}
 
-	void wp::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		lib->selectByNum( id, (*Frams)[_mode]._pic, index, int(_x), -int(_y)+int(_z));
-	}
-
 	void wp::OnMove() {
 		if (isTime()) {
 			nextFrame();
@@ -445,7 +449,7 @@ namespace game_framework {
 			toMotion((*Frams)[_mode].hit_d);
 		}
 
-		if (_x > maxx || _x<0) {
+		if (_x > mapdata[1] + 1000 || _x< -200) {
 			Alive = false;
 		}
 
@@ -506,7 +510,7 @@ namespace game_framework {
 				temp->holdingSth(this);
 				holding = temp;
 				holdinglt = true;
-				temp->setmax(3200, 500);
+				temp->setmax(3200);
 				_a->add(temp);
 			}
 			else {
@@ -523,7 +527,8 @@ namespace game_framework {
 					//TRACE("%d \n", tempF._op.getX());
 					temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 				}
-				temp->setmax(3200, 500);
+				temp->setmax(3200);
+				temp->mapSetting(mapdata);
 				skills = temp;
 			}
 		}
@@ -1539,6 +1544,11 @@ namespace game_framework {
 		}
 		}
 
+		if (_x <= -40)  _x = -40;
+		else if (_x >= (mapdata[0] + 760))_x = (mapdata[0] + 760);
+		if (_z <= mapdata[2])_z = mapdata[2];
+		else if (_z >= mapdata[3]) _z = mapdata[3];
+
 		useSupperAtt = false;
 		bcount();
 		checkbeenatt();
@@ -1593,18 +1603,11 @@ namespace game_framework {
 		if (hp >= 500) hp = 500;
 		else if (HpRecover >= 500) HpRecover = 500;
 		else if (hp >= HpRecover) HpRecover = hp;
-
-		bar->setHP(player, hp, HpRecover);
-		bar->setMP(player, mp);
-	}
-	
-	//人物顯示
-	void man::OnShow() {
-		int index;
-		if (Face_to_Left) index = 0;
-		else index = 1;
-		lib->selectByNum(id,(*Frams)[_mode]._pic, index, int(_x), -int(_y) + int(_z));
-		//TRACE("%d\n", (*Frams)[_mode]._pic);
+		
+		if (id < 3) {
+			bar->setHP(player, hp, HpRecover);
+			bar->setMP(player, mp);
+		}
 	}
 
 	//處理指令輸入時間間隔
@@ -1620,10 +1623,19 @@ namespace game_framework {
 		HpRecover -= (d / 3);
 		hp -= d;
 	}
+	
 	//
-	//------------------------------我也不知道的部分------------------------------------------
+	//------------------------------物品容器------------------------------------------
 	//
 
+	void allobj::init() {
+		if (all != nullptr) {
+			delete[] all;
+		}
+		all = nullptr;
+		num = 0;
+	}
+	
 	void allobj::add(obj* a) {
 		if (all == nullptr) {
 			all = new obj*[1];
@@ -1655,6 +1667,7 @@ namespace game_framework {
 			}
 		}
 		num--;
+		delete *(all + n);
 		delete all;
 		all = temp;
 	}
@@ -1680,50 +1693,66 @@ namespace game_framework {
 	//------------------------------主控的部分------------------------------------------
 	//
 
-	void ObjContainer::init(int p1,int p2, Bitmaplib *l , Framelib* f) {
-		lib = l;
-		fl = f;
+	void ObjContainer::init(int p1,int p2) {
+		//
+		// 物品初始化
+		// 
+		a.init();
+
+		//
+		//人物初始化
+		//
+		if (mans != nullptr) delete[] mans;
+		mans = nullptr;
+		
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
 			mans = new man*[2];
-			mans[0] = new man(p1,f,l,&a);
-			mans[1] = new man(p2,f,l,&a);
-
-			a.add(mans[0]);
-			a.add(mans[1]);
-
+			mans[0] = new man(p1, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
 			mans[0]->_z = 400;
 			mans[0]->setplayer(0, &bar);
 
+			a.add(mans[0]);
+
+			mans[1] = new man(p2, fl, lib, &a);
+			mans[1]->mapSetting(map_data);
 			mans[1]->_x = 100;
-			mans[1]->_z = 500;
+			mans[1]->_z = 450;
 			mans[1]->setplayer(1, &bar);
+
+			a.add(mans[1]);
 		}
 		else if ((p1 != -1) && (p2 == -1)) {
 			state = 1;
 			mans = new man*[1];
-			mans[0] = new man(p1, f, l, &a);
-			a.add(mans[0]);
-
+			mans[0] = new man(p1, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
-			mans[0]->_z = 400;
+			mans[0]->_z = 425;
 			mans[0]->setplayer(0, &bar);
+			
+			a.add(mans[0]);
 		}
 		else if ((p1 == -1) && (p2 != -1)) {
 			state = 2;
 			mans = new man*[1];
-			mans[0] = new man(p1, f, l, &a);
-			a.add(mans[0]);
-
+			mans[0] = new man(p2, fl, lib, &a);
+			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 100;
-			mans[0]->_z = 400;
+			mans[0]->_z = 425;
 			mans[0]->setplayer(1, &bar);
+
+			a.add(mans[0]);
 		}
 		bar.init(p1, p2);
 
-
 		creatWeapon(11);
+	}
+	
+	void ObjContainer::mapSetting(int* data){
+		map_data = data;
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
@@ -2022,6 +2051,9 @@ namespace game_framework {
 				a.add(temp);
 			}
 		}
+
+		com.OnMove();							//電腦指派任務階段
+		
 		check();
 		a.so();
 	}
@@ -2038,7 +2070,8 @@ namespace game_framework {
 
 		temp->init(400, 300,400,false);
 		
-		temp->setmax(3200, 500);
+		temp->setmax(3200);
+		temp->mapSetting(map_data);
 		a.add(temp);
 	}
 
@@ -2058,9 +2091,86 @@ namespace game_framework {
 				i++;
 			}
 		}
+
+		com.check();
 	}
 
-	void ObjContainer::creatEnemy(int type, int x, int y) {
+	void ObjContainer::creatEnemy(int type, int x, int z) {
+		man* enemy;
+		if (type) {
+			enemy = new man(4, fl, lib, &a);
+		}
+		else {
+			enemy = new man(3, fl, lib, &a);
+		}
+		enemy->_x = x;
+		enemy->_z = z;
+		enemy->mapSetting(map_data);
+		com.add(enemy);
+		a.add(enemy);
 
+
+	}
+
+
+	//
+	// ------------------------------電腦的部分------------------------------------------
+	//
+
+	
+
+	void AI::OnMove() {
+		
+	}
+
+	void AI::updateEnemy(int n, man** mans) {
+		numOfTarget = n;
+		Target = mans;
+	}
+
+	void AI::add(man* newone) {
+		if (self == nullptr) {
+			self = new man*[1];
+			self[0] = newone;
+		}
+		else {
+			man** temp = new man*[n + 1];
+			int i;
+			for (i = 0; i < n; i++) {
+				*(temp + i) = *(self + i);
+			}
+			*(temp + i) = newone;
+
+			delete self;
+			self = temp;
+		}
+		n++;
+	}
+
+	void AI::del(int num) {
+		man** temp = new man*[n - 1];
+		int i;
+		int no = 0;
+		for (i = 0; i < n; i++) {
+			if (i != num) {
+				*(temp + no) = *(self + i);
+				no++;
+			}
+		}
+		n--;
+		delete self;
+		self = temp;
+	}
+
+	void AI::check() {
+		int i = 0;
+		while (i < n) {
+			if (! ((*(self + i))->isAlive())) {
+				del(i);
+			}
+			else {
+				i++;
+			}
+		}
 	}
 }

@@ -57,6 +57,7 @@ namespace game_framework {
 		}
 		// TRACE("!!!%.3f %.3f %.3f %d %.3f\n",  move_pixel_right, layer_dis, layer_width, back_ground.Width(), temp);
 	}
+	
 	void gamemap::onShow(int _man_pos) {
 		int total_pos = _man_pos;
 		if (total_pos % 2 == 1)total_pos += 1;
@@ -133,7 +134,6 @@ namespace game_framework {
 		//TRACE("last_pos: %d \n",last_pos);
 		//TRACE("%d %d %1.f\n", _man_pos1 ,_man_pos2, temp * (layer_dis - 1));
 	}
-
 
 	int gamemap::map_pos() {
 		return temp2;

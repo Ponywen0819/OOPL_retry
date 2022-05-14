@@ -272,9 +272,9 @@ namespace game_framework {
 	void stage::info() {
 		if (now_stage == 1) {
 			map = 1;
-			map_width = lf1->_map_width();
-			upper_bound = lf1->_upper();
-			lower_bound = lf1->_lower();
+			data[0] = map_width = lf1->_map_width();
+			data[2] = upper_bound = lf1->_upper();
+			data[3] = lower_bound = lf1->_lower();
 			switch (trans_index) {
 			case 1:
 				obj->creatEnemy(0, 1000, 400);
@@ -312,9 +312,9 @@ namespace game_framework {
 		}
 		if (now_stage == 2) {
 			map = 2;
-			map_width = sp1->_map_width();
-			upper_bound = sp1->_upper();
-			lower_bound = sp1->_lower();
+			data[0] = map_width = sp1->_map_width();
+			data[2] = upper_bound = sp1->_upper();
+			data[3] = lower_bound = sp1->_lower();
 			switch (trans_index) {
 			case 6:
 				obj->creatEnemy(0, 1000, 300);
@@ -352,9 +352,9 @@ namespace game_framework {
 		}
 		if (now_stage == 3) {
 			map = 3;
-			map_width = gw1->_map_width();
-			upper_bound = gw1->_upper();
-			lower_bound = gw1->_lower();
+			data[0] = map_width = gw1->_map_width();
+			data[2] = upper_bound = gw1->_upper();
+			data[3] = lower_bound = gw1->_lower();
 			switch (trans_index) {
 			case 11:
 				obj->creatEnemy(0, 1000, 330);
@@ -442,6 +442,11 @@ namespace game_framework {
 
 
 	void stage::OnShow(int _man_pos) {
+
+		if (_man_pos <= 400) data[1] = 0;
+		else if (_man_pos >= (data[0] + 400)) data[1] = data[0];
+		else data[1] = _man_pos-400;
+
 		man_pos = _man_pos;
 		if (map == 0) {
 			show_trans();
@@ -508,6 +513,9 @@ namespace game_framework {
 		return lower_bound;
 	}
 
+	int* stage::getdata() {
+		return data;
+	}
 
 
 	void stage::delay() {

@@ -98,6 +98,9 @@ namespace game_framework {
 			map = 0;
 			temp = 0;
 			trans_index = 1;
+
+			data = new int[4];
+			for (int i = 0; i < 4; i++) data[i] = 0;
 			branch = FALSE;
 			main = TRUE;
 			clean = FALSE;
@@ -105,9 +108,8 @@ namespace game_framework {
 		}
 
 		~stage() {
-			delete[] lf1;
-			delete[] sp1;
-			delete[] gw1;
+
+			delete data;
 		}
 
 
@@ -117,6 +119,8 @@ namespace game_framework {
 		void info();
 		void delay();
 		void test();
+
+		int* getdata();
 		boolean check(int);
 		boolean overgame();
 		void show_trans();
@@ -128,9 +132,6 @@ namespace game_framework {
 
 
 	private:
-
-
-
 		SP* sp1 =new SP;
 		lf* lf1 = new lf;
 		temp1* ex1 = new temp1;
@@ -145,6 +146,8 @@ namespace game_framework {
 		boolean clean;
 		boolean over;
 
+
+		int *data;
 		int now_stage;
 		int map;
 		int map_width;
