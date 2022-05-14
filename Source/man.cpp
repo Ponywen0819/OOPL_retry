@@ -14,6 +14,8 @@
 #include <map>
 #include <algorithm>
 #include "CStateBar.h"
+#include <stdlib.h>
+#include <stdlib.h>
 #include "man.h"
 
 namespace game_framework {
@@ -1601,9 +1603,11 @@ namespace game_framework {
 		if (hp >= 500) hp = 500;
 		else if (HpRecover >= 500) HpRecover = 500;
 		else if (hp >= HpRecover) HpRecover = hp;
-
-		bar->setHP(player, hp, HpRecover);
-		bar->setMP(player, mp);
+		
+		if (id < 3) {
+			bar->setHP(player, hp, HpRecover);
+			bar->setMP(player, mp);
+		}
 	}
 
 	//處理指令輸入時間間隔
@@ -1619,8 +1623,9 @@ namespace game_framework {
 		HpRecover -= (d / 3);
 		hp -= d;
 	}
+	
 	//
-	//------------------------------我也不知道的部分------------------------------------------
+	//------------------------------物品容器------------------------------------------
 	//
 
 	void allobj::init() {
@@ -1662,6 +1667,7 @@ namespace game_framework {
 			}
 		}
 		num--;
+		delete *(all + n);
 		delete all;
 		all = temp;
 	}
@@ -2038,7 +2044,6 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
-		TRACE("%d\n",map_data[1]);
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
@@ -2046,6 +2051,9 @@ namespace game_framework {
 				a.add(temp);
 			}
 		}
+
+		com.OnMove();							//電腦指派任務階段
+		
 		check();
 		a.so();
 	}
@@ -2083,12 +2091,86 @@ namespace game_framework {
 				i++;
 			}
 		}
+
+		com.check();
 	}
 
-	void ObjContainer::creatEnemy(int type, int x, int y) {
+	void ObjContainer::creatEnemy(int type, int x, int z) {
+		man* enemy;
+		if (type) {
+			enemy = new man(4, fl, lib, &a);
+		}
+		else {
+			enemy = new man(3, fl, lib, &a);
+		}
+		enemy->_x = x;
+		enemy->_z = z;
+		enemy->mapSetting(map_data);
+		com.add(enemy);
+		a.add(enemy);
+
 
 	}
 
 
+	//
+	// ------------------------------電腦的部分------------------------------------------
+	//
 
+	
+
+	void AI::OnMove() {
+		
+	}
+
+	void AI::updateEnemy(int n, man** mans) {
+		numOfTarget = n;
+		Target = mans;
+	}
+
+	void AI::add(man* newone) {
+		if (self == nullptr) {
+			self = new man*[1];
+			self[0] = newone;
+		}
+		else {
+			man** temp = new man*[n + 1];
+			int i;
+			for (i = 0; i < n; i++) {
+				*(temp + i) = *(self + i);
+			}
+			*(temp + i) = newone;
+
+			delete self;
+			self = temp;
+		}
+		n++;
+	}
+
+	void AI::del(int num) {
+		man** temp = new man*[n - 1];
+		int i;
+		int no = 0;
+		for (i = 0; i < n; i++) {
+			if (i != num) {
+				*(temp + no) = *(self + i);
+				no++;
+			}
+		}
+		n--;
+		delete self;
+		self = temp;
+	}
+
+	void AI::check() {
+		int i = 0;
+		while (i < n) {
+			if (! ((*(self + i))->isAlive())) {
+				del(i);
+			}
+			else {
+				i++;
+			}
+		}
+	}
 }

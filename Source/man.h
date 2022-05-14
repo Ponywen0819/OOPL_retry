@@ -818,6 +818,43 @@ namespace game_framework {
 		int		stand;			// 持續的時間
 	};
 
+	class  AI{
+	public:
+		AI() {
+			n = numOfTarget = 0;
+			self = Target = nullptr;
+			commandFinish = true;
+		}
+
+		void add(man* newone);	// 創造電腦
+		void check();			// 檢查死了沒
+		void del(int n);		// 刪除此電腦
+
+		void doThing(int n);	// 指派電腦任務
+
+		void updateEnemy(int n,man** mans);
+
+		void OnMove();
+
+		int getComnum() { return n; }
+
+	private:
+		int		n;				// 電腦的數量	
+		man**	self;			// 電腦本人
+		
+		int		numOfTarget;	// 目標的數量
+		man**	Target;			// 攻擊目標
+
+		bool	commandFinish;		//指令完成
+
+		int		commandType;		// 指令種類
+		// 亂走 去拿東西 打人(如果太遠就是移動到他旁邊)
+
+		int*	_x;				//用於紀錄電腦指令移動
+		int*	_z;		
+
+	};
+
 	class ObjContainer {
 	public:
 		ObjContainer() {
@@ -870,7 +907,8 @@ namespace game_framework {
 		int		state;				// 使用者選用腳色的形況
 		allobj  a;					// 場上所有物品
 		CStateBar bar;				// 狀態條
-		man**	mans;				//人物
+		man**	mans;				// 人物
+		AI		com;				// 電腦
 		Bitmaplib* lib;				
 		Framelib* fl;
 		int maxx, maxz;				// 地圖的最大值

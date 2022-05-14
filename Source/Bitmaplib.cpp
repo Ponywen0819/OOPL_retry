@@ -49,6 +49,25 @@ namespace game_framework {
 			FreezePic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\hunter\\" + std::to_string(i) + ".bmp";
+			HunterPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\hunter\\" + std::to_string(140 + i) + ".bmp";
+			HunterPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\bandit\\" + std::to_string(i) + ".bmp";
+			BanditPic[1][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+		for (int i = 0; i < 140; i++) {
+			path = ".\\Bitmaps\\bandit\\" + std::to_string(140 + i) + ".bmp";
+			BanditPic[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
+		}
+
+
 		//
 		// freezeªº§Þ¯à
 		//
@@ -187,6 +206,17 @@ namespace game_framework {
 			FirenPic[index][n].ShowBitmap();
 			break;
 		}
+		case 3: {
+			BanditPic[index][n].SetTopLeft(x, y);
+			BanditPic[index][n].ShowBitmap();
+			break;
+		}
+		case 4: {
+			HunterPic[index][n].SetTopLeft(x, y);
+			HunterPic[index][n].ShowBitmap();
+			break;
+		}
+
 		case 10: {
 			weapon0[index][n].SetTopLeft(x, y);
 			weapon0[index][n].ShowBitmap();
