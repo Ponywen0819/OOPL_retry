@@ -24,9 +24,10 @@ namespace game_framework {
 		CMovingBitmap back;						
 		CMovingBitmap title;						
 		CMovingBitmap team;
-		CMovingBitmap option[4];						
+		CMovingBitmap option[6];						
 		CMovingBitmap player[2];
 		CMovingBitmap lock[3];
+		CMovingBitmap how[2];
 		CAnimation cma_ani;
 		CAnimation CountDown;
 		CAnimation name[3];

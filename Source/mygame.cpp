@@ -81,6 +81,7 @@ void CGameStateInit::OnInit(){
 void CGameStateInit::OnBeginState(){
 	chose = 0;
 	windows = 0;			//0為開始結束,1為選角畫面
+	how = 0;
 	checkin_1 = 0;
 	checkin_2 = 0;
 	player1_index = 0;
@@ -107,13 +108,22 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 		if (nChar == KEY_UP && chose == 1) {
 			chose = 0;
 		}
+		else if (nChar == KEY_UP && chose == 2) {
+			chose = 1;
+		}
 		if (nChar == KEY_DOWN && chose == 0) {
 			chose = 1;
+		}
+		else if (nChar == KEY_DOWN && chose == 1) {
+			chose = 2;
 		}
 		if (nChar == KEY_SPACE && chose == 0) {
 			windows = 1;
 		}
 		if (nChar == KEY_SPACE && chose == 1) {
+			windows = 2;
+		}
+		else if (nChar == KEY_SPACE && chose == 2) {
 			PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 		}
 	}
@@ -159,6 +169,16 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 		}
 
 	}
+
+	else if (windows == 2) {
+		if (how == 0) {
+			how = 1;
+		}
+		else if (how == 1) {
+			windows = 0;
+			how = 0;
+		}
+	}
 }
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point){  //滑鼠處理
@@ -169,7 +189,16 @@ void CGameStateInit::OnShow(){
 
 	if (windows == 0) {
 		menu.OnShowMenu(1);
-		chose == 0 ? menu.OnShowSelect(0) : menu.OnShowSelect(1);
+		if (chose == 0) {
+			menu.OnShowSelect(0);
+		}
+		else if (chose == 1) {
+			menu.OnShowSelect(1);
+		}
+		else if (chose == 2) {
+			menu.OnShowSelect(2);
+		}
+		
 	}
 	else if (windows == 1) {
 		menu.OnShowMenu(2);
@@ -186,6 +215,10 @@ void CGameStateInit::OnShow(){
 				GotoGameState(GAME_STATE_RUN);
 			}
 		}
+	}
+
+	else if (windows == 2) {
+		how == 0 ? menu.OnShowMenu(3) : menu.OnShowMenu(4);
 	}
 }								
 
@@ -256,7 +289,9 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	a = stage.check(allobj.getEnemyHP());      //-----------v改為敵人總血量就行，0的時候會跳關，a為TRUE時跳大關，人物要重置位置-----我是廢物什麼都不會，也不知道是不是寫在這裡----
+	if (stage.check(allobj.getEnemyHP())) {
+		allobj.init(player1, player2);
+	}     
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}
