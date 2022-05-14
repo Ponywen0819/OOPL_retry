@@ -104,6 +104,12 @@ namespace game_framework {
 			over = FALSE;
 		}
 
+		~stage() {
+			delete[] lf1;
+			delete[] sp1;
+			delete[] gw1;
+		}
+
 
 		void init(int,ObjContainer*);
 		void load();
