@@ -823,8 +823,8 @@ void CDDraw::BltBackToPrimary()
 		GetClientRect(ClientRect);
 		CRect WindowRect;
 		pCView->GetWindowRect(&WindowRect);
-		WindowRect.right = WindowRect.left + size_x;
-		WindowRect.bottom = WindowRect.top + size_y;
+		WindowRect.right = WindowRect.left + size_x ;
+		WindowRect.bottom = WindowRect.top + size_y ;
 		ddrval = lpDDSPrimary->Blt(WindowRect, lpDDSBack, ClientRect, DDBLTFAST_WAIT, NULL);
 		CheckDDFail("Blt Back to primary failed");
 	}
@@ -916,7 +916,7 @@ bool CDDraw::CreateSurfaceFullScreen()
 {
     ddrval = lpDD->SetCooperativeLevel(AfxGetMainWnd()->m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
     CheckDDFail("Can not SetCooperativeLevel Exclusive");
-    ddrval = lpDD->SetDisplayMode(size_x, size_y, 32, 0, 0);
+    ddrval = lpDD->SetDisplayMode(1280, 960, 32, 0, 0);
 	if (ddrval != DD_OK) {
 	    ddrval = lpDD->SetCooperativeLevel(AfxGetMainWnd()->m_hWnd, DDSCL_NORMAL);
 		CheckDDFail("Can not SetCooperativeLevel Normal");
@@ -933,8 +933,8 @@ bool CDDraw::CreateSurfaceFullScreen()
 	CheckDDFail("Create Primary Surface failed");
 
 	// Create clippers for the primary and back surfaces
-    // ddrval = lpDD->CreateClipper(0, &lpClipperPrimary, NULL);
-	// CheckDDFail("Create Primay Surface Clipper FAILED"); 
+    //ddrval = lpDD->CreateClipper(0, &lpClipperPrimary, NULL);
+	//CheckDDFail("Create Primay Surface Clipper FAILED"); 
     ddrval = lpDD->CreateClipper(0, &lpClipperBack, NULL);
 	CheckDDFail("Create Back Surface Clipper FAILED"); 
 
@@ -944,7 +944,7 @@ bool CDDraw::CreateSurfaceFullScreen()
     } CLIPLIST, *LPCLIPLIST; 
 	CLIPLIST    ClipList; 
 	RECT rc;
-	SetRect(&rc, 0, 0, size_x, size_y);  
+	SetRect(&rc, 0, 0, size_x, size_y);
     ClipList.hdr.dwSize = sizeof(RGNDATAHEADER); 
     ClipList.hdr.iType = RDH_RECTANGLES;
 	ClipList.hdr.nCount = 1; 

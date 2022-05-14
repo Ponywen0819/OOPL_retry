@@ -108,8 +108,10 @@ namespace game_framework {
 		}
 
 		~stage() {
+
 			delete data;
 		}
+
 
 		void init(int,ObjContainer*);
 		void load();
