@@ -301,19 +301,19 @@ namespace game_framework {
 	}
 
 	void Framelib::loadFrame() {
-		std::string path[15] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt",
+		std::string path[17] = { ".\\data\\t.txt",".\\data\\firen.txt",".\\data\\deep.txt",".\\data\\freeze.txt",".\\data\\bandit.txt",".\\data\\hunter.txt",
 			".\\data\\weapon0.txt",".\\data\\weapon1.txt",".\\data\\weapon7.txt",
 			".\\data\\deep_ball.txt",".\\data\\freeze_ball.txt",".\\data\\clo.txt" ,
 		
 			".\\data\\ww.txt",".\\data\\exp.txt",".\\data\\fl.txt",".\\data\\firewalk.txt",".\\data\\fire_ball.txt" };
-		std::map<int, Frame>* f[15] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze,
+		std::map<int, Frame>* f[17] = {&Frams_t,&Frams_firen,&Frams_deep,&Frams_freeze,&Frams_Bandit,&Frams_Hunter,
 			&Frams_weapon0,&Frams_weapon1,&Frams_weapon7,
 			&deep_ball ,&freeze_ball,&clo,
 		&ww,&explosion ,&flame,&gf,&fire_ball };
-		for (int ch = 0; ch < 15; ch++) {
+		for (int ch = 0; ch < 17; ch++) {
 			std::ifstream ifs(path[ch].c_str(), std::ios::in);
 			if (!ifs.is_open()) {
-				TRACE("Failed to open file.");
+				ASSERT("Failed to open file.");
 			}
 			else {
 				std::string s;

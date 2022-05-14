@@ -338,12 +338,22 @@ namespace game_framework {
 			return Alive;
 		}
 
+		int		getX() {
+			return int(_x);
+		}
+		int		getZ() {
+			return int(_z);
+		}
+
+		void	print() {
+			TRACE("%d %d %d %d\n",flag[0], flag[1], flag[2], flag[3]);
+		}
+
 		void	setplayer(int p, CStateBar* b){
 			player = p;
 			bar = b;
 		}
 
-	protected:
 		// 跳躍處理
 		void setYstep(double G, double x, double z) {
 			initG = G; stepx = x; stepz = z; jumping = true;
@@ -823,9 +833,15 @@ namespace game_framework {
 		AI() {
 			n = numOfTarget = 0;
 			self = Target = nullptr;
-			commandFinish = true;
+			commandFinish = nullptr;
+			commandType = _x = _z = nullptr;
 		}
 
+		~AI() {
+			if (self != nullptr) {
+				delete commandType;
+			}
+		}
 		void add(man* newone);	// 創造電腦
 		void check();			// 檢查死了沒
 		void del(int n);		// 刪除此電腦
@@ -833,6 +849,7 @@ namespace game_framework {
 		void doThing(int n);	// 指派電腦任務
 
 		void updateEnemy(int n,man** mans);
+		int  getTotalHP();
 
 		void OnMove();
 
@@ -845,9 +862,9 @@ namespace game_framework {
 		int		numOfTarget;	// 目標的數量
 		man**	Target;			// 攻擊目標
 
-		bool	commandFinish;		//指令完成
+		bool*	commandFinish;		//指令完成
 
-		int		commandType;		// 指令種類
+		int*		commandType;		// 指令種類
 		// 亂走 去拿東西 打人(如果太遠就是移動到他旁邊)
 
 		int*	_x;				//用於紀錄電腦指令移動
@@ -897,6 +914,7 @@ namespace game_framework {
 
 		void check();
 
+		int  getEnemyHP();
 
 		void mapSetting(int* data);
 		void OnMove();

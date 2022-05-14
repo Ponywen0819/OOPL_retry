@@ -53,6 +53,12 @@ namespace game_framework {
 				return &Frams_firen; 
 				break;
 			}
+			case 3: {
+				return &Frams_Bandit;
+			}
+			case 4: {
+				return &Frams_Hunter;
+			}
 			case 10: {
 				return &Frams_weapon0;
 				break;
@@ -111,6 +117,8 @@ namespace game_framework {
 		std::map<int, Frame> Frams_firen;
 		std::map<int, Frame> Frams_deep;
 		std::map<int, Frame> Frams_freeze;
+		std::map<int, Frame> Frams_Hunter;
+		std::map<int, Frame> Frams_Bandit;
 
 		std::map<int, Frame> Frams_weapon0;
 		std::map<int, Frame> Frams_weapon1;

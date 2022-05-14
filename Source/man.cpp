@@ -2044,6 +2044,14 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
+		if (state == 0) {
+			com.updateEnemy(2, mans);
+		}
+		else {
+			com.updateEnemy(1, mans);
+		}
+
+
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
@@ -2112,6 +2120,9 @@ namespace game_framework {
 
 	}
 
+	int ObjContainer::getEnemyHP() {
+		return com.getTotalHP();
+	}
 
 	//
 	// ------------------------------電腦的部分------------------------------------------
@@ -2120,7 +2131,79 @@ namespace game_framework {
 	
 
 	void AI::OnMove() {
-		
+		for (int i = 0; i < n; i++) {
+			//
+			// 選定目標
+			//
+			man *Traget_now;
+			man *com_now = *(self + i);
+
+			int ch = (*(commandType + i)) % numOfTarget;
+
+			if (!(*(Target + ch))->isAlive()) {
+				ch = (ch + 1 ) % numOfTarget;
+			}
+			Traget_now = *(Target + ch);
+
+			
+			int tx = Traget_now->getX();
+			int tz = Traget_now->getZ();
+			
+			int diffx = com_now->getX() - tx;
+			int diffz = com_now->getZ() - tz;
+			
+			//TRACE("%d\n", diffx);
+			if (abs(diffx)>500) {
+				if (diffx < 0) {
+					com_now->setComm(2);
+					com_now->setComm(2);
+				}
+				else {
+					com_now->setComm(1);
+					com_now->setComm(1);
+				}
+				com_now->print();
+
+				if (diffz < 0) {
+					com_now->cComm(3);
+					com_now->setComm(4);
+				}
+				else {
+					com_now->cComm(4);
+					com_now->setComm(3);
+				}
+
+				com_now->print();
+			}
+			else if(abs(diffx) >79){
+				if (diffx < 0) {
+					com_now->setComm(2);
+					com_now->cComm(2);
+				}
+				else {
+					com_now->setComm(1);
+					com_now->cComm(1);
+				}
+
+			}
+			else {
+				if (diffz < -10) {
+					com_now->cComm(3);
+					com_now->setComm(4);
+				}
+				else if(diffz >10){
+					com_now->cComm(4);
+					com_now->setComm(3);
+				}
+				else {
+					com_now->cComm(3);
+					com_now->cComm(4);
+					com_now->setComm(6);
+					com_now->cComm(6);
+				}
+			}
+			
+		}
 	}
 
 	void AI::updateEnemy(int n, man** mans) {
@@ -2132,32 +2215,48 @@ namespace game_framework {
 		if (self == nullptr) {
 			self = new man*[1];
 			self[0] = newone;
+
+			commandType = new int;
+			commandType[0] = rand() % 2;
 		}
 		else {
 			man** temp = new man*[n + 1];
+			
+			int * temp_command = new int[n+1];
+			
 			int i;
 			for (i = 0; i < n; i++) {
 				*(temp + i) = *(self + i);
+				*(temp_command + i) = *(commandType + i);
 			}
 			*(temp + i) = newone;
+			*(temp_command + i) = rand()%2;
 
+
+			delete commandType;
+			commandType = temp_command;
 			delete self;
 			self = temp;
+
 		}
 		n++;
 	}
 
 	void AI::del(int num) {
 		man** temp = new man*[n - 1];
+		int * temp_command = new int[n - 1];
 		int i;
 		int no = 0;
 		for (i = 0; i < n; i++) {
 			if (i != num) {
 				*(temp + no) = *(self + i);
+				*(temp_command + no) = *(commandType + i);
 				no++;
 			}
 		}
 		n--;
+		delete commandType;
+		commandType = temp_command;
 		delete self;
 		self = temp;
 	}
@@ -2172,5 +2271,19 @@ namespace game_framework {
 				i++;
 			}
 		}
+	}
+
+	int AI::getTotalHP() {
+		int temp =0 ;
+		for (int i = 0; i < n; i++) {
+			int hp = (*(self + i))->hp;
+			if (hp < 0) {
+				temp += 0;
+			}
+			else {
+				temp += hp;
+			}
+		}
+		return temp;
 	}
 }
