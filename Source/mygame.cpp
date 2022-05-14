@@ -256,7 +256,7 @@ void CGameStateRun::OnBeginState(){
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	a = stage.check(v);      //-----------v改為敵人總血量就行，0的時候會跳關，a為TRUE時跳大關，人物要重置位置-----我是廢物什麼都不會，也不知道是不是寫在這裡----
+	a = stage.check(allobj.getEnemyHP());      //-----------v改為敵人總血量就行，0的時候會跳關，a為TRUE時跳大關，人物要重置位置-----我是廢物什麼都不會，也不知道是不是寫在這裡----
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}
