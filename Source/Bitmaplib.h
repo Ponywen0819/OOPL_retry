@@ -18,7 +18,7 @@ namespace game_framework {
 		CMovingBitmap weapon0[2][40];	//球棒的圖片
 		CMovingBitmap weapon1[2][6];	//石頭的圖片
 		CMovingBitmap weapon7[2][40];	//冰劍的圖片
-
+		CMovingBitmap arrow[2][30];	//冰劍的圖片
 		
 		CMovingBitmap deep_ball[2][8];	
 
@@ -69,6 +69,10 @@ namespace game_framework {
 			}
 			case 12: {
 				return &Frams_weapon7;
+				break;
+			}
+			case 201: {
+				return &arrow;
 				break;
 			}
 			case 203: {
@@ -132,6 +136,7 @@ namespace game_framework {
 		std::map<int, Frame> flame;
 		std::map<int, Frame> gf;
 		std::map<int, Frame> fire_ball;
+		std::map<int, Frame> arrow;
 
 	};
 }
