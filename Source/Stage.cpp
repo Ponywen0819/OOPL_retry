@@ -278,7 +278,7 @@ namespace game_framework {
 			switch (trans_index) {
 			case 1:
 				obj->creatEnemy(0, 1000, 400);
-				obj->creatEnemy(0, 900, 450);
+				obj->creatEnemy(1, 900, 450);
 				break;
 			case 2:
 				obj->creatEnemy(0, 1500, 400);

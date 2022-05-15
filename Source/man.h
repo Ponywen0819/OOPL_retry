@@ -605,6 +605,9 @@ namespace game_framework {
 				maxH = maxW = 69;
 				break;
 			}
+			case 201: {
+				maxH = maxW = 48;
+			}
 			default:
 				break;
 			}
@@ -632,9 +635,7 @@ namespace game_framework {
 			_y += (*Frams)[_mode]._centery;
 		}
 
-		void hitSomeOne(obj *thoer) {
-
-		}
+		void hitSomeOne(obj *thoer);
 
 		void backToRandon();
 		void toMotion(int next);
@@ -643,16 +644,17 @@ namespace game_framework {
 		void OnMove();
 
 		void setYstep(double G, double x, double z) {
+			//TRACE("weapon setY called\n");
 			initG = G; stepx = x; stepz = z; jumping = true;
-
 		}
 		
 		void setdir(bool f) {
+			//TRACE("weapon setDir called\n");
 			if (!f) JumpFront = true;
 			else JumpBack = true;
-
 			throwing = true;
 		}
+
 
 		void holdingSth(obj* thing) {
 			holding = thing;
@@ -865,6 +867,8 @@ namespace game_framework {
 		bool*	commandFinish;		//指令完成
 
 		int*		commandType;		// 指令種類
+
+
 		// 亂走 去拿東西 打人(如果太遠就是移動到他旁邊)
 
 		int*	_x;				//用於紀錄電腦指令移動

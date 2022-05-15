@@ -157,6 +157,7 @@ namespace game_framework {
 	}
 
 	void weapon::OnMove() {
+		//TRACE("%.1f %.1f %d %d\n",initG,_y, ((*Frams)[_mode]._centery),_mode);
 		if (holding == nullptr) {
 			moveY();
 			if (isTime()) {
@@ -195,11 +196,16 @@ namespace game_framework {
 				break;
 			}
 			
+
 			int half = int(maxW/2);
 			if (_x <= -(half))  _x = -(half);
 			else if (_x >= (mapdata[0] + 800 - half))_x = (mapdata[0] + 800 - half);
 			if (_z <= mapdata[2])_z = mapdata[2];
 			else if (_z >= mapdata[3]) _z = mapdata[3];
+
+			if (_y <= (*Frams)[_mode]._centery) {
+				Alive = false;
+			}
 
 			checkbeenatt();
 		}
@@ -363,6 +369,11 @@ namespace game_framework {
 			}
 		}
 	}
+
+	void weapon::hitSomeOne(obj* other) {
+		if(id == 201)
+			toMotion(60);
+	}
 	//
 	//------------------------------氣功的部分------------------------------------------
 	//
@@ -511,7 +522,30 @@ namespace game_framework {
 				holding = temp;
 				holdinglt = true;
 				temp->setmax(3200);
-				_a->add(temp);
+
+				skills = temp;
+			}
+			else if (oid == 201) {
+				weapon* temp = new weapon(oid, 0, fl, lib, nullptr, _a);
+				temp->holdingSth(nullptr);
+
+				bool ftl;
+				if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
+				else ftl = Face_to_Left;
+
+				if (Face_to_Left) {
+					temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+				}
+				else {
+					temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
+				}
+
+				temp->setYstep(-3, 12, 0);
+				temp->toMotion(40);
+				temp->setdir(Face_to_Left);
+				temp->mapSetting(mapdata);
+
+				skills = temp;
 			}
 			else {
 				wp* temp = new wp(oid, tempF._op.getAction(), fl, lib, getOwner());
@@ -520,15 +554,13 @@ namespace game_framework {
 				else ftl = Face_to_Left;
 
 				if (Face_to_Left) {
-					//TRACE("%d \n", maxW - tempF._op.getX());
 					temp->init(int(_x) + maxW - tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 				}
 				else {
-					//TRACE("%d \n", tempF._op.getX());
 					temp->init(int(_x) + tempF._op.getX(), int(_y) - tempF._op.getY(), int(_z), ftl);
 				}
-				temp->setmax(3200);
 				temp->mapSetting(mapdata);
+				
 				skills = temp;
 			}
 		}
@@ -1046,6 +1078,10 @@ namespace game_framework {
 			if (temp_obj == this || temp_obj == holding || this == temp_obj->getOwner()) {
 				continue;
 			}
+
+			if (temp_obj->id > 2 && id > 2) {
+				continue;
+			}
 			int mode = temp_obj->_mode;
 			Frame tempf = (*(temp_obj->Frams))[mode];
 			if (temp_obj->getArest() > 0) {
@@ -1056,6 +1092,8 @@ namespace game_framework {
 				if ((myF._state == 12 || myF._state == 18)&& tempf._i.getFall() < 60) {
 					continue;
 				}
+				// TRACE("%d %d \n",temp_obj->id, tempf._i.getKind());
+
 				int eff;
 				switch (tempf._i.getKind()) {
 				// 普通攻擊
@@ -2152,57 +2190,91 @@ namespace game_framework {
 			int diffx = com_now->getX() - tx;
 			int diffz = com_now->getZ() - tz;
 			
-			//TRACE("%d\n", diffx);
-			if (abs(diffx)>500) {
-				if (diffx < 0) {
-					com_now->setComm(2);
-					com_now->setComm(2);
-				}
-				else {
-					com_now->setComm(1);
-					com_now->setComm(1);
-				}
-				com_now->print();
-
-				if (diffz < 0) {
-					com_now->cComm(3);
-					com_now->setComm(4);
-				}
-				else {
-					com_now->cComm(4);
-					com_now->setComm(3);
-				}
-
-				com_now->print();
-			}
-			else if(abs(diffx) >79){
-				if (diffx < 0) {
-					com_now->setComm(2);
-					com_now->cComm(2);
-				}
-				else {
-					com_now->setComm(1);
-					com_now->cComm(1);
-				}
-
+			int se = 0;
+			if (com_now->id == 3) {
+				se = 100;
 			}
 			else {
+				se = 300;
+			}
+			//TRACE("%d\n", diffx);
+			if (abs(diffx)>500) {
+				if ((*(com_now->Frams))[com_now->_mode]._state != 2) {
+					if (diffx < 0) {
+						com_now->Face_to_Left = false;
+					}
+					else {
+						com_now->Face_to_Left = true;
+					}
+					com_now->toMotion(9);
+				}
 				if (diffz < -10) {
-					com_now->cComm(3);
 					com_now->setComm(4);
 				}
-				else if(diffz >10){
-					com_now->cComm(4);
+				else if (diffz > 10) {
 					com_now->setComm(3);
 				}
 				else {
 					com_now->cComm(3);
 					com_now->cComm(4);
-					com_now->setComm(6);
-					com_now->cComm(6);
 				}
 			}
-			
+			else if(abs(diffx) > se){
+				if ((*(com_now->Frams))[com_now->_mode]._state == 2 && com_now->_mode != 218) {
+					if ((rand() % 100) == 0)com_now->toMotion(218);
+				}
+				else {
+					if ((*(com_now->Frams))[com_now->_mode]._state != 1) {
+						if (diffx < 0) {
+							com_now->setComm(2);
+						}
+						else {
+							com_now->setComm(1);
+						}
+					}
+					else {
+						if (diffx < -se && com_now->Face_to_Left) {
+							com_now->setComm(2);
+						}
+						else if (diffx > se && !com_now->Face_to_Left) {
+							com_now->setComm(1);
+						}
+					}
+				}
+				if (diffz < -10) {
+					com_now->setComm(4);
+				}
+				else if(diffz > 10){
+					com_now->setComm(3);
+				}
+				else {
+					com_now->cComm(3);
+					com_now->cComm(4);
+				}
+			}
+			else {
+				
+
+				if (diffz < -10) {
+					com_now->setComm(4);
+				}
+				else if (diffz > 10) {
+					com_now->setComm(3);
+				}
+				else {
+					com_now->cComm(3);
+					com_now->cComm(4);
+					if (diffx < 0 && !com_now->Face_to_Left) {
+						if ((rand() % 10) == 0) com_now->setComm(6);
+					}
+					else if (diffx > 0 && com_now->Face_to_Left) {
+						if ((rand() % 10) == 0) com_now->setComm(6);
+					}
+					
+				}
+
+
+			}
 		}
 	}
 
