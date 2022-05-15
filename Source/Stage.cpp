@@ -251,7 +251,7 @@ namespace game_framework {
 		main = TRUE;
 		clean = FALSE;
 		over = FALSE;
-
+		audio = FALSE;
 		map = 0;
 		temp = 0;
 
@@ -264,6 +264,10 @@ namespace game_framework {
 		lf1->init();
 		gw1->init();
 		ex1->init();
+		
+		CAudio::Instance()->Load(3, "Sounds\\stage1.wav");
+		CAudio::Instance()->Load(4, "Sounds\\stage2.wav");
+		CAudio::Instance()->Load(5, "Sounds\\stage3.wav");
 		for (int i = 0; i < 16; i++) {
 			path = "./Bitmaps/stage/"+ std::to_string(i) +"~1.bmp";
 			if (i == 1 || i == 6 || i == 11) {
@@ -281,6 +285,13 @@ namespace game_framework {
 
 	void stage::info() {
 		if (now_stage == 1) {
+			if (!audio) {
+				TRACE("!!!!!");
+				CAudio::Instance()->Stop(4);
+				CAudio::Instance()->Stop(5);
+				CAudio::Instance()->Play(3,true);
+				audio = TRUE;
+			}
 			map = 1;
 			data[0] = map_width = lf1->_map_width();
 			data[2] = upper_bound = lf1->_upper();
@@ -321,6 +332,12 @@ namespace game_framework {
 			}
 		}
 		if (now_stage == 2) {
+			if (!audio) {
+				CAudio::Instance()->Stop(3);
+				CAudio::Instance()->Stop(5);
+				CAudio::Instance()->Play(4,true);
+				audio = TRUE;
+			}
 			map = 2;
 			data[0] = map_width = sp1->_map_width();
 			data[2] = upper_bound = sp1->_upper();
@@ -361,6 +378,12 @@ namespace game_framework {
 			}			
 		}
 		if (now_stage == 3) {
+			if (!audio) {
+				CAudio::Instance()->Stop(3);
+				CAudio::Instance()->Stop(4);
+				CAudio::Instance()->Play(5,true);			
+				audio = TRUE;
+			}
 			map = 3;
 			data[0] = map_width = gw1->_map_width();
 			data[2] = upper_bound = gw1->_upper();
@@ -414,6 +437,7 @@ namespace game_framework {
 			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width-10) {
 				if (main) {
 					now_stage++;
+					audio = FALSE;
 					map = 0;
 					main = FALSE;
 				}
@@ -443,11 +467,13 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
+		if(over)CAudio::Instance()->Stop(5);
 		return over;
 	}
 
 	void stage::test() {
 		
+
 	}
 
 

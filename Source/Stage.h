@@ -105,6 +105,7 @@ namespace game_framework {
 			main = TRUE;
 			clean = FALSE;
 			over = FALSE;
+			
 		}
 
 		~stage() {
@@ -145,7 +146,7 @@ namespace game_framework {
 		boolean main;
 		boolean clean;
 		boolean over;
-
+		boolean audio;
 
 		int *data;
 		int now_stage;

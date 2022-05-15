@@ -70,15 +70,22 @@ boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
 : CGameState(g){
+	
 }
 
 void CGameStateInit::OnInit(){
 	ShowInitProgress(0);
+	CAudio::Instance()->Load(AUDIO_CHOOSE, "Sounds\\choose.wav");	
+	CAudio::Instance()->Load(AUDIO_CHAR, "Sounds\\char.wav");	
+	CAudio::Instance()->Load(AUDIO_MAIN, "Sounds\\main.wav");
 	
 	menu.LoadBitmap();
+
+	
 }
 
 void CGameStateInit::OnBeginState(){
+	
 	chose = 0;
 	windows = 0;			//0為開始結束,1為選角畫面
 	how = 0;
@@ -91,7 +98,9 @@ void CGameStateInit::OnBeginState(){
 	CountDown = FALSE;
 	start = FALSE;
 	stage = FALSE;
+	main = TRUE;
 	chose_stage = 0;
+	
 }
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -105,7 +114,10 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_LEFT = 37; // keyboard D
 	const char KEY_RIGHT = 39; // keyboard D
 	// TRACE("button key  %d\n", nChar);
-
+	if (main) {
+		CAudio::Instance()->Play(AUDIO_MAIN, true);
+		main = FALSE;
+	}
 	if (windows == 0) {
 		if (nChar == KEY_UP && chose == 1) {
 			chose = 0;
@@ -120,30 +132,38 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 			chose = 2;
 		}
 		if (nChar == KEY_SPACE && chose == 0) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			windows = 1;
 		}
 		if (nChar == KEY_SPACE && chose == 1) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			windows = 2;
 		}
 		else if (nChar == KEY_SPACE && chose == 2) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 		}
 	}
 
 	else if (windows == 1 && stage == FALSE) {
 		if (nChar == KEY_RIGHT && chose_stage == 0) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			chose_stage = 1;
 		}
 		else if (nChar == KEY_RIGHT && chose_stage == 1) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			chose_stage = 2;
 		}
 		else if (nChar == KEY_LEFT && chose_stage ==1) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			chose_stage = 0;
 		}
 		else if (nChar == KEY_LEFT && chose_stage == 2) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			chose_stage = 1;
 		}
 		if (nChar == KEY_SPACE) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			stage = TRUE;
 		}
 	}
@@ -151,10 +171,12 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 
 	else if (windows == 1 && CountDown == FALSE && stage == TRUE) {
 		if (nChar == KEY_S && checkin_1 == 0) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			checkin_1 = 1;
 			player1 = 0;
 		}
 		if (nChar == KEY_K && checkin_2 == 0) {
+			CAudio::Instance()->Play(AUDIO_CHAR);
 			checkin_2 = 1;
 			player2 = 0;
 		}
@@ -167,6 +189,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 				player1_index++;
 			}
 			if (nChar == KEY_S) {
+				CAudio::Instance()->Play(AUDIO_CHAR);
 				lock_1++;
 			}
 			player1 = menu.Get_player1(player1_index);
@@ -179,6 +202,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 				player2_index++;
 			}
 			if (nChar == KEY_K) {
+				CAudio::Instance()->Play(AUDIO_CHAR);
 				lock_2++;
 			}
 			player2 = menu.Get_player2(player2_index);
@@ -192,9 +216,11 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 
 	else if (windows == 2) {
 		if (how == 0) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			how = 1;
 		}
 		else if (how == 1) {
+			CAudio::Instance()->Play(AUDIO_CHOOSE);
 			windows = 0;
 			how = 0;
 		}
@@ -236,6 +262,7 @@ void CGameStateInit::OnShow(){
 			if (CountDown) {
 				start = menu.OnShowCountDown(lock_1, lock_2);
 				if (start) {
+					CAudio::Instance()->Stop(AUDIO_MAIN);
 					GotoGameState(GAME_STATE_RUN);
 				}
 			}
@@ -259,6 +286,7 @@ void CGameStateOver::OnMove(){
 	counter--;
 	if (counter < 0)
 		GotoGameState(GAME_STATE_INIT);
+	
 }
 
 void CGameStateOver::OnBeginState(){
@@ -310,13 +338,15 @@ CGameStateRun::~CGameStateRun(){
 void CGameStateRun::OnBeginState(){
 	allobj.init(player1, player2);
 	stage.init(chose_stage+1, &allobj);
+	
 }	
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
 	if (stage.check(allobj.getEnemyHP())) {
 		allobj.init(player1, player2);
-	}     
+	}    
+	
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}
