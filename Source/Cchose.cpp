@@ -26,43 +26,49 @@ namespace game_framework {
 	}
 
 	void Cchose::LoadBitmap() {
-		charmenu.LoadBitmap("./Bitmaps/menu.bmp");
-		character[0].LoadBitmap("./Bitmaps/deep_f.bmp");
-		character[1].LoadBitmap("./Bitmaps/freeze_f.bmp");
-		character[2].LoadBitmap("./Bitmaps/firen_f.bmp");
-		player[0].LoadBitmap("./Bitmaps/1.bmp", RGB(0, 0, 0));
-		player[1].LoadBitmap("./Bitmaps/2.bmp", RGB(0, 0, 0));
-		logo.LoadBitmap("./Bitmaps/MENU_BACK1.bmp", RGB(0, 0, 0));
-		back.LoadBitmap("./Bitmaps/start_background.bmp");
-		title.LoadBitmap("./Bitmaps/title.bmp", RGB(17, 34, 101));
-		team.LoadBitmap("./Bitmaps/team.bmp");
-		option[0].LoadBitmap("./Bitmaps/menu_start.bmp", RGB(255, 255, 255));
-		option[1].LoadBitmap("./Bitmaps/menu_start_r.bmp", RGB(90, 119, 216));
-		option[2].LoadBitmap("./Bitmaps/menu_quit.bmp", RGB(255, 255, 255));
-		option[3].LoadBitmap("./Bitmaps/menu_quit_r.bmp", RGB(90, 119, 216));
-		lock[0].LoadBitmap("./Bitmaps/deep_1.bmp");
-		lock[1].LoadBitmap("./Bitmaps/Freeze_1.bmp");
-		lock[2].LoadBitmap("./Bitmaps/Fizen_1.bmp");
+		charmenu.LoadBitmap("./Bitmaps/menu/char/menu.bmp");
+		character[0].LoadBitmap("./Bitmaps/menu/char/deep_f.bmp");
+		character[1].LoadBitmap("./Bitmaps/menu/char/freeze_f.bmp");
+		character[2].LoadBitmap("./Bitmaps/menu/char/firen_f.bmp");
+		player[0].LoadBitmap("./Bitmaps/menu/char/1.bmp", RGB(0, 0, 0));
+		player[1].LoadBitmap("./Bitmaps/menu/char/2.bmp", RGB(0, 0, 0));
+		logo.LoadBitmap("./Bitmaps/menu/first/MENU_BACK1.bmp", RGB(0, 0, 0));
+		back.LoadBitmap("./Bitmaps/menu/first/start_background.bmp");
+		title.LoadBitmap("./Bitmaps/menu/first/title.bmp", RGB(17, 34, 101));
+		team.LoadBitmap("./Bitmaps/menu/char/team.bmp");
+		option[0].LoadBitmap("./Bitmaps/menu/first/menu_start.bmp", RGB(255, 255, 255));
+		option[1].LoadBitmap("./Bitmaps/menu/first/menu_start_r.bmp", RGB(90, 119, 216));
+		option[2].LoadBitmap("./Bitmaps/menu/first/menu_quit.bmp", RGB(255, 255, 255));
+		option[3].LoadBitmap("./Bitmaps/menu/first/menu_quit_r.bmp", RGB(90, 119, 216));
+		option[4].LoadBitmap("./Bitmaps/menu/first/menu_howtoplay.bmp", RGB(255, 255, 255));
+		option[5].LoadBitmap("./Bitmaps/menu/first/menu_howtoplay_r.bmp", RGB(90, 119, 216));
+		how[0].LoadBitmap("./Bitmaps/menu/first/readme.bmp");
+		how[1].LoadBitmap("./Bitmaps/menu/first/skill.bmp");
+		lock[0].LoadBitmap("./Bitmaps/menu/char/deep_1.bmp");
+		lock[1].LoadBitmap("./Bitmaps/menu/char/Freeze_1.bmp");
+		lock[2].LoadBitmap("./Bitmaps/menu/char/Fizen_1.bmp");
+		stage[0].LoadBitmap("./Bitmaps/menu/stage/stage.bmp");
+		stage[1].LoadBitmap("./Bitmaps/menu/stage/choose.bmp",RGB(0,0,0));
 
-		char *filename[2] = { ".\\Bitmaps\\CMA.bmp", ".\\Bitmaps\\CMA2.bmp" };
+		char *filename[2] = { ".\\Bitmaps\\menu\\char\\CMA.bmp", ".\\Bitmaps\\menu\\char\\CMA2.bmp" };
 
 		for (int i = 0; i < 2; i++) {
 			cma_ani.AddBitmap(filename[i], RGB(0, 0, 0));
 		}
-		char *filename_CountDown[6] = { ".\\Bitmaps\\CM5.bmp", ".\\Bitmaps\\CM4.bmp",".\\Bitmaps\\CM3.bmp",".\\Bitmaps\\CM2.bmp",".\\Bitmaps\\CM1.bmp",".\\Bitmaps\\CM0.bmp" };
+		char *filename_CountDown[6] = { ".\\Bitmaps\\menu\\char\\CM5.bmp", ".\\Bitmaps\\menu\\char\\CM4.bmp",".\\Bitmaps\\menu\\char\\CM3.bmp",".\\Bitmaps\\menu\\char\\CM2.bmp",".\\Bitmaps\\menu\\char\\CM1.bmp",".\\Bitmaps\\menu\\char\\CM0.bmp" };
 		for (int i = 0; i < 6; i++) {
 			CountDown.AddBitmap(filename_CountDown[i]);
 		}
-		char *filename_deep[4] = { ".\\Bitmaps\\deep_1.bmp", ".\\Bitmaps\\deep_2.bmp",".\\Bitmaps\\deep_3.bmp",".\\Bitmaps\\deep_4.bmp" };
+		char *filename_deep[4] = { ".\\Bitmaps\\menu\\char\\deep_1.bmp", ".\\Bitmaps\\menu\\char\\deep_2.bmp",".\\Bitmaps\\menu\\char\\deep_3.bmp",".\\Bitmaps\\menu\\char\\deep_4.bmp" };
 		for (int i = 0; i < 4; i++) {
 			name[0].AddBitmap(filename_deep[i], RGB(0, 0, 0));
 		}
 
-		char *filename_freeze[4] = { ".\\Bitmaps\\Freeze_1.bmp", ".\\Bitmaps\\Freeze_2.bmp",".\\Bitmaps\\Freeze_3.bmp",".\\Bitmaps\\Freeze_4.bmp" };
+		char *filename_freeze[4] = { ".\\Bitmaps\\menu\\char\\Freeze_1.bmp", ".\\Bitmaps\\menu\\char\\Freeze_2.bmp",".\\Bitmaps\\menu\\char\\Freeze_3.bmp",".\\Bitmaps\\menu\\char\\Freeze_4.bmp" };
 		for (int i = 0; i < 4; i++) {
 			name[1].AddBitmap(filename_freeze[i], RGB(0, 0, 0));
 		}
-		char *filename_fizen[4] = { ".\\Bitmaps\\Fizen_1.bmp", ".\\Bitmaps\\Fizen_2.bmp",".\\Bitmaps\\Fizen_3.bmp",".\\Bitmaps\\Fizen_4.bmp" };
+		char *filename_fizen[4] = { ".\\Bitmaps\\menu\\char\\Fizen_1.bmp", ".\\Bitmaps\\menu\\char\\Fizen_2.bmp",".\\Bitmaps\\menu\\char\\Fizen_3.bmp",".\\Bitmaps\\menu\\char\\Fizen_4.bmp" };
 		for (int i = 0; i < 4; i++) {
 			name[2].AddBitmap(filename_fizen[i], RGB(0, 0, 0));
 		}
@@ -93,22 +99,59 @@ namespace game_framework {
 
 			}
 		}
+		else if (index == 3) {
+			how[0].SetTopLeft((SIZE_X - how[0].Width()) / 2, (SIZE_Y - how[0].Height()) / 2);
+			how[0].ShowBitmap();
+		}
+		else if (index == 4) {
+			how[1].SetTopLeft((SIZE_X - how[1].Width()) / 2, (SIZE_Y - how[1].Height()) / 2);
+			how[1].ShowBitmap();
+		}
+		
 	}
 
 	void Cchose::OnShowSelect(int index) {
 		if (index == 0) {
 			option[1].SetTopLeft((SIZE_X - option[0].Width()) / 2, SIZE_Y * 5 / 9);
 			option[1].ShowBitmap();
-			option[2].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 50);
+			option[4].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 50);
+			option[4].ShowBitmap();
+			option[2].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 100);
 			option[2].ShowBitmap();
 		}
-		else {
+		else if(index == 1) {
 			option[0].SetTopLeft((SIZE_X - option[0].Width()) / 2, SIZE_Y * 5 / 9);
 			option[0].ShowBitmap();
-			option[3].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 50);
+			option[5].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 50);
+			option[5].ShowBitmap();
+			option[2].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 100);
+			option[2].ShowBitmap();
+		}
+		else if (index == 2) {
+			option[0].SetTopLeft((SIZE_X - option[0].Width()) / 2, SIZE_Y * 5 / 9);
+			option[0].ShowBitmap();
+			option[4].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 50);
+			option[4].ShowBitmap();
+			option[3].SetTopLeft((SIZE_X - option[2].Width()) / 2, SIZE_Y * 5 / 9 + 100);
 			option[3].ShowBitmap();
 		}
 
+	}
+	void Cchose::OnShowStage(int index) {
+		stage[0].SetTopLeft((SIZE_X - stage[0].Width()) / 2, (SIZE_Y - stage[0].Height()) / 2);
+		stage[0].ShowBitmap();
+		if (index == 0) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 120, (SIZE_Y - stage[0].Height()) / 2 +390);
+			stage[1].ShowBitmap();
+		}
+		else if (index == 1) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 340, (SIZE_Y - stage[0].Height()) / 2 + 390);
+			stage[1].ShowBitmap();
+		}
+		else if (index == 2) {
+			stage[1].SetTopLeft((SIZE_X - stage[0].Width()) / 2 + 550, (SIZE_Y - stage[0].Height()) / 2 + 390);
+			stage[1].ShowBitmap();
+		}
 	}
 
 	void Cchose::OnShowChar1(int index) {

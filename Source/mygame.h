@@ -85,8 +85,10 @@ namespace game_framework {
 		int player2_index;
 		int lock_1;
 		int lock_2;
+		int how;
 		bool CountDown;
 		bool start;
+		bool stage;
 
 	};
 

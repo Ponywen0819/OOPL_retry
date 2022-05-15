@@ -65,7 +65,7 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,v = 1;
+int player1 = -1, player2 = -1,v = 1 , chose_stage = 0;
 boolean a = FALSE;
 
 CGameStateInit::CGameStateInit(CGame *g)
@@ -81,6 +81,7 @@ void CGameStateInit::OnInit(){
 void CGameStateInit::OnBeginState(){
 	chose = 0;
 	windows = 0;			//0為開始結束,1為選角畫面
+	how = 0;
 	checkin_1 = 0;
 	checkin_2 = 0;
 	player1_index = 0;
@@ -89,6 +90,8 @@ void CGameStateInit::OnBeginState(){
 	lock_2 = -1;
 	CountDown = FALSE;
 	start = FALSE;
+	stage = FALSE;
+	chose_stage = 0;
 }
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -107,19 +110,46 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 		if (nChar == KEY_UP && chose == 1) {
 			chose = 0;
 		}
+		else if (nChar == KEY_UP && chose == 2) {
+			chose = 1;
+		}
 		if (nChar == KEY_DOWN && chose == 0) {
 			chose = 1;
+		}
+		else if (nChar == KEY_DOWN && chose == 1) {
+			chose = 2;
 		}
 		if (nChar == KEY_SPACE && chose == 0) {
 			windows = 1;
 		}
 		if (nChar == KEY_SPACE && chose == 1) {
+			windows = 2;
+		}
+		else if (nChar == KEY_SPACE && chose == 2) {
 			PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);	// 關閉遊戲
 		}
 	}
 
+	else if (windows == 1 && stage == FALSE) {
+		if (nChar == KEY_RIGHT && chose_stage == 0) {
+			chose_stage = 1;
+		}
+		else if (nChar == KEY_RIGHT && chose_stage == 1) {
+			chose_stage = 2;
+		}
+		else if (nChar == KEY_LEFT && chose_stage ==1) {
+			chose_stage = 0;
+		}
+		else if (nChar == KEY_LEFT && chose_stage == 2) {
+			chose_stage = 1;
+		}
+		if (nChar == KEY_SPACE) {
+			stage = TRUE;
+		}
+	}
 
-	else if (windows == 1 && CountDown == FALSE) {
+
+	else if (windows == 1 && CountDown == FALSE && stage == TRUE) {
 		if (nChar == KEY_S && checkin_1 == 0) {
 			checkin_1 = 1;
 			player1 = 0;
@@ -159,6 +189,16 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 		}
 
 	}
+
+	else if (windows == 2) {
+		if (how == 0) {
+			how = 1;
+		}
+		else if (how == 1) {
+			windows = 0;
+			how = 0;
+		}
+	}
 }
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point){  //滑鼠處理
@@ -169,23 +209,41 @@ void CGameStateInit::OnShow(){
 
 	if (windows == 0) {
 		menu.OnShowMenu(1);
-		chose == 0 ? menu.OnShowSelect(0) : menu.OnShowSelect(1);
+		if (chose == 0) {
+			menu.OnShowSelect(0);
+		}
+		else if (chose == 1) {
+			menu.OnShowSelect(1);
+		}
+		else if (chose == 2) {
+			menu.OnShowSelect(2);
+		}
+		
 	}
 	else if (windows == 1) {
-		menu.OnShowMenu(2);
-		if (checkin_1 == 1) {
-			menu.OnShowChar1(player1);
+		if (!stage) {
+			menu.OnShowStage(chose_stage);
 		}
-		if (checkin_2 == 1) {
-			menu.OnShowChar2(player2);
-		}
-		menu.OnShowCharLock(lock_1, lock_2);
-		if (CountDown) {
-			start = menu.OnShowCountDown(lock_1, lock_2);
-			if (start) {
-				GotoGameState(GAME_STATE_RUN);
+		else {
+			menu.OnShowMenu(2);
+			if (checkin_1 == 1) {
+				menu.OnShowChar1(player1);
+			}
+			if (checkin_2 == 1) {
+				menu.OnShowChar2(player2);
+			}
+			menu.OnShowCharLock(lock_1, lock_2);
+			if (CountDown) {
+				start = menu.OnShowCountDown(lock_1, lock_2);
+				if (start) {
+					GotoGameState(GAME_STATE_RUN);
+				}
 			}
 		}
+	}
+
+	else if (windows == 2) {
+		how == 0 ? menu.OnShowMenu(3) : menu.OnShowMenu(4);
 	}
 }								
 
@@ -251,12 +309,14 @@ CGameStateRun::~CGameStateRun(){
 
 void CGameStateRun::OnBeginState(){
 	allobj.init(player1, player2);
-	stage.init(1, &allobj);
+	stage.init(chose_stage+1, &allobj);
 }	
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	a = stage.check(v);      //-----------v改為敵人總血量就行，0的時候會跳關，a為TRUE時跳大關，人物要重置位置-----我是廢物什麼都不會，也不知道是不是寫在這裡----
+	if (stage.check(allobj.getEnemyHP())) {
+		allobj.init(player1, player2);
+	}     
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}

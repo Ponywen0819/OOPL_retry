@@ -245,6 +245,16 @@ namespace game_framework {
 		else if (now_stage == 3) {
 			trans_index = 11;
 		}
+
+
+		branch = FALSE;
+		main = TRUE;
+		clean = FALSE;
+		over = FALSE;
+
+		map = 0;
+		temp = 0;
+
 	}
 
 
