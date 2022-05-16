@@ -364,7 +364,8 @@ void CGameStateRun::OnInit() {
 	std::string path = "";
 	for (int i = 1; i < 103; i++) {
 		path = "music\\"+std::to_string(i)+".wav";
-		CAudio::Instance()->Load(i, (char *)path.c_str());	// 載入編號1的聲音lake.mp3
+		
+		CAudio::Instance()->Load(i+5, (char *)path.c_str());	// 載入編號1的聲音lake.mp3
 	}
 
 	stage.load();

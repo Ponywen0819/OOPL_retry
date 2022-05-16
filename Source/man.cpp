@@ -519,7 +519,7 @@ namespace game_framework {
 		Frame tempF = (*Frams)[_mode];
 		setTimmer(tempF._wait);
 		int numOFwav = tempF._sound;
-		if(numOFwav!=0)  CAudio::Instance()->Play(numOFwav);
+		if(numOFwav!=0)  CAudio::Instance()->Play(numOFwav+5);
 		if (tempF._have_opiont) {
 			int oid = tempF._op.getOid();
 			if (oid == 12) {
