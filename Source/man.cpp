@@ -2171,6 +2171,7 @@ namespace game_framework {
 				total += mans[i]->getHP();
 			return total;
 		}
+		else if (state == 3)return -1;
 		else {
 			return mans[0]->getHP();
 		}

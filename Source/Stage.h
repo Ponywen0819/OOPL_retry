@@ -142,7 +142,7 @@ namespace game_framework {
 		boolean clean;
 		boolean over;
 		boolean audio;
-
+		boolean initcheckhp;
 		int *data;
 		int now_stage;
 		int map;

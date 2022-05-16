@@ -254,6 +254,7 @@ namespace game_framework {
 		clean = FALSE;
 		over = FALSE;
 		audio = FALSE;
+		initcheckhp = FALSE;
 		map = 0;
 		temp = 0;
 		obj->init(-1, -1);
@@ -302,6 +303,7 @@ namespace game_framework {
 			switch (trans_index) {
 			case 1:
 				obj->init(_player1, _player2);
+				obj->creatWeapon(10, 300, 300);
 				obj->creatEnemy(0, 1000, 400);
 				obj->creatEnemy(1, 900, 450);
 				break;
@@ -438,8 +440,8 @@ namespace game_framework {
 
 	}
 
-	void stage::check(int hp) {
-		if (hp == 0 && map != 0) {
+	void stage::check(int enemyhp) {
+	if (enemyhp == 0 && map != 0) {
 			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width + 750) {
 				if (main) {
 					now_stage++;
@@ -457,6 +459,7 @@ namespace game_framework {
 				branch = TRUE;
 			}
 		}
+	
 	}
 
 	void stage::show_trans() {
@@ -471,7 +474,12 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
-		if(over)CAudio::Instance()->Stop(5);
+		if(obj->getHP() == 0)over = TRUE;
+		if (over) {
+			CAudio::Instance()->Stop(3);
+			CAudio::Instance()->Stop(4);
+			CAudio::Instance()->Stop(5);
+		}
 		return over;
 	}
 
