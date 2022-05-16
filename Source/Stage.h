@@ -99,7 +99,7 @@ namespace game_framework {
 			temp = 0;
 			trans_index = 1;
 
-			data = new int[4];
+			data = new int[5];
 			for (int i = 0; i < 4; i++) data[i] = 0;
 			branch = FALSE;
 			main = TRUE;
@@ -114,7 +114,7 @@ namespace game_framework {
 		}
 
 
-		void init(int,ObjContainer*);
+		void init(int,ObjContainer*,int,int);
 		void load();
 		void OnShow(int);
 		void info();
@@ -122,7 +122,7 @@ namespace game_framework {
 		void test();
 
 		int* getdata();
-		boolean check(int);
+		void check(int);
 		boolean overgame();
 		void show_trans();
 
@@ -155,6 +155,8 @@ namespace game_framework {
 		int delay1;
 		int temp;
 		int trans_index;
+		int _player1;
+		int _player2;
 		ObjContainer* obj;
 	};
 

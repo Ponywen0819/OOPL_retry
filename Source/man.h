@@ -912,7 +912,10 @@ namespace game_framework {
 					return int(mans[0]->_x + mans[1]->_x) / 2;
 				}
 			}
-			else {
+			else if (state == 3) {
+				return 0;
+			}
+			else{
 				return int(mans[0]->_x);
 			}
 		}

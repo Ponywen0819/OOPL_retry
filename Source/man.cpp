@@ -1787,6 +1787,9 @@ namespace game_framework {
 
 			a.add(mans[0]);
 		}
+		else {
+			state = 3;
+		}
 		bar.init(p1, p2);
 
 		creatWeapon(11);
