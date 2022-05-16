@@ -245,6 +245,8 @@ namespace game_framework {
 					break;
 				}
 				case 2: {
+					if (myF._have_itr) continue;
+
 					holding = temp_obj;
 					temp_obj->holdingSth(this);
 					if (id == 11) {
@@ -1079,7 +1081,9 @@ namespace game_framework {
 				continue;
 			}
 
-			if (temp_obj->id > 2 && id > 2) {
+
+
+			if (temp_obj->id > 2 && temp_obj->id < 5  && id > 2 && id < 5) {
 				continue;
 			}
 			int mode = temp_obj->_mode;
@@ -1405,7 +1409,6 @@ namespace game_framework {
 		}
 	}
 
-	
 	void man::thw_obj() {
 		if (holdinglt) {
 			holding->toMotion(40);
@@ -2170,11 +2173,15 @@ namespace game_framework {
 
 	void AI::OnMove() {
 		for (int i = 0; i < n; i++) {
+
+			
+
 			//
 			// 選定目標
 			//
 			man *Traget_now;
 			man *com_now = *(self + i);
+
 
 			int ch = (*(commandType + i)) % numOfTarget;
 
@@ -2192,12 +2199,20 @@ namespace game_framework {
 			
 			int se = 0;
 			if (com_now->id == 3) {
-				se = 100;
+				if (com_now->Face_to_Left)
+					se = 80;
+				else
+					se = 40;
 			}
 			else {
-				se = 300;
+				if (com_now->Face_to_Left)
+					se = 250;
+				else
+					se = 200;
 			}
 			//TRACE("%d\n", diffx);
+
+			for (int j = 1; j < 7; j++)com_now->cComm(j);
 			if (abs(diffx)>500) {
 				if ((*(com_now->Frams))[com_now->_mode]._state != 2) {
 					if (diffx < 0) {
@@ -2221,7 +2236,7 @@ namespace game_framework {
 			}
 			else if(abs(diffx) > se){
 				if ((*(com_now->Frams))[com_now->_mode]._state == 2 && com_now->_mode != 218) {
-					if ((rand() % 100) == 0)com_now->toMotion(218);
+					if ((rand() % 25) == 0)com_now->toMotion(218);
 				}
 				else {
 					if ((*(com_now->Frams))[com_now->_mode]._state != 1) {
@@ -2232,43 +2247,46 @@ namespace game_framework {
 							com_now->setComm(1);
 						}
 					}
-					else {
-						if (diffx < -se && com_now->Face_to_Left) {
-							com_now->setComm(2);
-						}
-						else if (diffx > se && !com_now->Face_to_Left) {
-							com_now->setComm(1);
-						}
-					}
 				}
+
 				if (diffz < -10) {
 					com_now->setComm(4);
 				}
 				else if(diffz > 10){
 					com_now->setComm(3);
 				}
-				else {
-					com_now->cComm(3);
-					com_now->cComm(4);
-				}
 			}
 			else {
-				
-
 				if (diffz < -10) {
 					com_now->setComm(4);
 				}
 				else if (diffz > 10) {
 					com_now->setComm(3);
 				}
+				if (com_now->getX() == 0) {
+					if (com_now->Face_to_Left) {
+						com_now->setComm(2);
+					}
+					else {
+						com_now->setComm(1);
+					}
+				}
 				else {
-					com_now->cComm(3);
-					com_now->cComm(4);
 					if (diffx < 0 && !com_now->Face_to_Left) {
-						if ((rand() % 10) == 0) com_now->setComm(6);
+						if (!com_now->Face_to_Left) {
+							if ((rand() % 25) == 0) { com_now->setComm(6); }
+						}
+						else { 
+							if ((rand() % 10) == 0) { com_now->setComm(2); } 
+						}
 					}
 					else if (diffx > 0 && com_now->Face_to_Left) {
-						if ((rand() % 10) == 0) com_now->setComm(6);
+						if (com_now->Face_to_Left) {
+							if ((rand() % 25) == 0) { com_now->setComm(6); }
+						}
+						else {
+							if ((rand() % 10) == 0) { com_now->setComm(1); }
+						}
 					}
 					
 				}

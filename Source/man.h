@@ -866,8 +866,9 @@ namespace game_framework {
 
 		bool*	commandFinish;		//指令完成
 
-		int*		commandType;		// 指令種類
-
+		int*		commandType;		// 打哪個種類
+		
+		int*		commandState;		
 
 		// 亂走 去拿東西 打人(如果太遠就是移動到他旁邊)
 
