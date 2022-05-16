@@ -2223,7 +2223,13 @@ namespace game_framework {
 
 			for (int j = 1; j < 7; j++)com_now->cComm(j);
 			if (abs(diffx)>500) {
-				if ((*(com_now->Frams))[com_now->_mode]._state != 2) {
+				if (com_now->getX() <= 40) {
+					com_now->setComm(2);
+				}
+				else if (com_now->getX() >= com_now->mapdata[0] + 760) {
+					com_now->setComm(1);
+				}
+				else if ((*(com_now->Frams))[com_now->_mode]._state != 2) {
 					if (diffx < 0) {
 						com_now->Face_to_Left = false;
 					}
@@ -2244,7 +2250,13 @@ namespace game_framework {
 				}
 			}
 			else if(abs(diffx) > se){
-				if ((*(com_now->Frams))[com_now->_mode]._state == 2 && com_now->_mode != 218) {
+				if (com_now->getX() <= 40) {
+					com_now->setComm(2);
+				}
+				else if (com_now->getX() >= com_now->mapdata[0] + 760) {
+					com_now->setComm(1);
+				}
+				else if ((*(com_now->Frams))[com_now->_mode]._state == 2 && com_now->_mode != 218) {
 					if ((rand() % 25) == 0)com_now->toMotion(218);
 				}
 				else {
@@ -2272,13 +2284,11 @@ namespace game_framework {
 				else if (diffz > 10) {
 					com_now->setComm(3);
 				}
-				if (com_now->getX() == 0) {
-					if (com_now->Face_to_Left) {
-						com_now->setComm(2);
-					}
-					else {
-						com_now->setComm(1);
-					}
+				if (com_now->getX() <= 40) {
+					com_now->setComm(2);
+				}
+				else if (com_now->getX() >= com_now->mapdata[0] + 760) {
+					com_now->setComm(1);
 				}
 				else {
 					if (diffx < 0 && !com_now->Face_to_Left) {
