@@ -55,9 +55,12 @@ namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 
 	enum AUDIO_ID {				// 定義各種音效的編號
-		AUDIO_DING,				// 0
-		AUDIO_LAKE,				// 1
-		AUDIO_NTUT				// 2
+		AUDIO_MAIN,				// 0
+		AUDIO_CHOOSE,				// 1
+		AUDIO_CHAR,				// 2
+		AUDIO_STAGE1,
+		AUDIO_STAGE2,
+		AUDIO_STAGE3
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -89,6 +92,7 @@ namespace game_framework {
 		bool CountDown;
 		bool start;
 		bool stage;
+		bool main;
 
 	};
 

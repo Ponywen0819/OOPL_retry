@@ -105,6 +105,7 @@ namespace game_framework {
 			main = TRUE;
 			clean = FALSE;
 			over = FALSE;
+			
 		}
 
 		~stage() {
@@ -125,11 +126,6 @@ namespace game_framework {
 		boolean overgame();
 		void show_trans();
 
-		int get_mapwidth();
-		int get_upbound();
-		int get_downbound();
-		int get_mappos();
-
 
 	private:
 		SP* sp1 =new SP;
@@ -145,7 +141,7 @@ namespace game_framework {
 		boolean main;
 		boolean clean;
 		boolean over;
-
+		boolean audio;
 
 		int *data;
 		int now_stage;
