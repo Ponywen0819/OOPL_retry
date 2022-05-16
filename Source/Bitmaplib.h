@@ -30,6 +30,7 @@ namespace game_framework {
 		CMovingBitmap freeze_ball[2][8];
 		CMovingBitmap clo[2][28];
 		CMovingBitmap ww[2][11];
+
 	};
 
 	class Framelib {

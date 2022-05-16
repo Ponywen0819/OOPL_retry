@@ -308,8 +308,9 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
-	allobj.init(player1, player2);
 	stage.init(chose_stage+1, &allobj);
+	allobj.initOfinit(player1, player2);
+	allobj.init(player1, player2);
 }	
 
 void CGameStateRun::OnMove(){
@@ -331,6 +332,12 @@ void CGameStateRun::OnInit() {
 
 	ShowInitProgress(65);
 	Flib.init();
+
+	std::string path = "";
+	for (int i = 1; i < 103; i++) {
+		path = "music\\"+std::to_string(i)+".wav";
+		CAudio::Instance()->Load(i, (char *)path.c_str());	// 載入編號1的聲音lake.mp3
+	}
 
 	stage.load();
 	allobj.mapSetting(stage.getdata());

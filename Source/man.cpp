@@ -511,11 +511,15 @@ namespace game_framework {
 			hurt(afterhp);
 			mp -= aftermp;
 		}
+
+
 		adjustPosition(_mode, next);
 		_mode = next;
 		inMotion = true;
 		Frame tempF = (*Frams)[_mode];
 		setTimmer(tempF._wait);
+		int numOFwav = tempF._sound;
+		if(numOFwav!=0)  CAudio::Instance()->Play(numOFwav);
 		if (tempF._have_opiont) {
 			int oid = tempF._op.getOid();
 			if (oid == 12) {
@@ -2165,6 +2169,18 @@ namespace game_framework {
 		return com.getTotalHP();
 	}
 
+	int ObjContainer::getHP() {
+		if (state == 0) {
+			int total = 0;
+			for (int i = 0; i < 2; i++)
+				total += mans[i]->getHP();
+			return total;
+		}
+		else {
+			return mans[0]->getHP();
+		}
+	}
+
 	//
 	// ------------------------------電腦的部分------------------------------------------
 	//
@@ -2173,9 +2189,6 @@ namespace game_framework {
 
 	void AI::OnMove() {
 		for (int i = 0; i < n; i++) {
-
-			
-
 			//
 			// 選定目標
 			//
