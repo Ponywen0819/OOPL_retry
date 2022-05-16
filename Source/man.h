@@ -77,6 +77,10 @@ namespace game_framework {
 			maxx = x;
 		}
 
+		virtual bool isAlive() {
+			return Alive;
+		}
+
 		void mapSetting(int* data) {
 			maxx = data[0]; map_pos = data[1]; upbond = data[2]; underbond = data[3];
 			mapdata = data;
@@ -211,7 +215,13 @@ namespace game_framework {
 		obj* getSortObj(int n);
 
 		void so();
+		
 		obj* getobj(int n);
+
+		obj** getall() {
+			return all;
+		}
+
 		int getN() {
 			return num;
 		}
@@ -853,6 +863,7 @@ namespace game_framework {
 		void add(man* newone);	// 創造電腦
 		void check();			// 檢查死了沒
 		void del(int n);		// 刪除此電腦
+		void del(obj* shit);
 
 		void doThing(int n);	// 指派電腦任務
 

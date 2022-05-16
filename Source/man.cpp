@@ -23,9 +23,6 @@ namespace game_framework {
 	//
 	//------------------------------物品的部分------------------------------------------
 	//
-
-
-
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
 		if (beatenList == nullptr) {
@@ -203,7 +200,7 @@ namespace game_framework {
 			if (_z <= mapdata[2])_z = mapdata[2];
 			else if (_z >= mapdata[3]) _z = mapdata[3];
 
-			if (_y <= (*Frams)[_mode]._centery) {
+			if (_y <= (*Frams)[_mode]._centery && id == 201) {
 				Alive = false;
 			}
 
@@ -2137,7 +2134,8 @@ namespace game_framework {
 			i = 1;
 		}
 		while (i < a.getN()) {
-			if (!((a.getobj(i))->Alive)) {
+			if (!((a.getobj(i))->isAlive())) {
+				com.check();
 				a.del(i);
 			}
 			else {
@@ -2145,7 +2143,6 @@ namespace game_framework {
 			}
 		}
 
-		com.check();
 	}
 
 	void ObjContainer::creatEnemy(int type, int x, int z) {
@@ -2161,8 +2158,6 @@ namespace game_framework {
 		enemy->mapSetting(map_data);
 		com.add(enemy);
 		a.add(enemy);
-
-
 	}
 
 	int ObjContainer::getEnemyHP() {
@@ -2362,6 +2357,37 @@ namespace game_framework {
 		commandType = temp_command;
 		delete self;
 		self = temp;
+	}
+
+	void AI::del(obj* shit) {
+		
+		
+		if (n == 1) {
+			n = 0;
+			//delete commandType;
+			//delete self;
+			commandType = nullptr;
+			self = nullptr;
+		}
+		else {
+			man** temp = new man*[n - 1];
+			int * temp_command = new int[n - 1];
+			int i;
+			int no = 0;
+			for (i = 0; i < n; i++) {
+				if (*(temp + i) != shit) {
+					*(temp + no) = *(self + i);
+					*(temp_command + no) = *(commandType + i);
+					no++;
+				}
+			}
+			n--;
+			delete commandType;
+			commandType = temp_command;
+			delete self;
+			self = temp;
+		}
+
 	}
 
 	void AI::check() {
