@@ -344,6 +344,12 @@ namespace game_framework {
 		int		getZ() {
 			return int(_z);
 		}
+		int		getHP() {
+			if (hp > 0) 
+				return hp;
+			else 
+				return 0;
+		}
 
 		void	print() {
 			TRACE("%d %d %d %d\n",flag[0], flag[1], flag[2], flag[3]);
@@ -887,6 +893,9 @@ namespace game_framework {
 			delete[] mans;
 		}
 		
+		void initOfinit(int player1, int player2) {
+			bar.init(player1, player2);
+		}
 		void init(int player1,int player2);
 
 		void load(Bitmaplib *l, Framelib* f) {
@@ -901,6 +910,7 @@ namespace game_framework {
 		void KeyDown(UINT nChar);
 
 		int  getX() {
+			if (mans == nullptr) return 0;
 			if (state == 0) {
 				if (!mans[0]->isAlive()) {
 					return int(mans[0]->_x);
@@ -923,6 +933,7 @@ namespace game_framework {
 		void check();
 
 		int  getEnemyHP();
+		int	 getHP();
 
 		void mapSetting(int* data);
 		void OnMove();
