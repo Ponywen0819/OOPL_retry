@@ -126,11 +126,6 @@ namespace game_framework {
 		boolean overgame();
 		void show_trans();
 
-		int get_mapwidth();
-		int get_upbound();
-		int get_downbound();
-		int get_mappos();
-
 
 	private:
 		SP* sp1 =new SP;

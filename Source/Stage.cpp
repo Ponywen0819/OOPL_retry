@@ -284,6 +284,7 @@ namespace game_framework {
 
 
 	void stage::info() {
+		data[4] = trans_index;
 		if (now_stage == 1) {
 			if (!audio) {
 				TRACE("!!!!!");
@@ -444,7 +445,7 @@ namespace game_framework {
 				return TRUE;
 			}
 
-			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width - 10) {
+			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width) {
 				clean = TRUE;
 			}
 
@@ -535,19 +536,6 @@ namespace game_framework {
 		}
 	}
 
-
-	int stage::get_mappos() {
-		return map_pos;
-	}
-	int stage::get_mapwidth() {
-		return map_width;
-	}
-	int stage::get_upbound() {
-		return upper_bound;
-	}
-	int stage::get_downbound() {
-		return lower_bound;
-	}
 
 	int* stage::getdata() {
 		return data;
