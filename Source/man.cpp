@@ -1793,7 +1793,6 @@ namespace game_framework {
 		}
 		bar.init(p1, p2);
 
-		creatWeapon(11);
 	}
 	
 	void ObjContainer::mapSetting(int* data){
@@ -2118,12 +2117,10 @@ namespace game_framework {
 		}
 	}
 
-	void ObjContainer::creatWeapon(int n) {
+	void ObjContainer::creatWeapon(int n,int x,int z) {
 		weapon* temp = new weapon(n,0,fl,lib,nullptr,&a);
-
-		temp->init(400, 300,400,false);
+		temp->init(x, 800 - z,z,false);
 		
-		temp->setmax(3200);
 		temp->mapSetting(map_data);
 		a.add(temp);
 	}

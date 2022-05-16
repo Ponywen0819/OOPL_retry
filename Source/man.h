@@ -904,7 +904,7 @@ namespace game_framework {
 			bar.LoadBitmap();
 		}
 		
-		void creatWeapon(int n);
+		void creatWeapon(int n,int x,int z);
 
 		void KeyUp(UINT nChar);
 		void KeyDown(UINT nChar);
