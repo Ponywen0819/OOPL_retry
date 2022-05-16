@@ -336,15 +336,16 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
-	stage.init(chose_stage+1, &allobj);
+
+	stage.init(chose_stage + 1, &allobj, player1, player2);
+	/*allobj.init(player1, player2);*/
 	allobj.initOfinit(player1, player2);
+
 }	
 
 void CGameStateRun::OnMove(){
 	allobj.OnMove();
-	if (stage.check(allobj.getEnemyHP())) {
-		allobj.init(player1, player2);
-	}    
+	stage.check(allobj.getEnemyHP());
 	
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);

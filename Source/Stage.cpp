@@ -233,9 +233,11 @@ namespace game_framework {
 	}
 
 
-	void stage::init(int init_stage, ObjContainer* _obj) {
+	void stage::init(int init_stage, ObjContainer* _obj,int player1,int player2) {
 		obj = _obj;
 		now_stage = init_stage;
+		_player1 = player1;
+		_player2 = player2;
 		if (now_stage == 1) {
 			trans_index = 1;
 		}
@@ -254,7 +256,7 @@ namespace game_framework {
 		audio = FALSE;
 		map = 0;
 		temp = 0;
-
+		obj->init(-1, -1);
 	}
 
 
@@ -299,6 +301,7 @@ namespace game_framework {
 			data[3] = lower_bound = lf1->_lower();
 			switch (trans_index) {
 			case 1:
+				obj->init(_player1, _player2);
 				obj->creatEnemy(0, 1000, 400);
 				obj->creatEnemy(1, 900, 450);
 				break;
@@ -345,6 +348,7 @@ namespace game_framework {
 			data[3] = lower_bound = sp1->_lower();
 			switch (trans_index) {
 			case 6:
+				obj->init(_player1, _player2);
 				obj->creatEnemy(0, 1000, 300);
 				obj->creatEnemy(1, 900, 400);
 				break;
@@ -391,6 +395,7 @@ namespace game_framework {
 			data[3] = lower_bound = gw1->_lower();
 			switch (trans_index) {
 			case 11:
+				obj->init(_player1, _player2);
 				obj->creatEnemy(0, 1000, 330);
 				obj->creatEnemy(0, 900, 400);
 				obj->creatEnemy(1, 1100, 350);
@@ -433,16 +438,15 @@ namespace game_framework {
 
 	}
 
-	boolean stage::check(int hp) {
+	void stage::check(int hp) {
 		if (hp == 0 && map != 0) {
-			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width-10) {
+			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width + 750) {
 				if (main) {
 					now_stage++;
 					audio = FALSE;
 					map = 0;
 					main = FALSE;
 				}
-				return TRUE;
 			}
 
 			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width) {
@@ -453,7 +457,6 @@ namespace game_framework {
 				branch = TRUE;
 			}
 		}
-		return FALSE;
 	}
 
 	void stage::show_trans() {
@@ -479,17 +482,15 @@ namespace game_framework {
 
 
 	void stage::OnShow(int _man_pos) {
-
-		if (_man_pos <= 400) data[1] = 0;
-		else if (_man_pos >= (data[0] + 400)) data[1] = data[0];
-		else data[1] = _man_pos-400;
-
 		man_pos = _man_pos;
+		
+
 		if (map == 0) {
+			man_pos = 0;
 			show_trans();
 		}
 		else if(map == 1) {
-			lf1->showmap(_man_pos);
+			lf1->showmap(man_pos);
 			map_pos = lf1->map_pos();
 			if (branch) {
 				show_trans();
@@ -502,7 +503,7 @@ namespace game_framework {
 			}
 		}
 		else if (map == 2) {
-			sp1->showmap(_man_pos);
+			sp1->showmap(man_pos);
 			map_pos = sp1->map_pos();
 			main = TRUE;
 			if (branch) {
@@ -516,7 +517,7 @@ namespace game_framework {
 			}
 		}
 		else if (map == 3) {
-			gw1->showmap(_man_pos);
+			gw1->showmap(man_pos);
 			map_pos = gw1->map_pos();
 			main = TRUE;
 			if (branch) {
@@ -534,6 +535,9 @@ namespace game_framework {
 				}
 			}
 		}
+		if (man_pos <= 400) data[1] = 0;
+		else if (man_pos >= (data[0] + 400)) data[1] = data[0];
+		else data[1] = man_pos - 400;
 	}
 
 
