@@ -1798,6 +1798,7 @@ namespace game_framework {
 	}
 	
 	void ObjContainer::KeyDown(UINT nChar){
+		if (mans == nullptr) return;
 		const char KEY_A = 65;
 		const char KEY_W = 87;
 		const char KEY_S = 83;
@@ -1942,6 +1943,7 @@ namespace game_framework {
 	}
 	
 	void ObjContainer::KeyUp(UINT nChar){
+		if (mans == nullptr) return;
 		const char KEY_A = 65;
 		const char KEY_W = 87;
 		const char KEY_S = 83;
@@ -2088,10 +2090,10 @@ namespace game_framework {
 	void ObjContainer::OnMove() {
 		if (mans == nullptr) return;
 		if (state == 0) {
-			com.updateEnemy(2, mans);
+			com->updateEnemy(2, mans);
 		}
 		else {
-			com.updateEnemy(1, mans);
+			com->updateEnemy(1, mans);
 		}
 
 
@@ -2103,7 +2105,7 @@ namespace game_framework {
 			}
 		}
 
-		com.OnMove();							//電腦指派任務階段
+		com->OnMove();							//電腦指派任務階段
 		
 		check();
 		a.so();
@@ -2134,7 +2136,7 @@ namespace game_framework {
 		}
 		while (i < a.getN()) {
 			if (!((a.getobj(i))->isAlive())) {
-				com.check();
+				com->check();
 				a.del(i);
 			}
 			else {
@@ -2155,12 +2157,13 @@ namespace game_framework {
 		enemy->_x = x;
 		enemy->_z = z;
 		enemy->mapSetting(map_data);
-		com.add(enemy);
+		com->add(enemy);
 		a.add(enemy);
 	}
 
 	int ObjContainer::getEnemyHP() {
-		return com.getTotalHP();
+		TRACE("%d\n", com->getTotalHP());
+		return com->getTotalHP();
 	}
 
 	int ObjContainer::getHP() {

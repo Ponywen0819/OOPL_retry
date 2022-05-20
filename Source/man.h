@@ -204,6 +204,15 @@ namespace game_framework {
 
 		void init();
 
+		void reset() {
+			for (int i = 0; i < num; i++)
+				delete *(all + i);
+			delete all;
+
+			num = 0;
+			all = s = nullptr;
+		}
+
 		void add(obj *);
 		void del(int n);
 
@@ -879,8 +888,6 @@ namespace game_framework {
 		void reset() {
 			if (self != nullptr)
 				delete self;
-			if (Target != nullptr)
-				delete Target;
 			if (commandType != nullptr)
 				delete commandType;
 			if (commandFinish != nullptr)
@@ -889,7 +896,7 @@ namespace game_framework {
 				delete commandState;
 
 			n = numOfTarget = 0;
-			self = Target = nullptr;
+			self = nullptr;
 			commandFinish = nullptr;
 			commandState = nullptr;
 			commandType = _x = _z = nullptr;
@@ -915,8 +922,6 @@ namespace game_framework {
 		
 		int*		commandState;		
 
-		// 亂走 去拿東西 打人(如果太遠就是移動到他旁邊)
-
 		int*	_x;				//用於紀錄電腦指令移動
 		int*	_z;		
 
@@ -926,10 +931,12 @@ namespace game_framework {
 	public:
 		ObjContainer() {
 			mans = nullptr;
+			com = new AI();
 		}
 		~ObjContainer() {
 			if(mans != nullptr)
 				delete mans;
+			delete com;
 		}
 		
 		void initOfinit(int player1, int player2) {
@@ -974,6 +981,14 @@ namespace game_framework {
 		int  getEnemyHP();
 		int	 getHP();
 
+		void reset() {
+			if (mans != nullptr)
+				delete mans;
+			mans = nullptr;
+			a.reset();
+			com->reset();
+		}
+
 		void mapSetting(int* data);
 		void OnMove();
 		void OnShow();
@@ -984,7 +999,7 @@ namespace game_framework {
 		allobj  a;					// 場上所有物品
 		CStateBar bar;				// 狀態條
 		man**	mans;				// 人物
-		AI		com;				// 電腦
+		AI*		com;				// 電腦
 		Bitmaplib* lib;				
 		Framelib* fl;
 		int* map_data;				// 地圖的設定值

@@ -343,8 +343,8 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
-
 	stage.init(chose_stage + 1, &allobj, player1, player2);
+	allobj.reset();
 	allobj.initOfinit(player1, player2);
 
 }	
