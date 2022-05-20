@@ -1735,7 +1735,6 @@ namespace game_framework {
 	//
 
 	void ObjContainer::init(int p1,int p2) {
-		com.reset();
 		//
 		// 物品初始化
 		// 
@@ -1792,7 +1791,6 @@ namespace game_framework {
 			state = 3;
 		}
 		bar.init(p1, p2);
-
 	}
 	
 	void ObjContainer::mapSetting(int* data){
@@ -2088,6 +2086,7 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
+		if (mans == nullptr) return;
 		if (state == 0) {
 			com.updateEnemy(2, mans);
 		}
