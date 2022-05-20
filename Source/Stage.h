@@ -111,6 +111,10 @@ namespace game_framework {
 		~stage() {
 
 			delete data;
+			delete sp1;
+			delete lf1;
+			delete ex1;
+			delete gw1;
 		}
 
 

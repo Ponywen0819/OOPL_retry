@@ -449,6 +449,7 @@ namespace game_framework {
 			_have_wpoint = true;
 
 			_wp = wpoint(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
+			delete v;
 		}
 
 		void setCpointBasic(int kind, int x, int y) {
@@ -481,7 +482,7 @@ namespace game_framework {
 			_cp.setThrow(v[7], v[8], v[9]);
 			_cp.setInjury(v[10]);
 			_cp.setDecrese(v[11]);
-
+			delete v;
 		}
 
 		void setOpoint(int *v) {
@@ -491,6 +492,7 @@ namespace game_framework {
 			_op.setAction(v[3]);
 			_op.setOid(v[4]);
 			_op.setFacing(v[5]);
+			delete v;
 		}
 
 		int _id;

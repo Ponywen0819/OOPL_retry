@@ -69,10 +69,6 @@ namespace game_framework {
 		//
 		// 設定
 		//
-		void updateObj(obj** list, int n) {
-			all = list;
-			numOfObj = n;
-		}
 		void setmax(int x) {
 			maxx = x;
 		}
@@ -102,8 +98,6 @@ namespace game_framework {
 		virtual void nextFrame() {};			
 
 		void init(obj** a,int n) {
-			this->all = a;
-			numOfObj = n;
 			Frams = fl->getFrame(id);
 		}
 		void setArest(int n);
@@ -156,8 +150,7 @@ namespace game_framework {
 		virtual void	setdir(bool f) {}
 		int	id;						//代表自己是什麼
 		std::map<int, Frame> *Frams;// 動作資料表
-		obj**	all;				// 所有物品的列表
-		int		numOfObj;			// 所有物品的個數
+		
 
 		Bitmaplib*	lib;			// 圖片輸出
 		Framelib*	fl;				// 為了要創造
@@ -201,10 +194,12 @@ namespace game_framework {
 	public:
 		allobj() {
 			num = 0;
-			all = nullptr;
+			all = s = nullptr;
 		}
 		~allobj() {
-			delete[] all;
+			for (int i = 0; i < num; i++)
+				delete *(all + i);
+			delete all;
 		}
 
 		void init();
@@ -584,7 +579,7 @@ namespace game_framework {
 		bool	jumping;							// 正在跳躍
 		bool	cantBeTouch;						
 
-		allobj* _a;									// 場上所有人
+		allobj* _a;				//場上所有人
 		obj*	holding;			
 		obj*	who;								// 被打的那個
 		obj*	skills;								// 出技能
@@ -718,6 +713,8 @@ namespace game_framework {
 		}
 		bool isTime() { return time <= 0; }
 
+		
+
 		allobj* _a;				//場上所有人
 		obj*	holding;		//誰再拿他
 		bool	IsHolding;		//有被拾取
@@ -742,11 +739,12 @@ namespace game_framework {
 		
 		}
 
-		wp(int n,int mode, Framelib *f, Bitmaplib* b,obj* ow):wp(){
+		wp(int n,int mode, Framelib *f, Bitmaplib* b,obj* ow, allobj * all):wp(){
 			fl = f;
 			lib = b;
 			id = n;
 			owner = ow;
+			this->_a = all;
 			switch (id) {
 			case 203: {
 				maxW = 81;
@@ -799,6 +797,12 @@ namespace game_framework {
 			setTimmer((*Frams)[_mode]._wait);
 		}
 		
+		~wp() {
+			if (skills != nullptr) {
+				delete skills;
+			}
+		}
+
 		void init( int x, int y,int z,bool fa) {
 			_x = x;
 			_y = y;
@@ -839,8 +843,7 @@ namespace game_framework {
 		}
 		bool isTime() { return time <= 0; }
 
-		allobj* a;				//場上所有人
-		obj*	who;			// 被打的那個
+		allobj* _a;				//場上所有人
 		obj*	skills;			// 心放的技能
 		obj*	owner;			// 誰放的		
 		int		stand;			// 持續的時間
@@ -852,20 +855,45 @@ namespace game_framework {
 			n = numOfTarget = 0;
 			self = Target = nullptr;
 			commandFinish = nullptr;
+			commandState = nullptr;
 			commandType = _x = _z = nullptr;
 		}
 
 		~AI() {
-			if (self != nullptr) {
+			if (self != nullptr)
+				delete self;
+			if (Target != nullptr)
+				delete Target;
+			if(commandType != nullptr)
 				delete commandType;
-			}
+			if (commandFinish != nullptr)
+				delete commandFinish;
+			if (commandState != nullptr)
+				delete commandState;
 		}
 		void add(man* newone);	// 創造電腦
 		void check();			// 檢查死了沒
 		void del(int n);		// 刪除此電腦
 		void del(obj* shit);
 
-		void doThing(int n);	// 指派電腦任務
+		void reset() {
+			if (self != nullptr)
+				delete self;
+			if (Target != nullptr)
+				delete Target;
+			if (commandType != nullptr)
+				delete commandType;
+			if (commandFinish != nullptr)
+				delete commandFinish;
+			if (commandState != nullptr)
+				delete commandState;
+
+			n = numOfTarget = 0;
+			self = Target = nullptr;
+			commandFinish = nullptr;
+			commandState = nullptr;
+			commandType = _x = _z = nullptr;
+		}
 
 		void updateEnemy(int n,man** mans);
 		int  getTotalHP();
@@ -881,7 +909,7 @@ namespace game_framework {
 		int		numOfTarget;	// 目標的數量
 		man**	Target;			// 攻擊目標
 
-		bool*	commandFinish;		//指令完成
+		bool*		commandFinish;		//指令完成
 
 		int*		commandType;		// 打哪個種類
 		
@@ -900,8 +928,8 @@ namespace game_framework {
 			mans = nullptr;
 		}
 		~ObjContainer() {
-
-			delete[] mans;
+			if(mans != nullptr)
+				delete mans;
 		}
 		
 		void initOfinit(int player1, int player2) {
@@ -959,9 +987,7 @@ namespace game_framework {
 		AI		com;				// 電腦
 		Bitmaplib* lib;				
 		Framelib* fl;
-		int maxx, maxz;				// 地圖的最大值
-
-		int* map_data;				// 地圖的最大值
+		int* map_data;				// 地圖的設定值
 	};
 
 	
