@@ -257,7 +257,12 @@ namespace game_framework {
 		initcheckhp = FALSE;
 		map = 0;
 		temp = 0;
-		obj->init(-1, -1);
+		delay();
+		if (temp > 10) {
+			obj->init(player1, player2);
+			temp = 0;
+		}
+		
 	}
 
 
@@ -474,7 +479,7 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
-		if(obj->getHP() == 0)over = TRUE;
+		//if(obj->getHP() == 0)over = TRUE;
 		if (over) {
 			CAudio::Instance()->Stop(3);
 			CAudio::Instance()->Stop(4);

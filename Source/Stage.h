@@ -109,7 +109,7 @@ namespace game_framework {
 		}
 
 		~stage() {
-
+			delete obj;
 			delete data;
 		}
 
