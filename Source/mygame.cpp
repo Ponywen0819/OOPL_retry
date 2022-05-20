@@ -114,6 +114,11 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_K = 75; // keyboard D
 	const char KEY_LEFT = 37; // keyboard D
 	const char KEY_RIGHT = 39; // keyboard D
+	const char KEY_J = 74;
+	const char KEY_L = 76;
+	const char KEY_TAB = 9;
+
+
 	// TRACE("button key  %d\n", nChar);
 	if (main) {
 		CAudio::Instance()->Play(AUDIO_MAIN, true);
@@ -196,10 +201,10 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 			player1 = menu.Get_player1(player1_index);
 		}
 		if (checkin_2 == 1 && lock_2 < 1) {
-			if (nChar == KEY_LEFT) {
+			if (nChar == KEY_J) {
 				player2_index--;
 			}
-			if (nChar == KEY_RIGHT) {
+			if (nChar == KEY_L) {
 				player2_index++;
 			}
 			if (nChar == KEY_K) {
@@ -230,6 +235,8 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point){  //·Æ¹«³B²z
 	//GotoGameState(GAME_STATE_RUN);		// ¤Á´«¦ÜGAME_STATE_RUN
+	checkin_1 = 0;
+	lock_1 = -1;
 }
 
 void CGameStateInit::OnShow(){
@@ -338,7 +345,6 @@ CGameStateRun::~CGameStateRun(){
 void CGameStateRun::OnBeginState(){
 
 	stage.init(chose_stage + 1, &allobj, player1, player2);
-	//allobj.init(player1, player2);
 	allobj.initOfinit(player1, player2);
 
 }	

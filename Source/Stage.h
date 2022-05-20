@@ -109,7 +109,7 @@ namespace game_framework {
 		}
 
 		~stage() {
-
+			delete obj;
 			delete data;
 			delete sp1;
 			delete lf1;
@@ -146,7 +146,7 @@ namespace game_framework {
 		boolean clean;
 		boolean over;
 		boolean audio;
-
+		boolean initcheckhp;
 		int *data;
 		int now_stage;
 		int map;
