@@ -74,6 +74,7 @@ CGameStateInit::CGameStateInit(CGame *g)
 }
 
 void CGameStateInit::OnInit(){
+	TRACE("\n\n\n\n\n\nshit\n\n\n\n\n\\n");
 	ShowInitProgress(0);
 	CAudio::Instance()->Load(AUDIO_CHOOSE, "Sounds\\choose.wav");	
 	CAudio::Instance()->Load(AUDIO_CHAR, "Sounds\\char.wav");	
@@ -239,7 +240,6 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point){  //滑鼠處理
 }
 
 void CGameStateInit::OnShow(){
-
 	if (windows == 0) {
 		menu.OnShowMenu(1);
 		if (chose == 0) {
@@ -371,7 +371,6 @@ void CGameStateRun::OnInit() {
 	std::string path = "";
 	for (int i = 1; i < 103; i++) {
 		path = "music\\"+std::to_string(i)+".wav";
-		
 		CAudio::Instance()->Load(i+5, (char *)path.c_str());	// 載入編號1的聲音lake.mp3
 	}
 

@@ -7,7 +7,7 @@ namespace game_framework {
 		Cchose();
 		~Cchose();
 		void LoadBitmap();
-		void OnShowMenu(int index);											// �N�ϧζK��e��
+		void OnShowMenu(int index);											
 		void OnShowSelect(int index);
 		void OnShowStage(int index);
 		void OnShowChar1(int index);

@@ -395,7 +395,7 @@ namespace game_framework {
 		setTimmer((*Frams)[_mode]._wait);
 		if ((*Frams)[_mode]._have_opiont) {
 			int i = (*Frams)[_mode]._op.getOid();
-			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),fl,lib,getOwner());
+			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),fl,lib,getOwner(),_a);
 			bool ftl;
 			if ((*Frams)[_mode]._op.getFacing() == 1) ftl = !Face_to_Left;
 			else ftl = Face_to_Left;
@@ -437,7 +437,6 @@ namespace game_framework {
 			break;
 		}
 		}
-		who = other;
 		stop = true;
 		
 	}
@@ -551,7 +550,7 @@ namespace game_framework {
 				skills = temp;
 			}
 			else {
-				wp* temp = new wp(oid, tempF._op.getAction(), fl, lib, getOwner());
+				wp* temp = new wp(oid, tempF._op.getAction(), fl, lib, getOwner(),_a);
 				bool ftl;
 				if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
 				else ftl = Face_to_Left;
@@ -1736,6 +1735,7 @@ namespace game_framework {
 	//
 
 	void ObjContainer::init(int p1,int p2) {
+		com.reset();
 		//
 		// 物品初始化
 		// 
@@ -2180,9 +2180,6 @@ namespace game_framework {
 	//
 	// ------------------------------電腦的部分------------------------------------------
 	//
-
-	
-
 	void AI::OnMove() {
 		for (int i = 0; i < n; i++) {
 			//
@@ -2426,4 +2423,6 @@ namespace game_framework {
 		}
 		return temp;
 	}
+
+
 }
