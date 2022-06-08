@@ -40,12 +40,4 @@ namespace game_framework {
 		
 	};
 
-	
-
-
-
-
-
-
-
 }

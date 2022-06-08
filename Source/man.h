@@ -872,7 +872,7 @@ namespace game_framework {
 			if (self != nullptr)
 				delete self;
 			if (Target != nullptr)
-				delete Target;
+				//delete Target;
 			if(commandType != nullptr)
 				delete commandType;
 			if (commandFinish != nullptr)
@@ -916,11 +916,11 @@ namespace game_framework {
 		int		numOfTarget;	// 目標的數量
 		man**	Target;			// 攻擊目標
 
-		bool*		commandFinish;		//指令完成
+		bool*	commandFinish;		//指令完成
 
-		int*		commandType;		// 打哪個種類
+		int*	commandType;		// 打哪個種類
 		
-		int*		commandState;		
+		int*	commandState;		
 
 		int*	_x;				//用於紀錄電腦指令移動
 		int*	_z;		

@@ -452,27 +452,6 @@ namespace game_framework {
 			delete v;
 		}
 
-		void setCpointBasic(int kind, int x, int y) {
-			_have_cpoint = true;
-			_cp.setKind(kind);
-			_cp.setLoation(x, y);
-		}
-		void setCpointING(int vaction, int decrease, int hurtable) {
-			_cp.setVaction(vaction);
-			_cp.setDecrese(decrease);
-			_cp.setHurtable(hurtable);
-		}
-		void setCpointAction(int aaction, int taction) {
-			_cp.setAction(aaction, taction);
-		}
-		void setCpointThrow(int injury, int throwvx, int throwvy, int throwvz) {
-			_cp.setInjury(injury);
-			_cp.setThrow(throwvx, throwvy, throwvz);
-		}
-		void setCpiontED(int backhurtact, int fronthurtact) {
-			_cp.setHurtAct(backhurtact, fronthurtact);
-		}
-
 		void setCpoint(int *v) {
 			_cp.setKind(v[0]);
 			_cp.setLoation(v[1], v[2]);

@@ -340,6 +340,7 @@ CGameStateRun::CGameStateRun(CGame *g)
 }
 
 CGameStateRun::~CGameStateRun(){
+	TRACE("RRRRRRRRRRRRR");
 }
 
 void CGameStateRun::OnBeginState(){
