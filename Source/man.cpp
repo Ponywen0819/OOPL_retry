@@ -2162,7 +2162,7 @@ namespace game_framework {
 	}
 
 	int ObjContainer::getEnemyHP() {
-		TRACE("%d\n", com->getTotalHP());
+		//TRACE("%d\n", com->getTotalHP());
 		return com->getTotalHP();
 	}
 

@@ -255,8 +255,10 @@ namespace game_framework {
 		over = FALSE;
 		audio = FALSE;
 		initcheckhp = FALSE;
+		initover = FALSE;
 		map = 0;
 		temp = 0;
+		tempover = 0;
 		delay();
 		if (temp > 10) {
 			obj->init(player1, player2);
@@ -479,11 +481,19 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
-		//if(obj->getHP() == 0)over = TRUE;
-		if (over) {
-			CAudio::Instance()->Stop(3);
-			CAudio::Instance()->Stop(4);
-			CAudio::Instance()->Stop(5);
+		TRACE("%d\n", tempover);
+		delay();
+		if (tempover > 30) {
+			TRACE("%d\n", obj->getHP());
+			if (obj->getHP() == 0) {
+				over = TRUE;
+			}	
+			if (over) {
+				CAudio::Instance()->Stop(3);
+				CAudio::Instance()->Stop(4);
+				CAudio::Instance()->Stop(5);
+			}
+			tempover = 0;
 		}
 		return over;
 	}
@@ -563,6 +573,7 @@ namespace game_framework {
 		for (int i = 0; i < 2; i++) {
 			if (--delay1 < 0) {
 				temp++;
+				tempover++;
 				delay1 = 10;
 			}
 		}

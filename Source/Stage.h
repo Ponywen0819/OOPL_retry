@@ -146,6 +146,7 @@ namespace game_framework {
 		boolean over;
 		boolean audio;
 		boolean initcheckhp;
+		boolean initover;
 		int *data;
 		int now_stage;
 		int map;
@@ -157,6 +158,7 @@ namespace game_framework {
 		int man_pos;
 		int delay1;
 		int temp;
+		int tempover;
 		int trans_index;
 		int _player1;
 		int _player2;
