@@ -109,7 +109,7 @@ namespace game_framework {
 			p1_hp1 = HP1;
 			p1_hp2 = HP2;
 		}
-		TRACE("%d %d\n", p1_hp1, p1_hp2);
+		//TRACE("%d %d\n", p1_hp1, p1_hp2);
 	}
 	void CStateBar::Player2HPState(int HP1, int HP2) {
 		if (HP1 == p2_hp1) {
@@ -125,7 +125,7 @@ namespace game_framework {
 	}
 
 	void CStateBar::setHP(int p,int HP1,int HP2) {
-		TRACE("%d %d %d \n",p,HP1,HP2);
+		//TRACE("%d %d %d \n",p,HP1,HP2);
 		if (p == 0) {
 			Player1HPState(HP1, HP2);
 		}
