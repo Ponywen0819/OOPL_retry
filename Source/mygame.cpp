@@ -86,7 +86,7 @@ void CGameStateInit::OnInit(){
 }
 
 void CGameStateInit::OnBeginState(){
-	
+	player1 = player2 = -1;
 	chose = 0;
 	windows = 0;			//0為開始結束,1為選角畫面
 	how = 0;
@@ -340,7 +340,6 @@ CGameStateRun::CGameStateRun(CGame *g)
 }
 
 CGameStateRun::~CGameStateRun(){
-	TRACE("RRRRRRRRRRRRR");
 }
 
 void CGameStateRun::OnBeginState(){
@@ -408,7 +407,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
-	GotoGameState(GAME_STATE_OVER);
+	allobj.test();
 }
 
 // 處理滑鼠的動作

@@ -365,9 +365,7 @@ namespace game_framework {
 				return 0;
 		}
 
-		void	print() {
-			TRACE("%d %d %d %d\n",flag[0], flag[1], flag[2], flag[3]);
-		}
+		void setHP(){ hp = 0; }
 
 		void	setplayer(int p, CStateBar* b){
 			player = p;
@@ -994,6 +992,16 @@ namespace game_framework {
 		void OnShow();
 	
 		void creatEnemy(int type, int x, int y);
+
+		void test() {
+			if (state == 0) {
+				mans[0]->setHP();
+				mans[1]->setHP();
+			}
+			else{
+				mans[0]->setHP();
+			}
+		}
 	private:
 		int		state;				// 使用者選用腳色的形況
 		allobj  a;					// 場上所有物品

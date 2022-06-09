@@ -481,10 +481,10 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
-		TRACE("%d\n", tempover);
+		//TRACE("%d\n", tempover);
 		delay();
 		if (tempover > 30) {
-			TRACE("%d\n", obj->getHP());
+			//TRACE("%d\n", obj->getHP());
 			if (obj->getHP() == 0) {
 				over = TRUE;
 			}	
