@@ -23,6 +23,7 @@ namespace game_framework {
 	//
 	//------------------------------珇场だ------------------------------------------
 	//
+	
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
 		if (beatenList == nullptr) {
@@ -109,6 +110,7 @@ namespace game_framework {
 	void obj::setArest(int n) {
 		arestC = n;
 	}
+	
 	int	 obj::getArest() {
 		return arestC;
 	}
@@ -118,6 +120,18 @@ namespace game_framework {
 		if (Face_to_Left) index = 0;
 		else index = 1;
 		lib->selectByNum(id, (*Frams)[_mode]._pic, index, int(_x) - mapdata[1], -int(_y) + int(_z));
+	}
+
+	void obj::showShadow() {
+		int x = 0;
+		int z = 0;
+
+		x = (*Frams)[_mode]._centerx;
+		x += int(_x);
+		z = int(_z);
+		
+		lib->showShadow(x - mapdata[1],z);
+
 	}
 
 	//
@@ -373,6 +387,7 @@ namespace game_framework {
 		if(id == 201)
 			toMotion(60);
 	}
+	
 	//
 	//------------------------------场だ------------------------------------------
 	//
@@ -1715,14 +1730,6 @@ namespace game_framework {
 		all = temp;
 	}
 
-	obj* allobj::getobj(int n) {
-		return (*(all + n));
-	}
-
-	obj* allobj::getSortObj(int n) {
-		return (*(s + n));
-	}
-
 	void allobj::so() {
 		s = new obj*[num];
 		for (int i = 0; i < num; i++) {
@@ -1731,6 +1738,15 @@ namespace game_framework {
 
 		std::sort(s, s + num, [](obj* a, obj* b) {return (a)->_z < (b)->_z; });
 	}
+	
+	obj* allobj::getobj(int n) {
+		return (*(all + n));
+	}
+
+	obj* allobj::getSortObj(int n) {
+		return (*(s + n));
+	}
+
 
 	//
 	//------------------------------北场だ------------------------------------------
@@ -2116,6 +2132,9 @@ namespace game_framework {
 	void ObjContainer::OnShow() {
 		bar.OnShowBar();
 		for (int i = 0; i < a.getN(); i++) {
+			(a.getSortObj(i))->showShadow();
+		}
+		for (int i = 0; i < a.getN(); i++) {
 			(a.getSortObj(i))->OnShow();
 		}
 	}
@@ -2423,7 +2442,7 @@ namespace game_framework {
 		}
 	}
 
-	int AI::getTotalHP() {
+	int	 AI::getTotalHP() {
 		int temp =0 ;
 		for (int i = 0; i < n; i++) {
 			int hp = (*(self + i))->hp;

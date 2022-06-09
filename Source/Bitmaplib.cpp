@@ -195,6 +195,8 @@ namespace game_framework {
 			arrow[0][i].LoadBitmap((char *)path.c_str(), RGB(0, 0, 0));
 		}
 	
+
+		shadow.LoadBitmap(".\\Bitmaps\\other\\SHADOW1.bmp",RGB(0,0,0));
 	}
 
 	void Bitmaplib::selectByNum(int ch,int n, int index, int x, int y) {
@@ -291,6 +293,12 @@ namespace game_framework {
 			break;
 		}
 	}
+
+	void Bitmaplib::showShadow(int x, int y) {
+		shadow.SetTopLeft(x-19, y);
+		shadow.ShowBitmap();
+	}
+	
 	void Framelib::init() {
 		loadFrame();
 	}

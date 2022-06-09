@@ -5,8 +5,8 @@ namespace game_framework {
 	public:
 		Bitmaplib();
 		void LoadBitmap();
-
 		void selectByNum(int ch, int n,int index,int x, int y);
+		void showShadow(int x,int y);
 	private:
 		CMovingBitmap tempPic[2][140];	//人物的圖片
 		CMovingBitmap FirenPic[2][190];	//人物的圖片
@@ -30,6 +30,8 @@ namespace game_framework {
 		CMovingBitmap freeze_ball[2][8];
 		CMovingBitmap clo[2][28];
 		CMovingBitmap ww[2][11];
+
+		CMovingBitmap shadow;
 
 	};
 
