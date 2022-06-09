@@ -57,16 +57,21 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
-#include "mygame.h"
 #include "man.h"
 #include "Bitmaplib.h"
+#include "string"
+#include "mygame.h"
+
 
 namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1,v = 1 , chose_stage = 0;//test
+int player1 = -1, player2 = -1, v = 1, chose_stage = 0;//test
+int count = 0;
 boolean a = FALSE;
+
+std::string Info = "";
 
 CGameStateInit::CGameStateInit(CGame *g)
 : CGameState(g){
@@ -287,8 +292,12 @@ void CGameStateInit::OnShow(){
 
 CGameStateOver::CGameStateOver(CGame *g)
 : CGameState(g){
+	for (int i = 0; i < 10; i++) data[i] = 0;
+
 }
 
+CGameStateOver::~CGameStateOver() {
+}
 void CGameStateOver::OnMove(){
 	counter--;
 	if (counter < 0)
@@ -297,37 +306,132 @@ void CGameStateOver::OnMove(){
 }
 
 void CGameStateOver::OnBeginState(){
-	counter = 30 * 5; // 5 seconds
+	counter = 300;
+	for (int i = 0; i < 10; i++) data[i] = 0;
+	playerState = -1;
+	dataproccess();
 }
 
 void CGameStateOver::OnInit(){
-	//
-	// 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
-	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
-	//
-	ShowInitProgress(66);	// 接個前一個狀態的進度，此處進度視為66%
-	//
-	// 開始載入資料
-	//
-	Sleep(300);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
-	//
-	// 最終進度為100%
-	//
+	ShowInitProgress(95);
+	title.LoadBitmap(".\\Bitmaps\\End.bmp");
+	row.LoadBitmap(".\\Bitmaps\\End2.bmp");
+	end.LoadBitmap(".\\Bitmaps\\down.bmp");
+	deep.LoadBitmap(".\\Bitmaps\\state\\deep_s.bmp",RGB(50,77,154));
+	freeze.LoadBitmap(".\\Bitmaps\\state\\freeze_s.bmp", RGB(50, 77, 154));
+	firen.LoadBitmap(".\\Bitmaps\\state\\firen_s.bmp", RGB(50, 77, 154));
+	WD.LoadBitmap(".\\Bitmaps\\WD.bmp");
+	WA.LoadBitmap(".\\Bitmaps\\WA.bmp");
+	LD.LoadBitmap(".\\Bitmaps\\LD.bmp");
 	ShowInitProgress(100);
 }
 
+void CGameStateOver::dataproccess() {
+	int i = 4;
+	int timeNow = 0;
+	std::string temp = "";
+	playerState = Info[0] - '0';
+	result = Info[2] - '0';
+	while (i < int(Info.size())) {
+		if (Info[i] == ',') {
+			data[timeNow++] = std::stoi(temp);
+			i++;
+			temp = "";
+		}
+		else {
+			temp += Info[i++];
+		}
+	}
+}
+
 void CGameStateOver::OnShow(){
+
+	//for (int i = 0; i < 10; i++) TRACE("\t%d\n", data[i]);
+	//TRACE("------------------------\n");
+	
+	title.SetTopLeft(226, 50);
+	title.ShowBitmap();
+
+
+	int numOfRow;
+	int endpos = 111;
+	if (playerState == 0) {
+		numOfRow = 2;
+	}
+	else {
+		numOfRow = 1;
+	}
+	for (int i = 0; i < numOfRow; i++) {
+		row.SetTopLeft(226, endpos);
+		row.ShowBitmap();	
+
+		int clopos = 316;
+		// 資訊顯示
+		//TRACE("%d\n", data[(i * 5)]);
+		switch (data[(i * 5)] ) {
+		case 0: {
+			deep.SetTopLeft(240,endpos);
+			deep.ShowBitmap();
+			break;
+		}
+		case 1: {
+			freeze.SetTopLeft(240, endpos);
+			freeze.ShowBitmap();
+			break;
+		}
+		case 2: {
+			firen.SetTopLeft(240, endpos);
+			firen.ShowBitmap();
+			break;
+		}
+		}
+
+		for (int j = 1; j < 4; j++) {
+			CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
+			CFont f, *fp;
+			f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
+			fp = pDC->SelectObject(&f);					// 選用 font f
+			pDC->SetBkMode(TRANSPARENT);
+			pDC->SetTextColor(RGB(255, 255, 0));
+			char str[80];								// Demo 數字對字串的轉換
+			sprintf(str, "%d", data[(i*5)+j]);
+			pDC->TextOut(clopos , endpos+10, str);
+			pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
+			CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+			clopos += 65;
+		}
+		clopos -= 10;
+		if (result == 0) {
+			LD.SetTopLeft(clopos, endpos+10 );
+			LD.ShowBitmap();
+		}
+		else {
+			if (data[(i * 5) + 4] == 1) {
+				WA.SetTopLeft(clopos, endpos +10);
+				WA.ShowBitmap();
+			}
+			else {
+				WD.SetTopLeft(clopos, endpos + 10);
+				WD.ShowBitmap();
+			}
+		}
+		endpos += 45;
+	}
+	end.SetTopLeft(226, endpos);
+	end.ShowBitmap();
+
 	CDC *pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC 
-	CFont f,*fp;
-	f.CreatePointFont(160,"Times New Roman");	// 產生 font f; 160表示16 point的字
-	fp=pDC->SelectObject(&f);					// 選用 font f
-	pDC->SetBkColor(RGB(0,0,0));
-	pDC->SetTextColor(RGB(255,255,0));
+	CFont f, *fp;
+	f.CreatePointFont(160, "Times New Roman");	// 產生 font f; 160表示16 point的字
+	fp = pDC->SelectObject(&f);					// 選用 font f
+	pDC->SetBkMode(TRANSPARENT);
+	pDC->SetTextColor(RGB(255, 255, 0));
 	char str[80];								// Demo 數字對字串的轉換
-	sprintf(str, "Game Over ! (%d)", counter / 30);
-	pDC->TextOut(240,210,str);
+	sprintf(str, "%d:%d", int(count/1800),int(count/30)%60);
+	pDC->TextOut(435, endpos, str);
 	pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 	CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -343,6 +447,7 @@ CGameStateRun::~CGameStateRun(){
 }
 
 void CGameStateRun::OnBeginState(){
+	count = 0;
 	stage.init(chose_stage + 1, &allobj, player1, player2);
 	allobj.reset();
 	allobj.initOfinit(player1, player2);
@@ -350,9 +455,12 @@ void CGameStateRun::OnBeginState(){
 }	
 
 void CGameStateRun::OnMove(){
+	count++;
 	allobj.OnMove();
-	stage.check(allobj.getEnemyHP());
 	
+	Info = allobj.getendInfo();
+	//TRACE("%s\n",Info.c_str());
+	stage.check(allobj.getEnemyHP());
 	if (stage.overgame()) {
 		GotoGameState(GAME_STATE_OVER);
 	}
@@ -407,12 +515,12 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
-	allobj.test();
+	//allobj.test();
 }
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
-	GotoGameState(GAME_STATE_OVER);
+	//GotoGameState(GAME_STATE_OVER);
 }
 
 // 顯示

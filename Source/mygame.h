@@ -113,6 +113,9 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
+
+		
+
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -132,13 +135,32 @@ namespace game_framework {
 	class CGameStateOver : public CGameState {
 	public:
 		CGameStateOver(CGame *g);
+		~CGameStateOver();
 		void OnBeginState();							// 設定每次重玩所需的變數
 		void OnInit();
+		void dataproccess();
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		int counter;	// 倒數之計數器
+
+		int result;
+		int playerState;
+		int data[10];
+
+
+
+		CMovingBitmap title;
+		CMovingBitmap row;
+		CMovingBitmap end;
+		CMovingBitmap deep;
+		CMovingBitmap firen;
+		CMovingBitmap freeze;
+
+		CMovingBitmap LD;
+		CMovingBitmap WD;
+		CMovingBitmap WA;
 	};
 
 }

@@ -485,7 +485,7 @@ namespace game_framework {
 		delay();
 		if (tempover > 30) {
 			//TRACE("%d\n", obj->getHP());
-			if (obj->getHP() == 0) {
+			if (!obj->end()) {
 				over = TRUE;
 			}	
 			if (over) {

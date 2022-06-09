@@ -506,6 +506,7 @@ namespace game_framework {
 			next = f;
 			hurt(afterhp);
 			mp -= aftermp;
+			total_mpcost += aftermp;
 		}
 
 
@@ -1663,6 +1664,7 @@ namespace game_framework {
 	void man::hurt(int d) {
 		HpRecover -= (d / 3);
 		hp -= d;
+		total_hpcost += d;
 	}
 	
 	//
@@ -2176,6 +2178,15 @@ namespace game_framework {
 		else if (state == 3)return -1;
 		else {
 			return mans[0]->getHP();
+		}
+	}
+
+	bool ObjContainer::end() {
+		if (state == 0) {
+			return mans[0]->isAlive() || mans[1]->isAlive();
+		}
+		else {
+			return mans[0]->isAlive();
 		}
 	}
 

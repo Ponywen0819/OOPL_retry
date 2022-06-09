@@ -293,6 +293,8 @@ namespace game_framework {
 
 			mpGap = hpGap = 0;
 			Alive = true;
+
+			total_hpcost = total_mpcost = total_damage = 0;
 		}
 		man(int ch, Framelib *f, Bitmaplib* b, allobj* al) :man() {
 			id = ch;
@@ -352,20 +354,22 @@ namespace game_framework {
 			return Alive;
 		}
 
-		int		getX() {
-			return int(_x);
-		}
-		int		getZ() {
-			return int(_z);
-		}
+		int		getX() { return int(_x); }
+		int		getZ() { return int(_z); }
 		int		getHP() {
 			if (hp > 0) 
 				return hp;
 			else 
 				return 0;
 		}
-
+		int		getID() { return id; }
+		int		getTotalHpCost() { return total_hpcost; }
+		int		getTotalMpCost() { return total_mpcost; }
+		int		getTotalDamage() { return total_damage; }
+		
 		void setHP(){ hp = 0; }
+
+
 
 		void	setplayer(int p, CStateBar* b){
 			player = p;
@@ -403,6 +407,7 @@ namespace game_framework {
 		void adjustPosition(int f_now,int f_next);
 
 		void hitSomeOne(obj *thoer) { 
+			total_damage += (*Frams)[_mode]._i.getInjury();
 			who = thoer; 
 			stop = true;
 		}
@@ -567,12 +572,13 @@ namespace game_framework {
 		int		NumOfMan;							// 在場上的人
 		int		SkillsMotion[8];					
 		int		cantBrTouchCount;				
+		int		hpGap, mpGap;						//血量與魔力恢復
+		int		total_hpcost, total_mpcost,total_damage;			// 血量與魔力總號耗損
 
 		//
 		// 計時相關
 		//
 
-		int		hpGap, mpGap;						//血量與魔力恢復
 
 		bool	inSpecialMotion;					// 在特殊動作中
 		bool	useSupperAtt;						// 可以使用終結季
@@ -978,6 +984,7 @@ namespace game_framework {
 
 		int  getEnemyHP();
 		int	 getHP();
+		bool end();
 
 		void reset() {
 			if (mans != nullptr)
@@ -993,15 +1000,56 @@ namespace game_framework {
 	
 		void creatEnemy(int type, int x, int y);
 
-		void test() {
+		std::string getendInfo() {
+			if (mans == nullptr) return std::string("");
+			
+			std::string temp = "";
+			temp+= std::to_string(state);
+			temp += ",";
 			if (state == 0) {
-				mans[0]->setHP();
-				mans[1]->setHP();
+				if ((mans[0]->getHP() > 0) || (mans[1]->getHP() > 0)) {
+					temp += '1';
+				}
+				else {
+					temp += '0';
+				}
+				temp += ',';
+
+				for (int i = 0; i < 2; i++) {
+					temp += std::to_string(mans[i]->getID());
+					temp += ",";
+					temp += std::to_string(mans[i]->getTotalDamage());
+					temp += ",";
+					temp += std::to_string(mans[i]->getTotalHpCost());
+					temp += ",";
+					temp += std::to_string(mans[i]->getTotalMpCost());
+					temp += ",";
+					temp += std::to_string(mans[i]->isAlive());
+					temp += ",";
+				}
 			}
-			else{
-				mans[0]->setHP();
+			else {
+				if (mans[0]->getHP() >0) {
+					temp += '1';
+				}
+				else {
+					temp += '0';
+				}
+				temp += ',';
+				temp+= std::to_string(mans[0]->getID());
+				temp += ",";
+				temp += std::to_string(mans[0]->getTotalDamage());
+				temp += ",";
+				temp += std::to_string(mans[0]->getTotalHpCost());
+				temp += ",";
+				temp += std::to_string(mans[0]->getTotalMpCost());
+				temp += ",";
+				temp += std::to_string(mans[0]->isAlive());
+				temp += ",";
 			}
+			return temp;
 		}
+		int getState() { return state; }
 	private:
 		int		state;				// 使用者選用腳色的形況
 		allobj  a;					// 場上所有物品
