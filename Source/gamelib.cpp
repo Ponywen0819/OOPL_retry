@@ -508,7 +508,7 @@ CGame::~CGame()
 {
 	for (int i = 0; i < NUM_GAME_STATES; i++) {
 		delete gameStateTable[i];
-		TRACE("R%d\n", i);
+		//TRACE("R%d\n", i);
 	}
 }
 

@@ -114,6 +114,16 @@ IDB_BITMAP3             BITMAP                  "..\\res\\bitmap3.bmp"
 
 IDC_GAMECURSOR          CURSOR                  "..\\res\\gamecurs.cur"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "D:\\work\\OOP\\OOPL\\RES\\1.ico"
+
 #endif    // 中文 (繁體，台灣) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -140,7 +150,7 @@ IDR_MAINFRAME           BITMAP                  "..\\res\\Toolbar.bmp"
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "..\\res\\game.ico"
+IDR_MAINFRAME           ICON                    "..\\res\\1.ico"
 
 IDR_GAMETYPE            ICON                    "..\\res\\gameDoc.ico"
 

@@ -25,7 +25,6 @@ namespace game_framework {
 
 	private:
 		int state;
-
 		int cma_x[4], cma_y[2];
 		int p1, p2;
 		int p1_hp1, p1_hp2, p1_mp, p2_hp1, p2_hp2, p2_mp;
