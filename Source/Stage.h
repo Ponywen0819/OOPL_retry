@@ -94,6 +94,7 @@ namespace game_framework {
 	public:
 		stage() {
 			delay1 = 100;
+			delay2 = 100;
 			now_stage = 0;
 			map = 0;
 			temp = 0;
@@ -122,7 +123,9 @@ namespace game_framework {
 		void OnShow(int);
 		void info();
 		void delay();
+		void overdelay();
 		void test();
+		void randObj(int,int, int, int, int, int);
 
 		int* getdata();
 		void check(int);
@@ -157,11 +160,14 @@ namespace game_framework {
 		int a;
 		int man_pos;
 		int delay1;
+		int delay2;
 		int temp;
 		int tempover;
 		int trans_index;
 		int _player1;
 		int _player2;
+		int randWidth;
+		int randBound;
 		ObjContainer* obj;
 	};
 

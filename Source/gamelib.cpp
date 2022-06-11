@@ -917,8 +917,10 @@ bool CDDraw::CreateSurface()
 bool CDDraw::CreateSurfaceFullScreen()
 {
     ddrval = lpDD->SetCooperativeLevel(AfxGetMainWnd()->m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
+	ddrval = lpDD->SetDisplayMode(640, 480, 32, 0, 0);
     CheckDDFail("Can not SetCooperativeLevel Exclusive");
-    ddrval = lpDD->SetDisplayMode(1280, 960, 32, 0, 0);
+	ddrval = lpDD->SetDisplayMode(800, 600, 32, 0, 0);
+
 	if (ddrval != DD_OK) {
 	    ddrval = lpDD->SetCooperativeLevel(AfxGetMainWnd()->m_hWnd, DDSCL_NORMAL);
 		CheckDDFail("Can not SetCooperativeLevel Normal");
@@ -1141,7 +1143,7 @@ DWORD CDDraw::MatchColorKey(LPDIRECTDRAWSURFACE lpDDSurface, COLORREF color)
 	DWORD dw=CLR_INVALID,mask=(DWORD)~0;
 	if (lpDDSurface && color != CLR_INVALID) {
 		if (lpDDSurface->GetDC(&hdc) == DD_OK) {
-			rgbT = GetPixel(hdc, 0, 0);             // save (0,0) pixel value
+			rgbT = GetPixel(hdc, 0, 0);             // (0,0) pixel value
 			SetPixel(hdc, 0, 0, color);             // set our value
 			lpDDSurface->ReleaseDC(hdc);
 		}

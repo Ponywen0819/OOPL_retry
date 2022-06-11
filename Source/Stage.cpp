@@ -8,6 +8,7 @@
 #include "Bitmaplib.h"
 #include "gamemap.h"
 #include "Stage.h"
+#include <time.h>
 #include <string>
 namespace game_framework {
 
@@ -247,8 +248,7 @@ namespace game_framework {
 		else if (now_stage == 3) {
 			trans_index = 11;
 		}
-
-
+		srand((unsigned int)time(NULL));
 		branch = FALSE;
 		main = TRUE;
 		clean = FALSE;
@@ -307,40 +307,26 @@ namespace game_framework {
 			data[0] = map_width = lf1->_map_width();
 			data[2] = upper_bound = lf1->_upper();
 			data[3] = lower_bound = lf1->_lower();
+
 			switch (trans_index) {
 			case 1:
 				obj->init(_player1, _player2);
-				obj->creatWeapon(10, 300, 300);
-				obj->creatEnemy(0, 1000, 400);
-				obj->creatEnemy(1, 900, 450);
+				obj->creatWeapon(11, 300, 300);
+				randObj(0,2, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 2:
-				obj->creatEnemy(0, 1500, 400);
-				obj->creatEnemy(0, 1400, 300);
-				obj->creatEnemy(0, 1200, 450);
+				randObj(0,3, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 3:
-				obj->creatEnemy(0, 2000, 500);
-				obj->creatEnemy(0, 1800, 400);
-				obj->creatEnemy(0, 1600, 380);
-				obj->creatEnemy(0, 1600, 450);
+				randObj(0,4, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 4:
-				obj->creatEnemy(0, 100, 370);
-				obj->creatEnemy(0, 200, 450);
-				obj->creatEnemy(0, 150, 400);
-				obj->creatEnemy(0, 1600, 375);
-				obj->creatEnemy(0, 1800, 480);
+				randObj(1,2, 10, map_width, lower_bound, upper_bound);
+				randObj(0,5, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 5:
-				obj->creatEnemy(0, 100, 300);
-				obj->creatEnemy(0, 200, 400);
-				obj->creatEnemy(0, 1000, 500);
-				obj->creatEnemy(0, 2000, 330);
-				obj->creatEnemy(0, 3000, 430);
-				obj->creatEnemy(0, 3200, 490);
-				obj->creatEnemy(0, 1800, 440);
-				obj->creatEnemy(0, 2500, 420);
+				randObj(1,2, 10, map_width, lower_bound, upper_bound);
+				randObj(0,7, 0, map_width, lower_bound, upper_bound);
 				break;
 			}
 		}
@@ -358,36 +344,22 @@ namespace game_framework {
 			switch (trans_index) {
 			case 6:
 				obj->init(_player1, _player2);
-				obj->creatEnemy(0, 1000, 300);
-				obj->creatEnemy(1, 900, 400);
+				randObj(1,2, 11, map_width, lower_bound, upper_bound);
+				randObj(0,2, 1, map_width, lower_bound, upper_bound);
 				break;
 			case 7:
-				obj->creatEnemy(0, 1500, 400);
-				obj->creatEnemy(0, 1400, 300);
-				obj->creatEnemy(1, 1200, 450);
+				randObj(1,2, 11, map_width, lower_bound, upper_bound);
+				randObj(0,3, 1, map_width, lower_bound, upper_bound);
 				break;
 			case 8:
-				obj->creatEnemy(0, 1500, 400);
-				obj->creatEnemy(0, 1400, 300);
-				obj->creatEnemy(1, 1200, 450);
-				obj->creatEnemy(1, 1600, 450);
+				randObj(0,4, 1, map_width, lower_bound, upper_bound);
 				break;
 			case 9:
-				obj->creatEnemy(0, 100, 370);
-				obj->creatEnemy(0, 200, 450);
-				obj->creatEnemy(0, 150, 400);
-				obj->creatEnemy(1, 1600, 375);
-				obj->creatEnemy(1, 1800, 480);
+				randObj(0,5, 1, map_width, lower_bound, upper_bound);
 				break;
 			case 10:
-				obj->creatEnemy(0, 100, 300);
-				obj->creatEnemy(0, 200, 400);
-				obj->creatEnemy(0, 250, 470);
-				obj->creatEnemy(0, 300, 330);
-				obj->creatEnemy(1, 1600, 430);
-				obj->creatEnemy(1, 1800, 490);
-				obj->creatEnemy(1, 2000, 440);
-				obj->creatEnemy(1, 2300, 420);
+				randObj(1,2, 11, map_width, lower_bound, upper_bound);
+				randObj(0,7, 1, map_width, lower_bound, upper_bound);
 				break;
 			}			
 		}
@@ -405,42 +377,29 @@ namespace game_framework {
 			switch (trans_index) {
 			case 11:
 				obj->init(_player1, _player2);
-				obj->creatEnemy(0, 1000, 330);
-				obj->creatEnemy(0, 900, 400);
-				obj->creatEnemy(1, 1100, 350);
-				obj->creatEnemy(1, 1200, 470);
+				randObj(1, 1, 10, map_width, lower_bound, upper_bound);
+				randObj(1, 1, 11, map_width, lower_bound, upper_bound);
+				randObj(0,1, 1, map_width, lower_bound, upper_bound);
+				randObj(0,1, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 12:
-				obj->creatEnemy(0, 1500, 400);
-				obj->creatEnemy(0, 1400, 330);
-				obj->creatEnemy(1, 1200, 450);
-				obj->creatEnemy(0, 900, 400);
-				obj->creatEnemy(1, 1100, 350);
+				randObj(0,2, 1, map_width, lower_bound, upper_bound);
+				randObj(0,2, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 13:
-				obj->creatEnemy(0, 100, 370);
-				obj->creatEnemy(0, 200, 450);
-				obj->creatEnemy(0, 150, 400);
-				obj->creatEnemy(1, 1600, 375);
-				obj->creatEnemy(1, 1800, 450);
+				randObj(1, 2, 10, map_width, lower_bound, upper_bound);
+				randObj(1, 2, 11, map_width, lower_bound, upper_bound);
+				randObj(0,3, 1, map_width, lower_bound, upper_bound);
+				randObj(0,3, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 14:
-				obj->creatEnemy(1, 1200, 450);
-				obj->creatEnemy(0, 900, 400);
-				obj->creatEnemy(1, 1100, 320);
-				obj->creatEnemy(0, 200, 450);
-				obj->creatEnemy(0, 150, 400);
-				obj->creatEnemy(1, 1600, 375);
+				randObj(0,4, 1, map_width, lower_bound, upper_bound);
+				randObj(0,4, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 15:
-				obj->creatEnemy(0, 100, 330);
-				obj->creatEnemy(0, 200, 400);
-				obj->creatEnemy(0, 250, 470);
-				obj->creatEnemy(0, 300, 380);
-				obj->creatEnemy(1, 1600, 430);
-				obj->creatEnemy(1, 1800, 460);
-				obj->creatEnemy(1, 2000, 440);
-				obj->creatEnemy(1, 2300, 420);
+				randObj(1, 20, 10, map_width, lower_bound, upper_bound);
+				randObj(0,6, 1, map_width, lower_bound, upper_bound);
+				randObj(0,6, 0, map_width, lower_bound, upper_bound);
 				break;
 			}
 		}
@@ -481,8 +440,7 @@ namespace game_framework {
 	}
 
 	boolean stage::overgame() {
-		//TRACE("%d\n", tempover);
-		delay();
+		overdelay();
 		if (tempover > 30) {
 			//TRACE("%d\n", obj->getHP());
 			if (!obj->end()) {
@@ -563,6 +521,23 @@ namespace game_framework {
 		else data[1] = man_pos - 400;
 	}
 
+	void stage::randObj(int chooseObj,int index,int type, int width, int lower_bound, int upper_bound) {
+		if (chooseObj == 0) {
+			for (int i = 0; i < index; i++) {
+				randWidth = rand() % (width + 800 - 800 + 1) + 800;
+				randBound = rand() % (lower_bound - upper_bound + 1) + upper_bound;
+				obj->creatEnemy(type, randWidth, randBound);
+			}
+		}
+		else if (chooseObj == 1) {
+			for (int i = 0; i < index; i++) {
+				randWidth = rand() % (width + 800 - 800 + 1) + 800;
+				randBound = rand() % (lower_bound - upper_bound + 1) + upper_bound;
+				obj->creatWeapon(type, randWidth, randBound);
+			}
+		}
+
+	}
 
 	int* stage::getdata() {
 		return data;
@@ -573,8 +548,15 @@ namespace game_framework {
 		for (int i = 0; i < 2; i++) {
 			if (--delay1 < 0) {
 				temp++;
-				tempover++;
 				delay1 = 10;
+			}
+		}
+	}
+	void stage::overdelay() {
+		for (int i = 0; i < 2; i++) {
+			if (--delay2 < 0) {
+				tempover++;
+				delay2 = 10;
 			}
 		}
 	}
