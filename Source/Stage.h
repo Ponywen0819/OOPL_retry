@@ -124,7 +124,6 @@ namespace game_framework {
 		void info();
 		void delay();
 		void overdelay();
-		void test();
 		void randObj(int,int, int, int, int, int);
 
 		int* getdata();

@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Source\Area.cpp" />
-    <ClCompile Include="Source\Bitmaplib.cpp" />
     <ClCompile Include="Source\Cchose.cpp" />
     <ClCompile Include="Source\audio.cpp" />
     <ClCompile Include="Source\CBall.cpp" />
@@ -19,6 +18,7 @@
     <ClCompile Include="Source\gamelib.cpp" />
     <ClCompile Include="Source\mygame.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
+    <ClCompile Include="Source\Bitmaplib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Area.h" />

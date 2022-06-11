@@ -482,8 +482,7 @@
 <frame_end>
 
 <frame> 60 on_ground
-   pic: 2  state: 1003  wait: 1  next: 61  dvx: 0  dvy: 0  centerx: 36  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: data\023.wav 
+   pic: 2  state: 1003  wait: 1  next: 61  dvx: 0  dvy: 0  centerx: 36  centery: 56  hit_a: 0  hit_d: 0  hit_j: 0 sound: 23
 <frame_end>
 
 <frame> 61 on_ground

@@ -7,6 +7,12 @@ namespace game_framework {
 		void LoadBitmap();
 		void selectByNum(int ch, int n,int index,int x, int y);
 		void showShadow(int x,int y);
+
+		static Bitmaplib* Instance() {
+			return &lib;
+		}
+
+		static Bitmaplib lib;
 	private:
 		CMovingBitmap tempPic[2][140];	//人物的圖片
 		CMovingBitmap FirenPic[2][190];	//人物的圖片
@@ -33,12 +39,12 @@ namespace game_framework {
 
 		CMovingBitmap shadow;
 
+
 	};
 
 	class Framelib {
 	public:
 		Framelib() {
-
 		}
 		void init();
 
@@ -116,9 +122,15 @@ namespace game_framework {
 			}
 			}
 		}
+
+		static Framelib* Instance() {
+			return &flib;
+		}
 	private:
 		int * extra(std::string &line, std::string *tar, int number);
 		void  loadFrame();
+		static Framelib flib;
+
 
 		std::map<int, Frame> Frams_t;
 		std::map<int, Frame> Frams_firen;

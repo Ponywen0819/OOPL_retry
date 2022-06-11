@@ -14,34 +14,25 @@ namespace game_framework {
 	class obj{
 	public:
 		obj() { 
-			Frams = nullptr; 
 			_mode = 0; 
-			_x = _y = _z = 0.0; 
-			beatenCount = 0;
-			beatenCount = nullptr;
-			beatenList = nullptr;
-			numOfBeaten = 0;
-			Face_to_Left = true;
-			inMotion = false;
-			Caught = nullptr;
 			arestC = 0;
+			beatenCount = 0;
+			numOfBeaten = 0;
+			_x = _y = _z = 0.0; 
+			Frams = nullptr; 
+			beatenList = nullptr;
+			beatenCount = nullptr;
+			Caught = nullptr;
 			Alive = true;
+			Face_to_Left = true;
 			stop = false;
+			inMotion = false;
 			hit = holdinglt = holdingheavy = false;
 
 			maxx = map_pos = upbond = underbond = 0;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
-		}
-		
-		~obj() {
-			if (beatenCount != nullptr) {
-				delete beatenCount;
-			}
-			if (beatenList != nullptr) {
-				delete beatenList;
-			}
 		}
 		obj& operator=(const obj& o) {
 			if (this != &o) {
@@ -58,14 +49,23 @@ namespace game_framework {
 			return *this;
 		}
 		
-
+		~obj() {
+			if (beatenCount != nullptr) {
+				delete beatenCount;
+			}
+			if (beatenList != nullptr) {
+				delete beatenList;
+			}
+		}
+		
 		void OnShow();
-		void setmax(int x) { maxx = x; }
 		void mapSetting(int* data) {
-			maxx = data[0]; map_pos = data[1]; upbond = data[2]; underbond = data[3];
+			maxx = data[0]; 
+			map_pos = data[1]; 
+			upbond = data[2]; 
+			underbond = data[3];
 			mapdata = data;
 		}
-		void init(obj** a, int n) { Frams = fl->getFrame(id); }
 		void setArest(int n);
 		void addBeaten(obj *who);
 		void restList();
@@ -103,18 +103,18 @@ namespace game_framework {
 			return false;
 		}
 		bool checkBeenBeaten(obj *who);
-		
+
 		Frame getNoFrame() { return (*Frams)[_mode]; }
 		
 
 		virtual void OnMove() = 0;
-		virtual void holdingSth(obj* thing) {}
-		virtual void hitSomeOne(obj* other) {}
+		virtual void setdir(bool f) {}
+		virtual void nextFrame() {};
 		virtual void backToRandon() {};
 		virtual void toMotion(int next) {};
-		virtual void nextFrame() {};
+		virtual void holdingSth(obj* thing) {}
+		virtual void hitSomeOne(obj* other) {}
 		virtual void setYstep(double G, double x, double z) {}
-		virtual void setdir(bool f) {}
 
 		virtual bool isAlive() { return Alive; }
 		
@@ -125,23 +125,18 @@ namespace game_framework {
 
 		std::map<int, Frame> *Frams;// 動作資料表
 		
-
-		Bitmaplib*	lib;			// 圖片輸出
-		Framelib*	fl;				// 為了要創造
-		
-
 		obj*	Caught;				// 被抓住的人
 		obj**	beatenList;			// 被打到的人
 
+		int		id;					// 代表自己是什麼
 		int		_mode;				// 現在的模式
-		int		id;						//代表自己是什麼
-		int		maxW,maxH;			// 此物品圖片大小
 		int		numOfBeaten;		// 有多少人被打到
 		int		cc;					// 抓人計數
 		int		time;				// 計數
 		int		arestC;				// 多久之後才可以打人
 		int		hp;					// 血量
 		int		kind;				// 此物品的種類
+		int		maxW,maxH;			// 此物品圖片大小
 		int		maxx, map_pos;		// 地圖的最大值
 		int		upbond, underbond;	// 地圖的上下界線 
 		
@@ -191,13 +186,9 @@ namespace game_framework {
 		
 		obj* getobj(int n);
 
-		obj** getall() {
-			return all;
-		}
+		obj** getall() { return all; }
 
-		int getN() {
-			return num;
-		}
+		int getN() { return num; }
 	private:
 		int num;
 		obj** all;
@@ -265,10 +256,8 @@ namespace game_framework {
 
 			total_hpcost = total_mpcost = total_damage = 0;
 		}
-		man(int ch, Framelib *f, Bitmaplib* b, allobj* al) :man() {
+		man(int ch,allobj* al) :man() {
 			id = ch;
-			lib = b;
-			fl = f;
 			_a = al;
 			switch (ch) {
 			case 0: {
@@ -295,14 +284,10 @@ namespace game_framework {
 			default:
 				break;
 			}
-			Frams = fl->getFrame(id);
+			Frams = Framelib::Instance()->getFrame(id);
 		}
 		~man() {
 
-		}
-
-		void	getFl(Framelib* a) {
-			fl = a;
 		}
 		void	setComm(UINT comm);					// 設定指令
 		void	cComm(UINT comm);					// 取消指令					
@@ -449,10 +434,7 @@ namespace game_framework {
 
 		}
 		void	hurt(int d);
-
-		bool	isAlive() {
-			return Alive;
-		}
+		
 		bool	isTime() { return time == 0; }			
 		
 		int		getNextWalkMotion() {
@@ -557,9 +539,7 @@ namespace game_framework {
 			kind = 2;
 		}
 		
-		weapon(int n, int mode, Framelib *f, Bitmaplib* b, obj* ow,allobj * all) :weapon() {
-			fl = f;
-			lib = b;
+		weapon(int n, int mode, obj* ow,allobj * all) :weapon() {
 			id = n;
 			_mode = mode;
 			switch (id){
@@ -581,7 +561,7 @@ namespace game_framework {
 			default:
 				break;
 			}
-			Frams = fl->getFrame(id);
+			Frams = Framelib::Instance()->getFrame(id);
 			holding = ow;
 
 			_a = all;
@@ -617,9 +597,7 @@ namespace game_framework {
 			else JumpBack = true;
 			throwing = true;
 		}
-		void holdingSth(obj* thing) {
-			holding = thing;
-		}
+		void holdingSth(obj* thing) { holding = thing; }
 	
 	private:
 		void moveY() {
@@ -691,9 +669,7 @@ namespace game_framework {
 		
 		}
 
-		wp(int n,int mode, Framelib *f, Bitmaplib* b,obj* ow, allobj * all):wp(){
-			fl = f;
-			lib = b;
+		wp(int n,int mode,obj* ow, allobj * all):wp(){
 			id = n;
 			owner = ow;
 			this->_a = all;
@@ -744,7 +720,7 @@ namespace game_framework {
 				break;
 			}
 			}
-			Frams = fl->getFrame(id);
+			Frams = Framelib::Instance()->getFrame(id);
 			_mode = mode;
 			setTimmer((*Frams)[_mode]._wait);
 		}
@@ -876,14 +852,9 @@ namespace game_framework {
 			bar.init(player1, player2);
 		}
 		void init(int player1,int player2);
-		void load(Bitmaplib *l, Framelib* f) {
-			lib = l;
-			fl = f;
+		void load() {
 			bar.LoadBitmap();
 		}
-		void creatWeapon(int n,int x,int z);
-		void KeyUp(UINT nChar);
-		void KeyDown(UINT nChar);
 		void reset() {
 			if (mans != nullptr)
 				delete mans;
@@ -891,13 +862,16 @@ namespace game_framework {
 			a.reset();
 			com->reset();
 		}
-		void mapSetting(int* data);
+		void check();
 		void OnMove();
 		void OnShow();
+		void KeyUp(UINT nChar);
+		void KeyDown(UINT nChar);
+		void mapSetting(int* data);
+		void creatWeapon(int n,int x,int z);
 		void creatEnemy(int type, int x, int y);
-		void check();
 
-		int getState() { return state; }
+		int	 getState() { return state; }
 		int  getX() {
 			if (mans == nullptr) return 0;
 			if (state == 0) {
@@ -974,15 +948,11 @@ namespace game_framework {
 		}
 	private:
 		int		state;				// 使用者選用腳色的形況
-		
-		int* map_data;				// 地圖的設定值
-		
-		man**	mans;				// 人物
+		int*	map_data;			// 地圖的設定值
 		AI*		com;				// 電腦
+		man**	mans;				// 人物
 		allobj  a;					// 場上所有物品
-		CStateBar bar;				// 狀態條
-		Framelib* fl;
-		Bitmaplib* lib;				
+		CStateBar bar;				// 狀態條		
 	};
 
 	

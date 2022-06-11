@@ -456,10 +456,6 @@ namespace game_framework {
 		return over;
 	}
 
-	void stage::test() {
-		
-
-	}
 
 
 	void stage::OnShow(int _man_pos) {
@@ -539,9 +535,7 @@ namespace game_framework {
 
 	}
 
-	int* stage::getdata() {
-		return data;
-	}
+	int* stage::getdata() { return data; }
 
 
 	void stage::delay() {

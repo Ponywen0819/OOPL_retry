@@ -487,6 +487,7 @@
       kind: 0  x: 3  y: 4  w: 40  h: 39
    bdy_end:
 <frame_end>
+
 <frame> 81 super_arrow
    pic: 21  state: 3006  wait: 1  next: 82  dvx: 0  dvy: 0  centerx: 24  centery: 40
    itr:
@@ -496,6 +497,7 @@
       kind: 0  x: 3  y: 4  w: 40  h: 39
    bdy_end:
 <frame_end>
+
 <frame> 82 super_arrow
    pic: 22  state: 3006  wait: 1  next: 83  dvx: 0  dvy: 0  centerx: 24  centery: 40
    itr:
@@ -505,6 +507,7 @@
       kind: 0  x: 3  y: 4  w: 40  h: 39
    bdy_end:
 <frame_end>
+
 <frame> 83 super_arrow
    pic: 23  state: 3006  wait: 1  next: 84  dvx: 0  dvy: 0  centerx: 24  centery: 40
    itr:
@@ -514,6 +517,7 @@
       kind: 0  x: 3  y: 4  w: 40  h: 39
    bdy_end:
 <frame_end>
+
 <frame> 84 super_arrow
    pic: 24  state: 3006  wait: 1  next: 85  dvx: 0  dvy: 0  centerx: 24  centery: 40
    itr:
@@ -523,6 +527,7 @@
       kind: 0  x: 3  y: 4  w: 40  h: 39
    bdy_end:
 <frame_end>
+
 <frame> 85 super_arrow
    pic: 25  state: 3006  wait: 1  next: 80  dvx: 0  dvy: 0  centerx: 24  centery: 40
    itr:

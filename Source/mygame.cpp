@@ -57,8 +57,8 @@
 #include <ddraw.h>
 #include "audio.h"
 #include "gamelib.h"
-#include "man.h"
 #include "Bitmaplib.h"
+#include "man.h"
 #include "string"
 #include "mygame.h"
 
@@ -468,13 +468,14 @@ void CGameStateRun::OnMove(){
 
 void CGameStateRun::OnInit() {
 
-	allobj.load(&Blib, &Flib);
+	Bitmaplib::Instance()->LoadBitmap();
+
+	allobj.load();
 
 	ShowInitProgress(33);
-	Blib.LoadBitmap();
 
 	ShowInitProgress(65);
-	Flib.init();
+	Framelib::Instance()->init();
 
 	std::string path = "";
 	for (int i = 1; i < 103; i++) {
@@ -526,6 +527,6 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
 // Εγ₯ά
 void CGameStateRun::OnShow() {
 	stage.OnShow(allobj.getX());
-	allobj.OnShow();	
+	allobj.OnShow();
 }
 }

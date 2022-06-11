@@ -70,7 +70,6 @@
    itr:
       kind: 14  x: 21  y: 37  w: 16  h: 18   vrest: 1
    itr_end:
-
    bdy:
       kind: 0  x: 11  y: 15  w: 36  h: 40
    bdy_end:

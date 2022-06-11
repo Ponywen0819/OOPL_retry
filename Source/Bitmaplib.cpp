@@ -2,16 +2,16 @@
 #include "Resource.h"
 #include <mmsystem.h>
 #include <ddraw.h>
-#include "audio.h"
-#include "gamelib.h"
 #include <string>
 #include <map>
-#include "Frame.h"
 #include <fstream>
 #include <sstream>
+#include "Frame.h"
+#include "gamelib.h"
 #include "Bitmaplib.h"
 
 namespace game_framework {
+	Bitmaplib Bitmaplib::lib;
 
 	Bitmaplib::Bitmaplib() {}
 
@@ -299,6 +299,9 @@ namespace game_framework {
 		shadow.ShowBitmap();
 	}
 	
+
+	Framelib Framelib::flib;
+
 	void Framelib::init() {
 		loadFrame();
 	}
@@ -394,4 +397,6 @@ namespace game_framework {
 		}
 		//TRACE("%d\n", fire_ball[51]._pic);
 	}
+
+	
 }
