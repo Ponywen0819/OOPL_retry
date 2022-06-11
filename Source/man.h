@@ -305,14 +305,13 @@ namespace game_framework {
 		}
 		void	moveY() {
 			_y -= initG;
-		
 			if (JumpFront) {_x += stepx;}
 			if (JumpBack) {_x -= stepx;}
 			if (JumpUp) { _z -= stepz; }
 			if (JumpDown) { _z += stepz; }
 
 			if (_y <= (*Frams)[_mode]._centery) {
-				_y = maxH;
+				_y = (*Frams)[_mode]._centery;
 				stepx = stepz = initG = 0;
 				JumpFront = JumpBack = JumpUp = JumpDown = false;
 			}
@@ -842,21 +841,19 @@ namespace game_framework {
 			com = new AI();
 		}
 		~ObjContainer() {
-			if(mans != nullptr)
+			if (mans != nullptr) {
 				delete mans;
+			}
 			delete com;
 		}
 		
-		void initOfinit(int player1, int player2) {
-			bar.init(player1, player2);
-		}
+		void initOfinit(int player1, int player2) { bar.init(player1, player2); }
 		void init(int player1,int player2);
-		void load() {
-			bar.LoadBitmap();
-		}
+		void load() { bar.LoadBitmap(); }
 		void reset() {
-			if (mans != nullptr)
+			if (mans != nullptr) {
 				delete mans;
+			}
 			mans = nullptr;
 			a.reset();
 			com->reset();

@@ -152,7 +152,6 @@ namespace game_framework {
 
 	void weapon::nextFrame() {
 		int temp = (*Frams)[_mode]._next;
-		//TRACE("%d %d\n",temp,_mode);
 		if (temp == 999) {
 			toMotion(0);
 		}
@@ -167,7 +166,6 @@ namespace game_framework {
 	}
 
 	void weapon::OnMove() {
-		//TRACE("%.1f %.1f %d %d\n",initG,_y, ((*Frams)[_mode]._centery),_mode);
 		if (holding == nullptr) {
 			moveY();
 			if (isTime()) {
@@ -252,14 +250,11 @@ namespace game_framework {
 					}
 					break;
 				}
-				case 2: {
-					TRACE("1\n");
+				case 2: {;
 					if (myF._have_itr && myF._i.getKind()!=14) continue;
-					TRACE("2\n");
 					holding = temp_obj;
 					temp_obj->holdingSth(this);
 					if (id == 11) {
-						TRACE("3\n");
 						temp_obj->toMotion(116);
 						temp_obj->holdingheavy = true;
 					}
@@ -645,7 +640,6 @@ namespace game_framework {
 			}
 		}
 		else{
-			//TRACE("right %d\n", (*Frams)[_mode]._state);
 			// ¯S®í°Ê§@
 			switch ((*Frams)[_mode]._state){
 			case 2: {
@@ -1104,7 +1098,6 @@ namespace game_framework {
 				if ((myF._state == 12 || myF._state == 18)&& tempf._i.getFall() < 60) {
 					continue;
 				}
-				// TRACE("%d %d \n",temp_obj->id, tempf._i.getKind());
 
 				int eff;
 				switch (tempf._i.getKind()) {
@@ -1604,7 +1597,6 @@ namespace game_framework {
 
 		if (holdinglt || holdingheavy) {
 			wpoint temp = this->getNoFrame()._wp;
-			//TRACE("%d %d \n", temp.get_weaponact(), _mode);
 			holding->_mode = temp.get_weaponact();
 
 			wpoint ht = holding->getNoFrame()._wp;
@@ -1677,6 +1669,9 @@ namespace game_framework {
 	//
 	void allobj::init() {
 		if (all != nullptr) {
+			for (int i = 0; i < num; i++) {
+				delete all[i];
+			}
 			delete[] all;
 		}
 		all = nullptr;
@@ -2166,7 +2161,6 @@ namespace game_framework {
 	}
 
 	int ObjContainer::getEnemyHP() {
-		//TRACE("%d\n", com->getTotalHP());
 		return com->getTotalHP();
 	}
 
@@ -2231,7 +2225,6 @@ namespace game_framework {
 				else
 					se = 200;
 			}
-			//TRACE("%d\n", diffx);
 
 			for (int j = 1; j < 7; j++)com_now->cComm(j);
 			if (abs(diffx)>500) {
