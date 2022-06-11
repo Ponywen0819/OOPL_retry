@@ -404,7 +404,7 @@ namespace game_framework {
 	}
 
 	void stage::check(int enemyhp) {
-	if (enemyhp == 0 && map != 0) {
+	if ((!obj->enemystate()) && map != 0) {
 			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width + 750) {
 				if (main) {
 					now_stage++;

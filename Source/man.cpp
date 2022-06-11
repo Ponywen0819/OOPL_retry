@@ -522,9 +522,10 @@ namespace game_framework {
 		inMotion = true;
 		Frame tempF = (*Frams)[_mode];
 		setTimmer(tempF._wait);
+		
 		int numOFwav = tempF._sound;
-		if(numOFwav!=0)  
-			CAudio::Instance()->Play(numOFwav+5);
+		if(numOFwav!=0)	CAudio::Instance()->Play(numOFwav+5);
+		
 		if (tempF._have_opiont) {
 			int oid = tempF._op.getOid();
 			if (oid == 12) {
@@ -2174,9 +2175,9 @@ namespace game_framework {
 		}
 	}
 
-	void ObjContainer::kill() {
-		com->kill();
-	}
+	bool ObjContainer::enemystate() { return com->state(); }
+
+	void ObjContainer::kill() { com->kill(); }
 
 	//
 	// ------------------------------電腦的部分------------------------------------------
@@ -2227,12 +2228,19 @@ namespace game_framework {
 				}
 				else if ((*(com_now->Frams))[com_now->_mode]._state != 2) {
 					if (diffx < 0) {
-						com_now->Face_to_Left = false;
+						com_now->setComm(2);
 					}
 					else {
-						com_now->Face_to_Left = true;
+						com_now->setComm(1);
 					}
-					com_now->toMotion(9);
+					
+					if (com_now->Face_to_Left) {
+						com_now->setComm(1);
+					}
+					else {
+						com_now->setComm(2);
+					}
+
 				}
 				if (diffz < -10) {
 					com_now->setComm(4);
@@ -2303,10 +2311,7 @@ namespace game_framework {
 							if ((rand() % 10) == 0) { com_now->setComm(1); }
 						}
 					}
-					
 				}
-
-
 			}
 		}
 	}
@@ -2406,10 +2411,8 @@ namespace game_framework {
 
 	void AI::check() {
 		int i = 0;
-		TRACE("%d\n", n);
 		while (i < n) {
-			TRACE("\t%d\n",i);
-			if (! ((*(self + i))->isAlive())) {
+			if ( !((*(self + i))->isAlive()) ) {
 				del(i);
 			}
 			else {
@@ -2421,7 +2424,7 @@ namespace game_framework {
 	int	 AI::getTotalHP() {
 		int temp =0 ;
 		for (int i = 0; i < n; i++) {
-			int hp = (*(self + i))->hp;
+			int hp = (*(self + i))->getHP();
 			if (hp < 0) {
 				temp += 0;
 			}
@@ -2433,9 +2436,17 @@ namespace game_framework {
 	}
 
 	void AI::kill() {
-		int i = 0;
-		while (i< n) {
-			(*(self + i++))->hurt(500, false);
+		for (int i = 0; i < n; i++) {
+			(*(self + i))->hurt(9999, false);
 		}
+	}
+
+	bool AI::state() {
+		for (int i = 0; i < n; i++) {
+			if (((*(self + i))->isAlive())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

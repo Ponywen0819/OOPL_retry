@@ -347,7 +347,6 @@ namespace game_framework {
 			if (HpRecover > hp && --hpGap <= 0 && hp <MaxHp && hp > 0) {
 				hp++;
 				hpGap = 12;
-
 			}
 
 			// 魔力回復相關
@@ -822,6 +821,7 @@ namespace game_framework {
 		int  getTotalHP();
 		int  getComnum() { return n; }
 
+		bool state();
 	private:
 		int		n;				// 電腦的數量	
 		int		numOfTarget;	// 目標的數量
@@ -896,6 +896,7 @@ namespace game_framework {
 		int  getEnemyHP();
 
 		bool end();
+		bool enemystate();
 
 		std::string getendInfo() {
 			if (mans == nullptr) return std::string("");
