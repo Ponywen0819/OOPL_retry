@@ -562,10 +562,6 @@
 
 <frame> 60 punch
    pic: 10  state: 3  wait: 1  next: 61  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 mp: 12
-   itr:
-      kind: 2  x: 18  y: 60  w: 44  h: 18  vrest: 1  
-      
-   itr_end:
    bdy:
       kind: 0  x: 28  y: 13  w: 33  h: 63
    bdy_end:
@@ -613,10 +609,6 @@
 
 <frame> 65 punch
    pic: 10  state: 3  wait: 1  next: 61  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 mp: 12
-   itr:
-      kind: 2  x: 18  y: 60  w: 44  h: 18  vrest: 1  
-      
-   itr_end:
    bdy:
       kind: 0  x: 28  y: 13  w: 33  h: 63
    bdy_end:
@@ -1124,7 +1116,6 @@
    pic: 41  state: 10  wait: 3  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
       kind: 2  x: 36  y: 38
-      
    cpoint_end:
    wpoint:
       kind: 1  x: 48  y: 47  weaponact: 20  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -1135,7 +1126,6 @@
    pic: 42  state: 10  wait: 3  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
       kind: 2  x: 44  y: 40
-      
    cpoint_end:
    wpoint:
       kind: 1  x: 47  y: 58  weaponact: 23  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -1146,7 +1136,6 @@
    pic: 43  state: 10  wait: 3  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
       kind: 2  x: 46  y: 51
-      
    cpoint_end:
    wpoint:
       kind: 1  x: 41  y: 69  weaponact: 24  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -1157,7 +1146,6 @@
    pic: 44  state: 10  wait: 3  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 74  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
       kind: 2  x: 45  y: 66
-      
    cpoint_end:
    wpoint:
       kind: 1  x: 49  y: 76  weaponact: 24  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
@@ -1168,7 +1156,6 @@
    pic: 45  state: 10  wait: 3  next: 0  dvx: 0  dvy: 0  dvz: 0  centerx: 39  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
    cpoint:
       kind: 2  x: 42  y: 55
-      
    cpoint_end:
    wpoint:
       kind: 1  x: 47  y: 70  weaponact: 24  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 

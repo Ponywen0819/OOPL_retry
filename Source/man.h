@@ -58,7 +58,13 @@ namespace game_framework {
 			}
 		}
 		
+		void del(int n);
 		void OnShow();
+		void bcount();
+		void restList();
+		void showShadow();
+		void setArest(int n);
+		void addBeaten(obj *who);
 		void mapSetting(int* data) {
 			maxx = data[0]; 
 			map_pos = data[1]; 
@@ -66,14 +72,8 @@ namespace game_framework {
 			underbond = data[3];
 			mapdata = data;
 		}
-		void setArest(int n);
-		void addBeaten(obj *who);
-		void restList();
-		void bcount();
-		void del(int n);
-		void showShadow();
 
-		int getArest();
+		int  getArest();
 		
 		bool touch(obj * o) {
 			if (o->id == 213 || o->id == 215) {
@@ -116,7 +116,7 @@ namespace game_framework {
 		virtual void hitSomeOne(obj* other) {}
 		virtual void setYstep(double G, double x, double z) {}
 
-		virtual bool isAlive() { return Alive; }
+		bool isAlive() { return Alive; }
 		
 		virtual obj* getOwner() { return this; }
 		virtual obj* usingSkills() { return nullptr; }
@@ -312,6 +312,7 @@ namespace game_framework {
 			if (JumpDown) { _z += stepz; }
 
 			if (_y <= (*Frams)[_mode]._centery) {
+				_y = maxH;
 				stepx = stepz = initG = 0;
 				JumpFront = JumpBack = JumpUp = JumpDown = false;
 			}
@@ -437,6 +438,18 @@ namespace game_framework {
 		
 		bool	isTime() { return time == 0; }			
 		
+		int		getX() { return int(_x); }
+		int		getZ() { return int(_z); }
+		int		getID() { return id; }
+		int		getHP() {
+			if (hp > 0)
+				return hp;
+			else
+				return 0;
+		}
+		int		getTotalHpCost() { return total_hpcost; }
+		int		getTotalMpCost() { return total_mpcost; }
+		int		getTotalDamage() { return total_damage; }
 		int		getNextWalkMotion() {
 			if (walk_Ani_dir) {
 				if (++Walk_Ani_num >= 9) {
@@ -452,20 +465,7 @@ namespace game_framework {
 			}
 			return Walk_Ani_num;
 		}
-		int		getX() { return int(_x); }
-		int		getZ() { return int(_z); }
-		int		getHP() {
-			if (hp > 0)
-				return hp;
-			else
-				return 0;
-		}
-		int		getID() { return id; }
-		int		getTotalHpCost() { return total_hpcost; }
-		int		getTotalMpCost() { return total_mpcost; }
-		int		getTotalDamage() { return total_damage; }
 
-		
 		obj*	usingSkills() {
 			obj* a = skills;
 			skills = nullptr;
@@ -514,7 +514,6 @@ namespace game_framework {
 		bool	_dir[4];							// 方向
 		bool	flag[7];							// keyboard input flag
 		bool	first_att_animation;				// 是不是出左拳
-		bool	Alive;								// 是否活著
 		bool	walk_Ani_dir;						// 走路動作的方向
 		bool	run_Ani_dir;						// 跑步動作的方向
 		bool	jumping;							// 正在跳躍

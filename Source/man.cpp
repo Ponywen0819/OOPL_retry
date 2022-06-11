@@ -1432,7 +1432,6 @@ namespace game_framework {
 	void man::OnMove() {
 		if (!Alive) return;
 
-		//TRACE("%d\n",_mode);
 		if (stop) {
 			if (who->hit) {
 				return;
@@ -1443,9 +1442,7 @@ namespace game_framework {
 		}
 		
 		//負責動作的變更
-		if (isTime()) {
-			nextFrame();
-		}
+		if (isTime()) { nextFrame(); }
 		Count();
 		int stateNow = (*Frams)[_mode]._state;
 		moveY();
@@ -1659,8 +1656,9 @@ namespace game_framework {
 		}
 	}
 
-	//處理指令輸入時間間隔
-	void man::setCountDwon() {
+	
+	void man::setCountDwon()	//處理指令輸入時間間隔
+	{
 		_Double_Tap_Gap = 75;
 	}
 
@@ -1677,7 +1675,6 @@ namespace game_framework {
 	//
 	//------------------------------物品容器------------------------------------------
 	//
-
 	void allobj::init() {
 		if (all != nullptr) {
 			delete[] all;
@@ -1743,7 +1740,6 @@ namespace game_framework {
 	//
 	//------------------------------主控的部分------------------------------------------
 	//
-
 	void ObjContainer::init(int p1,int p2) {
 		//------------------------- 物品初始化
 		a.init();
