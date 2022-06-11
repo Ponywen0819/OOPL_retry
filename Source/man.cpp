@@ -511,7 +511,9 @@ namespace game_framework {
 		}
 		else {
 			next = f;
-			hurt(afterhp);
+			HpRecover -= (afterhp / 3);
+			hp -= afterhp;
+			total_hpcost += afterhp;
 			mp -= aftermp;
 			total_mpcost += aftermp;
 		}
@@ -521,7 +523,8 @@ namespace game_framework {
 		Frame tempF = (*Frams)[_mode];
 		setTimmer(tempF._wait);
 		int numOFwav = tempF._sound;
-		if(numOFwav!=0)  CAudio::Instance()->Play(numOFwav+5);
+		if(numOFwav!=0)  
+			CAudio::Instance()->Play(numOFwav+5);
 		if (tempF._have_opiont) {
 			int oid = tempF._op.getOid();
 			if (oid == 12) {
@@ -912,7 +915,6 @@ namespace game_framework {
 	}
 
 	void man::specialEvent() {
-
 		int stateNow = (*Frams)[_mode]._state;
 		int ha = (*Frams)[_mode].hit_a;
 		if ( ha != 0) {
@@ -936,7 +938,6 @@ namespace game_framework {
 		case 1: {
 			bool button_down = false;
 			// 處理移動
-			
 			for (int i = 0; i < 4; i++) {
 				if (_dir[i]) {
 					button_down = true;
@@ -964,7 +965,6 @@ namespace game_framework {
 					}
 				}
 			}
-
 			if (flag[5] && holdingheavy) {
 				flag[5];
 				toMotion(50);
@@ -1178,17 +1178,8 @@ namespace game_framework {
 						temp_obj->hitSomeOne(this);
 						hit = true;
 
-						hurt(tempf._i.getInjury());
-						if (hp <= 0) {
-							if (temp_obj->Face_to_Left != this->Face_to_Left) {
-								toMotion(180);
-							}
-							else {
-								toMotion(186);
-							}
-							time = (*Frams)[_mode]._wait;
-							fall = 100;
-						}
+						hurt(tempf._i.getInjury(), temp_obj->Face_to_Left);
+						
 					}
 					break;
 				}
@@ -1219,14 +1210,14 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 2;
 							fall -= 40.0;
-							hurt(40);
+							hurt(40, temp_obj->Face_to_Left);
 							hp -= 40;
 							defend -= 16;
 						}
 						else {
 							dvx = 2;
 							fall -= 40.0;
-							hurt(30);
+							hurt(30, temp_obj->Face_to_Left);
 							defend -= 16;
 						
 							eff = 201;
@@ -1237,13 +1228,13 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 7;
 							fall -= 70;
-							hurt(40);
+							hurt(40, temp_obj->Face_to_Left);
 							defend -= 16;
 						}
 						else {
 							dvx = 7;
 							fall -= 70;
-							hurt(30);
+							hurt(30, temp_obj->Face_to_Left);
 							defend -= 16;
 
 							eff = 201;
@@ -1254,13 +1245,13 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 10;
 							fall -= 70;
-							hurt(50);
+							hurt(50, temp_obj->Face_to_Left);
 							defend -= 16;
 						}
 						else {
 							dvx = 10;
 							fall -= 70;
-							hurt(40);
+							hurt(40, temp_obj->Face_to_Left);
 							defend -= 16;
 
 							eff = 201;
@@ -1271,13 +1262,13 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 12;
 							fall -= 70;
-							hurt(50);
+							hurt(50, temp_obj->Face_to_Left);
 							defend -= 60;
 						}
 						else {
 							dvx = 12;
 							fall -= 70;
-							hurt(40);
+							hurt(40, temp_obj->Face_to_Left);
 							defend -= 60;
 
 							eff = 201;
@@ -1338,17 +1329,6 @@ namespace game_framework {
 
 					temp_obj->addBeaten(this);
 					temp_obj->getOwner()->hitSomeOne(this);
-
-					if (hp <= 0) {
-						if (temp_obj->Face_to_Left != this->Face_to_Left) {
-							toMotion(180);
-						}
-						else {
-							toMotion(186);
-						}
-						time = (*Frams)[_mode]._wait;
-						fall = 100;
-					}
 					break;
 				}
 				// 可使用終結季
@@ -1648,7 +1628,6 @@ namespace game_framework {
 		}
 	}
 
-	
 	void man::setCountDwon()	//處理指令輸入時間間隔
 	{
 		_Double_Tap_Gap = 75;
@@ -1658,10 +1637,20 @@ namespace game_framework {
 		_Double_Tap_Gap = -1;
 	}
 
-	void man::hurt(int d) {
+	void man::hurt(int d,bool f) {
 		HpRecover -= (d / 3);
 		hp -= d;
 		total_hpcost += d;
+		if (hp <= 0) {
+			if (f != this->Face_to_Left) {
+				toMotion(180);
+			}
+			else {
+				toMotion(186);
+			}
+			time = (*Frams)[_mode]._wait;
+			fall = 100;
+		}
 	}
 	
 	//
@@ -2092,7 +2081,6 @@ namespace game_framework {
 			com->updateEnemy(1, mans);
 		}
 
-
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
@@ -2100,7 +2088,7 @@ namespace game_framework {
 				a.add(temp);
 			}
 		}
-
+		//TRACE("%d\n", a.getN());
 		com->OnMove();							//電腦指派任務階段
 		
 		check();
@@ -2186,18 +2174,21 @@ namespace game_framework {
 		}
 	}
 
+	void ObjContainer::kill() {
+		com->kill();
+	}
+
 	//
 	// ------------------------------電腦的部分------------------------------------------
 	//
 	void AI::OnMove() {
+		//TRACE("%d\n",n);
 		for (int i = 0; i < n; i++) {
 			//
 			// 選定目標
 			//
 			man *Traget_now;
 			man *com_now = *(self + i);
-
-
 			int ch = (*(commandType + i)) % numOfTarget;
 
 			if (!(*(Target + ch))->isAlive()) {
@@ -2357,32 +2348,39 @@ namespace game_framework {
 	}
 
 	void AI::del(int num) {
-		man** temp = new man*[n - 1];
-		int * temp_command = new int[n - 1];
-		int i;
-		int no = 0;
-		for (i = 0; i < n; i++) {
-			if (i != num) {
-				*(temp + no) = *(self + i);
-				*(temp_command + no) = *(commandType + i);
-				no++;
-			}
+		if (n == 1) {
+			n--;
+			delete commandType;
+			commandType = nullptr;
+			delete self;
+			self = nullptr;
 		}
-		n--;
-		delete commandType;
-		commandType = temp_command;
-		delete self;
-		self = temp;
+		else {
+			man** temp = new man*[n - 1];
+			int * temp_command = new int[n - 1];
+			int i;
+			int no = 0;
+			for (i = 0; i < n; i++) {
+				if (i != num) {
+					*(temp + no) = *(self + i);
+					*(temp_command + no) = *(commandType + i);
+					no++;
+				}
+			}
+			n--;
+			delete commandType;
+			commandType = temp_command;
+			delete self;
+			self = temp;
+		}
 	}
 
 	void AI::del(obj* shit) {
-		
-		
 		if (n == 1) {
 			n = 0;
-			//delete commandType;
-			//delete self;
+			delete commandType;
 			commandType = nullptr;
+			delete self;
 			self = nullptr;
 		}
 		else {
@@ -2408,7 +2406,9 @@ namespace game_framework {
 
 	void AI::check() {
 		int i = 0;
+		TRACE("%d\n", n);
 		while (i < n) {
+			TRACE("\t%d\n",i);
 			if (! ((*(self + i))->isAlive())) {
 				del(i);
 			}
@@ -2432,5 +2432,10 @@ namespace game_framework {
 		return temp;
 	}
 
-
+	void AI::kill() {
+		int i = 0;
+		while (i< n) {
+			(*(self + i++))->hurt(500, false);
+		}
+	}
 }

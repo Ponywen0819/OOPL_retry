@@ -267,8 +267,6 @@ namespace game_framework {
 		
 	}
 
-
-
 	void stage::load() {
 		sp1->init();
 		lf1->init();
@@ -292,12 +290,11 @@ namespace game_framework {
 		
 	}
 
-
 	void stage::info() {
 		data[4] = trans_index;
 		if (now_stage == 1) {
 			if (!audio) {
-				TRACE("!!!!!");
+				TRACE("!!!!!\n");
 				CAudio::Instance()->Stop(4);
 				CAudio::Instance()->Stop(5);
 				CAudio::Instance()->Play(3,true);
@@ -312,7 +309,7 @@ namespace game_framework {
 			case 1:
 				obj->init(_player1, _player2);
 				obj->creatWeapon(11, 300, 300);
-				randObj(0,2, 0, map_width, lower_bound, upper_bound);
+				randObj(0, 2, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 2:
 				randObj(0,3, 0, map_width, lower_bound, upper_bound);
@@ -456,12 +453,9 @@ namespace game_framework {
 		return over;
 	}
 
-
-
 	void stage::OnShow(int _man_pos) {
 		man_pos = _man_pos;
 		
-
 		if (map == 0) {
 			man_pos = 0;
 			show_trans();
@@ -529,14 +523,13 @@ namespace game_framework {
 			for (int i = 0; i < index; i++) {
 				randWidth = rand() % (width + 800 - 800 + 1) + 800;
 				randBound = rand() % (lower_bound - upper_bound + 1) + upper_bound;
-				obj->creatWeapon(type, randWidth, randBound);
+				//obj->creatWeapon(type, randWidth, randBound);
 			}
 		}
 
 	}
 
 	int* stage::getdata() { return data; }
-
 
 	void stage::delay() {
 		for (int i = 0; i < 2; i++) {
@@ -546,6 +539,7 @@ namespace game_framework {
 			}
 		}
 	}
+	
 	void stage::overdelay() {
 		for (int i = 0; i < 2; i++) {
 			if (--delay2 < 0) {

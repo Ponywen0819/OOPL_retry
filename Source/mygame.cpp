@@ -79,15 +79,14 @@ CGameStateInit::CGameStateInit(CGame *g)
 }
 
 void CGameStateInit::OnInit(){
-	TRACE("\n\n\n\n\n\nshit\n\n\n\n\n\\n");
+
 	ShowInitProgress(0);
 	CAudio::Instance()->Load(AUDIO_CHOOSE, "Sounds\\choose.wav");	
 	CAudio::Instance()->Load(AUDIO_CHAR, "Sounds\\char.wav");	
 	CAudio::Instance()->Load(AUDIO_MAIN, "Sounds\\main.wav");
-	
+	ShowInitProgress(10);
 	menu.LoadBitmap();
-
-	
+	ShowInitProgress(20);
 }
 
 void CGameStateInit::OnBeginState(){
@@ -296,8 +295,8 @@ CGameStateOver::CGameStateOver(CGame *g)
 
 }
 
-CGameStateOver::~CGameStateOver() {
-}
+CGameStateOver::~CGameStateOver() {}
+
 void CGameStateOver::OnMove(){
 	counter--;
 	if (counter < 0)
@@ -313,15 +312,23 @@ void CGameStateOver::OnBeginState(){
 }
 
 void CGameStateOver::OnInit(){
-	ShowInitProgress(95);
+	ShowInitProgress(90);
 	title.LoadBitmap(".\\Bitmaps\\End.bmp");
+	ShowInitProgress(92);
 	row.LoadBitmap(".\\Bitmaps\\End2.bmp");
+	ShowInitProgress(93);
 	end.LoadBitmap(".\\Bitmaps\\down.bmp");
+	ShowInitProgress(94);
 	deep.LoadBitmap(".\\Bitmaps\\state\\deep_s.bmp",RGB(50,77,154));
+	ShowInitProgress(95);
 	freeze.LoadBitmap(".\\Bitmaps\\state\\freeze_s.bmp", RGB(50, 77, 154));
+	ShowInitProgress(96);
 	firen.LoadBitmap(".\\Bitmaps\\state\\firen_s.bmp", RGB(50, 77, 154));
+	ShowInitProgress(97);
 	WD.LoadBitmap(".\\Bitmaps\\WD.bmp");
+	ShowInitProgress(98);
 	WA.LoadBitmap(".\\Bitmaps\\WA.bmp");
+	ShowInitProgress(99);
 	LD.LoadBitmap(".\\Bitmaps\\LD.bmp");
 	ShowInitProgress(100);
 }
@@ -472,19 +479,22 @@ void CGameStateRun::OnInit() {
 
 	allobj.load();
 
-	ShowInitProgress(33);
+	ShowInitProgress(30);
 
-	ShowInitProgress(65);
 	Framelib::Instance()->init();
+	ShowInitProgress(60);
 
 	std::string path = "";
 	for (int i = 1; i < 103; i++) {
 		path = "music\\"+std::to_string(i)+".wav";
 		CAudio::Instance()->Load(i+5, (char *)path.c_str());	// 載入編號1的聲音lake.mp3
 	}
+	ShowInitProgress(80);
 
 	stage.load();
 	allobj.mapSetting(stage.getdata());
+	ShowInitProgress(90);
+
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
@@ -501,27 +511,20 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){
 }
 
 // 處理滑鼠的動作
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {
-}
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  {}
 
 // 處理滑鼠的動作
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	{
-	
-}
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	{}
 
 // 處理滑鼠的動作
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{
-	// 沒事。如果需要處理滑鼠移動的話，寫code在這裡
-}
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{}	
 
 // 處理滑鼠的動作
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {
-	//allobj.test();
-}
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {}
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
-	//GotoGameState(GAME_STATE_OVER);
+	allobj.kill();
 }
 
 // 顯示

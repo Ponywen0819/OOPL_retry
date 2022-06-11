@@ -433,7 +433,7 @@ namespace game_framework {
 			}
 
 		}
-		void	hurt(int d);
+		void	hurt(int d,bool f);
 		
 		bool	isTime() { return time == 0; }			
 		
@@ -757,8 +757,8 @@ namespace game_framework {
 			return owner;
 		}
 	private:
-		void adjustPosition(int f_now, int f_next);
 		void setTimmer(int t) { time = t; }
+		void adjustPosition(int f_now, int f_next);
 		void Count() {
 			if (arestC > 0)arestC--;
 			if (time > 0) time--;
@@ -794,6 +794,7 @@ namespace game_framework {
 			if (commandState != nullptr)
 				delete commandState;
 		}
+
 		void add(man* newone);	// 創造電腦
 		void check();			// 檢查死了沒
 		void del(int n);		// 刪除此電腦
@@ -816,9 +817,11 @@ namespace game_framework {
 		}
 		void updateEnemy(int n,man** mans);
 		void OnMove();
+		void kill();
 
 		int  getTotalHP();
-		int getComnum() { return n; }
+		int  getComnum() { return n; }
+
 	private:
 		int		n;				// 電腦的數量	
 		int		numOfTarget;	// 目標的數量
@@ -859,6 +862,7 @@ namespace game_framework {
 			com->reset();
 		}
 		void check();
+		void kill();
 		void OnMove();
 		void OnShow();
 		void KeyUp(UINT nChar);
@@ -867,6 +871,7 @@ namespace game_framework {
 		void creatWeapon(int n,int x,int z);
 		void creatEnemy(int type, int x, int y);
 
+		int	 getHP();
 		int	 getState() { return state; }
 		int  getX() {
 			if (mans == nullptr) return 0;
@@ -889,7 +894,6 @@ namespace game_framework {
 			}
 		}
 		int  getEnemyHP();
-		int	 getHP();
 
 		bool end();
 
@@ -947,9 +951,8 @@ namespace game_framework {
 		int*	map_data;			// 地圖的設定值
 		AI*		com;				// 電腦
 		man**	mans;				// 人物
-		allobj  a;					// 場上所有物品
+		allobj	a;					// 場上所有物品
 		CStateBar bar;				// 狀態條		
 	};
 
-	
 }
