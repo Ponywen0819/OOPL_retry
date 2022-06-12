@@ -445,13 +445,9 @@ void CGameStateOver::OnShow(){
 // 這個class為遊戲的遊戲執行物件，主要的遊戲程式都在這裡
 /////////////////////////////////////////////////////////////////////////////
 
-CGameStateRun::CGameStateRun(CGame *g)
-: CGameState(g){
-	
-}
+CGameStateRun::CGameStateRun(CGame *g): CGameState(g){}
 
-CGameStateRun::~CGameStateRun(){
-}
+CGameStateRun::~CGameStateRun(){}
 
 void CGameStateRun::OnBeginState(){
 	count = 0;
@@ -533,8 +529,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{}
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {}
 
 // 處理滑鼠的動作
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
-}
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{}
 
 // 顯示
 void CGameStateRun::OnShow() {

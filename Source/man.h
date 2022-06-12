@@ -286,9 +286,7 @@ namespace game_framework {
 			}
 			Frams = Framelib::Instance()->getFrame(id);
 		}
-		~man() {
-
-		}
+		~man() {}
 		void	setComm(UINT comm);					// 設定指令
 		void	cComm(UINT comm);					// 取消指令					
 		void	checkbeenatt();						// 被攻擊偵測
@@ -434,7 +432,12 @@ namespace game_framework {
 		}
 		void	hurt(int d,bool f);
 		
-		bool	isTime() { return time == 0; }			
+		bool	isTime() { return time == 0; }
+
+		void	getinfo() {
+			TRACE("%.1f %d\n", _y,_mode);
+		}
+		void	getY() { TRACE("%.1f \n",_y); }
 		
 		int		getX() { return int(_x); }
 		int		getZ() { return int(_z); }
@@ -463,6 +466,11 @@ namespace game_framework {
 			}
 			return Walk_Ani_num;
 		}
+
+
+		//
+		int		getMode() { return _mode; }
+
 
 		obj*	usingSkills() {
 			obj* a = skills;

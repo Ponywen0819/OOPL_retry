@@ -59,9 +59,8 @@ namespace game_framework {
 	bool obj::checkBeenBeaten(obj *who) {
 		if (beatenList == nullptr) return false;
 		for (int i = 0; i < numOfBeaten; i++) {
-			if ((*(beatenList + i)) == who) {
+			if ((*(beatenList + i)) == who) 
 				return true;
-			}
 		}
 		return false;
 	}
@@ -107,13 +106,9 @@ namespace game_framework {
 		numOfBeaten--;
 	}
 
-	void obj::setArest(int n) {
-		arestC = n;
-	}
+	void obj::setArest(int n) { arestC = n; }
 	
-	int	 obj::getArest() {
-		return arestC;
-	}
+	int	 obj::getArest() { return arestC; }
 
 	void obj::OnShow() {
 		int index;
@@ -217,9 +212,7 @@ namespace game_framework {
 
 			checkbeenatt();
 		}
-		else{
-			
-		}
+		
 		Count();
 		bcount();
 	}
@@ -376,8 +369,7 @@ namespace game_framework {
 	}
 
 	void weapon::hitSomeOne(obj* other) {
-		if(id == 201)
-			toMotion(60);
+		if (id == 201) toMotion(60);
 	}
 	
 	//
@@ -595,7 +587,8 @@ namespace game_framework {
 			else if (holdingheavy) {
 				toMotion(12);
 			}
-			else if ( _y > maxH) {
+			else if ( _y > maxH && jumping) {
+				//TRACE("%.1f %d wtf\n",_y,maxH);
 				adjustPosition(_mode, 212);
 				toMotion(212);
 			}
@@ -1405,6 +1398,7 @@ namespace game_framework {
 	//------------人物狀態更新
 	void man::OnMove() {
 		if (!Alive) return;
+		//TRACE("%.1f\n", _y);
 
 		if (stop) {
 			if (who->hit) {
@@ -1510,7 +1504,6 @@ namespace game_framework {
 		}
 		// 跌倒的部分
 		case 12: {
-			
 			break;
 		}
 		
@@ -1627,6 +1620,7 @@ namespace game_framework {
 			bar->setHP(player, hp, HpRecover);
 			bar->setMP(player, mp);
 		}
+		//TRACE("\t%.1f\n", _y);
 	}
 
 	void man::setCountDwon()	//處理指令輸入時間間隔
@@ -1713,13 +1707,9 @@ namespace game_framework {
 		std::sort(s, s + num, [](obj* a, obj* b) {return (a)->_z < (b)->_z; });
 	}
 	
-	obj* allobj::getobj(int n) {
-		return (*(all + n));
-	}
+	obj* allobj::getobj(int n) { return (*(all + n)); }
 
-	obj* allobj::getSortObj(int n) {
-		return (*(s + n));
-	}
+	obj* allobj::getSortObj(int n) { return (*(s + n)); }
 
 
 	//
@@ -2097,12 +2087,16 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnShow() {
-		bar.OnShowBar();
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getSortObj(i))->showShadow();
 		}
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getSortObj(i))->OnShow();
+		}
+		bar.OnShowBar();
+
+		if (mans != nullptr) {
+			mans[0]->getinfo();
 		}
 	}
 
@@ -2149,10 +2143,6 @@ namespace game_framework {
 		a.add(enemy);
 	}
 
-	int ObjContainer::getEnemyHP() {
-		return com->getTotalHP();
-	}
-
 	int ObjContainer::getHP() {
 		if (state == 0) {
 			int total = 0;
@@ -2174,6 +2164,8 @@ namespace game_framework {
 			return mans[0]->isAlive();
 		}
 	}
+
+	int ObjContainer::getEnemyHP() { return com->getTotalHP(); }
 
 	bool ObjContainer::enemystate() { return com->state(); }
 
