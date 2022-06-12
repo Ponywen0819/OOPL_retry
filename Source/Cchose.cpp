@@ -217,6 +217,7 @@ namespace game_framework {
 		}
 		CountDown.OnMove();
 		if (CountDown.GetCurrentBitmapNumber() == 5) {
+			CountDown.Reset();
 			return TRUE;
 		}
 		return FALSE;

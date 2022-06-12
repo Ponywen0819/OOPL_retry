@@ -498,6 +498,16 @@ void CGameStateRun::OnInit() {
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
+	const char KEY_R = 82;
+	if ((nChar == KEY_R) && GetKeyState(VK_CONTROL) < 0)
+	{
+		stage.cheat();
+	}
+	if (nChar == VK_F4) 
+	{
+		allobj.kill();
+	}
+
 	allobj.KeyDown(nChar);
 }
 
@@ -524,7 +534,6 @@ void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {}
 
 // 處理滑鼠的動作
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{
-	allobj.kill();
 }
 
 // 顯示

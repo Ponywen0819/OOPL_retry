@@ -256,6 +256,7 @@ namespace game_framework {
 		audio = FALSE;
 		initcheckhp = FALSE;
 		initover = FALSE;
+		cheatover = FALSE;
 		map = 0;
 		temp = 0;
 		tempover = 0;
@@ -426,20 +427,22 @@ namespace game_framework {
 	}
 
 	void stage::show_trans() {
-		trans[trans_index].SetTopLeft(0, 140);
-		trans[trans_index].ShowBitmap();
-		delay();
-		if (temp > 10) {
-			temp = 0;
-			info();
-			trans_index++;
+		if (trans_index < 16) {
+			trans[trans_index].SetTopLeft(0, 140);
+			trans[trans_index].ShowBitmap();
+			delay();
+			if (temp > 10) {
+				temp = 0;
+				info();
+				trans_index++;
+				if(cheatover)obj->kill();
+			}
 		}
 	}
 
 	boolean stage::overgame() {
 		overdelay();
-		if (tempover > 30) {
-			//TRACE("%d\n", obj->getHP());
+		if (tempover > 25) {
 			if (!obj->end()) {
 				over = TRUE;
 			}	
@@ -452,6 +455,15 @@ namespace game_framework {
 		}
 		return over;
 	}
+
+	void stage::cheat() {
+		obj->kill();
+		now_stage = 3;
+		trans_index = 15;
+		show_trans();
+		cheatover = TRUE;
+	}
+
 
 	void stage::OnShow(int _man_pos) {
 		man_pos = _man_pos;
@@ -523,7 +535,7 @@ namespace game_framework {
 			for (int i = 0; i < index; i++) {
 				randWidth = rand() % (width + 800 - 800 + 1) + 800;
 				randBound = rand() % (lower_bound - upper_bound + 1) + upper_bound;
-				//obj->creatWeapon(type, randWidth, randBound);
+				obj->creatWeapon(type, randWidth, randBound);
 			}
 		}
 

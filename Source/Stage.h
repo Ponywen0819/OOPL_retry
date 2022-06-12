@@ -125,6 +125,7 @@ namespace game_framework {
 		void delay();
 		void overdelay();
 		void randObj(int,int, int, int, int, int);
+		void cheat();
 
 		int* getdata();
 		void check(int);
@@ -149,6 +150,7 @@ namespace game_framework {
 		boolean audio;
 		boolean initcheckhp;
 		boolean initover;
+		boolean cheatover;
 		int *data;
 		int now_stage;
 		int map;
