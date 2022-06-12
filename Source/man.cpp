@@ -1195,25 +1195,28 @@ namespace game_framework {
 					int dvx;
 					Frame weapont = (*(temp_obj->getOwner()->Frams))[temp_obj->getOwner()->_mode];
 					int att = weapont._wp.getattcking();
-					switch (att){
+					
+					switch (att) {
 					case 0: {
 						return;
 						break;
 					}
 					case 1: {
+						
 						if (temp_obj->id == 10) {
 							dvx = 2;
 							fall -= 40.0;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(40, temp_obj->Face_to_Left);
-							hp -= 40;
 							defend -= 16;
 						}
 						else {
 							dvx = 2;
 							fall -= 40.0;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(30, temp_obj->Face_to_Left);
 							defend -= 16;
-						
+
 							eff = 201;
 						}
 						break;
@@ -1222,6 +1225,7 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 7;
 							fall -= 70;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(40, temp_obj->Face_to_Left);
 							defend -= 16;
 						}
@@ -1239,12 +1243,14 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 10;
 							fall -= 70;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(50, temp_obj->Face_to_Left);
 							defend -= 16;
 						}
 						else {
 							dvx = 10;
 							fall -= 70;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(40, temp_obj->Face_to_Left);
 							defend -= 16;
 
@@ -1256,12 +1262,14 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 12;
 							fall -= 70;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(50, temp_obj->Face_to_Left);
 							defend -= 60;
 						}
 						else {
 							dvx = 12;
 							fall -= 70;
+							injuredMotion(temp_obj->Face_to_Left);
 							hurt(40, temp_obj->Face_to_Left);
 							defend -= 60;
 
@@ -1272,8 +1280,7 @@ namespace game_framework {
 					default:
 						break;
 					}
-					
-					injuredMotion(temp_obj->Face_to_Left);
+
 
 
 					setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
@@ -1317,12 +1324,13 @@ namespace game_framework {
 							toMotion(200);
 						}
 					}
-					else if(eff == 203){
+					else if (eff == 203) {
 						toMotion(203);
 					}
 
 					temp_obj->addBeaten(this);
 					temp_obj->getOwner()->hitSomeOne(this);
+
 					break;
 				}
 				// 可使用終結季
