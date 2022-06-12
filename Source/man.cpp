@@ -1195,6 +1195,9 @@ namespace game_framework {
 					int dvx;
 					Frame weapont = (*(temp_obj->getOwner()->Frams))[temp_obj->getOwner()->_mode];
 					int att = weapont._wp.getattcking();
+					
+					injuredMotion(temp_obj->Face_to_Left);
+
 					switch (att){
 					case 0: {
 						return;
@@ -1204,8 +1207,7 @@ namespace game_framework {
 						if (temp_obj->id == 10) {
 							dvx = 2;
 							fall -= 40.0;
-							hurt(40, temp_obj->Face_to_Left);
-							hp -= 40;
+							hurt(400, temp_obj->Face_to_Left);
 							defend -= 16;
 						}
 						else {
@@ -1272,9 +1274,6 @@ namespace game_framework {
 					default:
 						break;
 					}
-					
-					injuredMotion(temp_obj->Face_to_Left);
-
 
 					setYstep(tempf._i.getDvy(), tempf._i.getDvx(), 0);
 					if (temp_obj->Face_to_Left) {

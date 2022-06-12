@@ -495,6 +495,7 @@ void CGameStateRun::OnInit() {
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
 	const char KEY_R = 82;
+	allobj.KeyDown(nChar);
 	if ((nChar == KEY_R) && GetKeyState(VK_CONTROL) < 0)
 	{
 		stage.cheat();
@@ -504,7 +505,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags){
 		allobj.kill();
 	}
 
-	allobj.KeyDown(nChar);
+	
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags){	

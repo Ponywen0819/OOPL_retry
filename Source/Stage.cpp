@@ -439,7 +439,10 @@ namespace game_framework {
 				temp = 0;
 				info();
 				trans_index++;
-				if(cheatover)obj->kill();
+				if (cheatover) {
+					obj->kill();
+					audio = FALSE;
+				}
 			}
 		}
 	}
