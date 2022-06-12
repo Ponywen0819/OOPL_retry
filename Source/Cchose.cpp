@@ -32,7 +32,7 @@ namespace game_framework {
 		character[2].LoadBitmap("./Bitmaps/menu/char/firen_f.bmp");
 		player[0].LoadBitmap("./Bitmaps/menu/char/1.bmp", RGB(0, 0, 0));
 		player[1].LoadBitmap("./Bitmaps/menu/char/2.bmp", RGB(0, 0, 0));
-		logo.LoadBitmap("./Bitmaps/menu/first/MENU_BACK1.bmp", RGB(0, 0, 0));
+		logo.LoadBitmap("./Bitmaps/menu/first/MENU_BACK3.bmp", RGB(0, 0, 0));
 		back.LoadBitmap("./Bitmaps/menu/first/start_background.bmp");
 		title.LoadBitmap("./Bitmaps/menu/first/title.bmp", RGB(17, 34, 101));
 		team.LoadBitmap("./Bitmaps/menu/char/team.bmp");
@@ -49,6 +49,7 @@ namespace game_framework {
 		lock[2].LoadBitmap("./Bitmaps/menu/char/Fizen_1.bmp");
 		stage[0].LoadBitmap("./Bitmaps/menu/stage/stage.bmp");
 		stage[1].LoadBitmap("./Bitmaps/menu/stage/choose.bmp",RGB(0,0,0));
+		initchar.LoadBitmap("./Bitmaps/menu/first/initchar.bmp");
 
 		char *filename[2] = { ".\\Bitmaps\\menu\\char\\CMA.bmp", ".\\Bitmaps\\menu\\char\\CMA2.bmp" };
 
@@ -86,6 +87,9 @@ namespace game_framework {
 
 			title.SetTopLeft((SIZE_X - title.Width()) / 2, SIZE_Y / 9);
 			title.ShowBitmap();
+
+			initchar.SetTopLeft(SIZE_X -137 , SIZE_Y - 39);
+			initchar.ShowBitmap();
 		}
 		else if (index == 2) {
 			charmenu.SetTopLeft((SIZE_X - charmenu.Width()) / 2, (SIZE_Y - charmenu.Height()) / 2);

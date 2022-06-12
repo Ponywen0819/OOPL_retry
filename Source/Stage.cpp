@@ -309,7 +309,7 @@ namespace game_framework {
 			switch (trans_index) {
 			case 1:
 				obj->init(_player1, _player2);
-				obj->creatWeapon(11, 300, 300);
+				obj->creatWeapon(10, 300, 300);
 				randObj(0, 2, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 2:
@@ -391,11 +391,12 @@ namespace game_framework {
 				randObj(0,3, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 14:
+				randObj(1, 20, 10, map_width, lower_bound, upper_bound);
 				randObj(0,4, 1, map_width, lower_bound, upper_bound);
 				randObj(0,4, 0, map_width, lower_bound, upper_bound);
 				break;
 			case 15:
-				randObj(1, 20, 10, map_width, lower_bound, upper_bound);
+				randObj(1, 20, 11, map_width, lower_bound, upper_bound);
 				randObj(0,6, 1, map_width, lower_bound, upper_bound);
 				randObj(0,6, 0, map_width, lower_bound, upper_bound);
 				break;

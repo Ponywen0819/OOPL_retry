@@ -1737,7 +1737,7 @@ namespace game_framework {
 			mans = new man*[2];
 			mans[0] = new man(p1, &a);
 			mans[0]->mapSetting(map_data);
-			mans[0]->_x = 100;
+			mans[0]->_x = 0;
 			mans[0]->_z = 400;
 			mans[0]->setplayer(0, &bar);
 
@@ -1745,7 +1745,7 @@ namespace game_framework {
 
 			mans[1] = new man(p2, &a);
 			mans[1]->mapSetting(map_data);
-			mans[1]->_x = 100;
+			mans[1]->_x = 0;
 			mans[1]->_z = 450;
 			mans[1]->setplayer(1, &bar);
 
@@ -1756,7 +1756,7 @@ namespace game_framework {
 			mans = new man*[1];
 			mans[0] = new man(p1, &a);
 			mans[0]->mapSetting(map_data);
-			mans[0]->_x = 100;
+			mans[0]->_x = 0;
 			mans[0]->_z = 425;
 			mans[0]->setplayer(0, &bar);
 			
@@ -1767,7 +1767,7 @@ namespace game_framework {
 			mans = new man*[1];
 			mans[0] = new man(p2, &a);
 			mans[0]->mapSetting(map_data);
-			mans[0]->_x = 100;
+			mans[0]->_x = 0;
 			mans[0]->_z = 425;
 			mans[0]->setplayer(1, &bar);
 

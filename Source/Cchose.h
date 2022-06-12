@@ -30,6 +30,7 @@ namespace game_framework {
 		CMovingBitmap lock[3];
 		CMovingBitmap how[2];
 		CMovingBitmap stage[2];
+		CMovingBitmap initchar;
 		CAnimation cma_ani;
 		CAnimation CountDown;
 		CAnimation name[3];
