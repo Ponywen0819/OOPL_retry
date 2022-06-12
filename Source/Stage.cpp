@@ -311,12 +311,15 @@ namespace game_framework {
 				obj->init(_player1, _player2);
 				obj->creatWeapon(10, 300, 300);
 				randObj(0, 2, 0, map_width, lower_bound, upper_bound);
+				randObj(1, 2, 10, map_width, lower_bound, upper_bound);
 				break;
 			case 2:
 				randObj(0,3, 0, map_width, lower_bound, upper_bound);
+				randObj(1, 2, 10, map_width, lower_bound, upper_bound);
 				break;
 			case 3:
 				randObj(0,4, 0, map_width, lower_bound, upper_bound);
+				randObj(1, 2, 10, map_width, lower_bound, upper_bound);
 				break;
 			case 4:
 				randObj(1,2, 10, map_width, lower_bound, upper_bound);

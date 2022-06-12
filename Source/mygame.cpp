@@ -529,7 +529,7 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	{}
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  {}
 
 // 處理滑鼠的動作
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	{}
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point) { allobj.kill(); }
 
 // 顯示
 void CGameStateRun::OnShow() {

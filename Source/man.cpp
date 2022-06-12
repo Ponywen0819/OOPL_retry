@@ -1089,10 +1089,7 @@ namespace game_framework {
 			}
 			bool t = touch(temp_obj);
 			if(tempf._have_itr && t){				// 這個東西具有攻擊性並且有碰到
-				if ((myF._state == 12 || myF._state == 18)&& tempf._i.getFall() < 60) {
-					continue;
-				}
-
+				if ((myF._state == 12 || myF._state == 18) && tempf._i.getFall() < 60) { continue; }
 				int eff;
 				switch (tempf._i.getKind()) {
 				// 普通攻擊
@@ -1117,6 +1114,9 @@ namespace game_framework {
 							holding = nullptr;
 							holdinglt = false;
 							holdingheavy = false;
+						}
+						else if (myF._state == 9) {
+							Caught->toMotion(133);
 						}
 
 						int fa = tempf._i.getFall();
@@ -1303,7 +1303,7 @@ namespace game_framework {
 					default:
 						break;
 					}
-					if (eff == 201) {
+					if (eff == 201 || eff == 200) {
 						if (myF._state == 15 || myF._state == 13) {
 							if (temp_obj->Face_to_Left != this->Face_to_Left) {
 								toMotion(180);
@@ -1317,7 +1317,7 @@ namespace game_framework {
 							toMotion(200);
 						}
 					}
-					else {
+					else if(eff == 203){
 						toMotion(203);
 					}
 
@@ -1387,10 +1387,8 @@ namespace game_framework {
 	void man::thw_obj() {
 		if (holdinglt) {
 			holding->toMotion(40);
-
 		}
 		else if (holdingheavy) {
-
 		}
 	}
 	
@@ -2094,10 +2092,6 @@ namespace game_framework {
 			(a.getSortObj(i))->OnShow();
 		}
 		bar.OnShowBar();
-
-		if (mans != nullptr) {
-			mans[0]->getinfo();
-		}
 	}
 
 	void ObjContainer::check() {
@@ -2143,7 +2137,7 @@ namespace game_framework {
 		a.add(enemy);
 	}
 
-	int ObjContainer::getHP() {
+	int  ObjContainer::getHP() {
 		if (state == 0) {
 			int total = 0;
 			for (int i = 0; i < 2; i++)
@@ -2165,7 +2159,7 @@ namespace game_framework {
 		}
 	}
 
-	int ObjContainer::getEnemyHP() { return com->getTotalHP(); }
+	int  ObjContainer::getEnemyHP() { return com->getTotalHP(); }
 
 	bool ObjContainer::enemystate() { return com->state(); }
 

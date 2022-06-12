@@ -163,7 +163,7 @@ namespace game_framework {
 		~allobj() {
 			for (int i = 0; i < num; i++)
 				delete *(all + i);
-			delete all;
+			delete[] all;
 		}
 
 		void init();
@@ -433,11 +433,6 @@ namespace game_framework {
 		void	hurt(int d,bool f);
 		
 		bool	isTime() { return time == 0; }
-
-		void	getinfo() {
-			TRACE("%.1f %d\n", _y,_mode);
-		}
-		void	getY() { TRACE("%.1f \n",_y); }
 		
 		int		getX() { return int(_x); }
 		int		getZ() { return int(_z); }
@@ -451,6 +446,7 @@ namespace game_framework {
 		int		getTotalHpCost() { return total_hpcost; }
 		int		getTotalMpCost() { return total_mpcost; }
 		int		getTotalDamage() { return total_damage; }
+
 		int		getNextWalkMotion() {
 			if (walk_Ani_dir) {
 				if (++Walk_Ani_num >= 9) {
@@ -466,10 +462,8 @@ namespace game_framework {
 			}
 			return Walk_Ani_num;
 		}
-
-
-		//
-		int		getMode() { return _mode; }
+		
+		
 
 
 		obj*	usingSkills() {
@@ -512,8 +506,6 @@ namespace game_framework {
 		//
 		// 計時相關
 		//
-
-
 		bool	inSpecialMotion;					// 在特殊動作中
 		bool	useSupperAtt;						// 可以使用終結季
 		bool	JumpUp, JumpDown,JumpFront,JumpBack;// 斜跳
@@ -621,6 +613,7 @@ namespace game_framework {
 			}
 			
 			if (_y <= (*Frams)[_mode]._centery) {
+				_y = (*Frams)[_mode]._centery;
 				stepx = stepz = initG = 0;
 				JumpFront = JumpBack = JumpUp = JumpDown = false;
 			}
@@ -779,7 +772,7 @@ namespace game_framework {
 		obj*	owner;			// 誰放的		
 	};
 
-	class  AI{
+	class AI{
 	public:
 		AI() {
 			n = numOfTarget = 0;
@@ -880,7 +873,6 @@ namespace game_framework {
 		void creatEnemy(int type, int x, int y);
 
 		int	 getHP();
-		int	 getState() { return state; }
 		int  getX() {
 			if (mans == nullptr) return 0;
 			if (state == 0) {
@@ -901,6 +893,7 @@ namespace game_framework {
 				return int(mans[0]->_x);
 			}
 		}
+		int	 getState() { return state; }
 		int  getEnemyHP();
 
 		bool end();
