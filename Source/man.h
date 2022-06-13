@@ -164,6 +164,7 @@ namespace game_framework {
 			for (int i = 0; i < num; i++)
 				delete *(all + i);
 			delete[] all;
+			if (s != nullptr) delete s;
 		}
 
 		void init();

@@ -1705,6 +1705,7 @@ namespace game_framework {
 	}
 
 	void allobj::so() {
+		if (s != nullptr) delete s;
 		s = new obj*[num];
 		for (int i = 0; i < num; i++) {
 			(*(s + i)) = *(all + i);
