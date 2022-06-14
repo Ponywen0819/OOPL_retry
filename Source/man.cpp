@@ -587,7 +587,7 @@ namespace game_framework {
 			else if (holdingheavy) {
 				toMotion(12);
 			}
-			else if ( _y > maxH && jumping) {
+			else if ( _y > (*Frams)[_mode]._centery && jumping) {
 				//TRACE("%.1f %d wtf\n",_y,maxH);
 				adjustPosition(_mode, 212);
 				toMotion(212);
@@ -610,7 +610,7 @@ namespace game_framework {
 				}
 			}
 			else if (tempState == 18) {
-				if (_y <= maxH) {
+				if (_y <= (*Frams)[_mode]._centery) {
 					if (_mode == 204) {
 						toMotion(230);
 					}
@@ -1420,6 +1420,8 @@ namespace game_framework {
 		Count();
 		int stateNow = (*Frams)[_mode]._state;
 		moveY();
+		//TRACE("------\n");
+		//TRACE("%d\n",jumping);
 		// 負責位置的調整
 		switch (stateNow) {
 		// 走路狀態
@@ -1481,9 +1483,11 @@ namespace game_framework {
 		}
 		//大跳
 		case 5: {
+			//TRACE("5 %d\n", jumping);
 			if (_y <= (*Frams)[_mode]._centery && jumping) {
+				//TRACE("back\n");
 				jumping = false;
-				_y = maxH;
+				_y = (*Frams)[_mode]._centery;
 				backToRandon();
 			}
 			break;
@@ -1516,6 +1520,7 @@ namespace game_framework {
 		// 被冰起來
 		case 13: {
 			if (_y <= maxH && jumping) {
+				jumping = false;
 				toMotion(182);
 			}
 			break;
@@ -1527,11 +1532,15 @@ namespace game_framework {
 		
 		// 可以被同盟攻擊，基本上沒用
 		case 15: {
-			if (_y <= maxH && jumping) {
+			//TRACE("15 %d\n", jumping);
+			if (_y <= (*Frams)[_mode]._centery && jumping) {
 				jumping = false;
-				_y = maxH;
+				_y = (*Frams)[_mode]._centery;
 				if(_mode>202 && _mode <200)
 					backToRandon();
+				else if(_mode > 89 && _mode < 93){
+					backToRandon();
+				}
 			}
 		}
 		
@@ -1549,9 +1558,9 @@ namespace game_framework {
 			break;
 		}
 		default: {
-			if (_y <= maxH && jumping) {
+			if (_y <= (*Frams)[_mode]._centery && jumping) {
 				jumping = false;
-				_y = maxH;
+				_y = (*Frams)[_mode]._centery;
 				backToRandon();
 			}
 			else {
