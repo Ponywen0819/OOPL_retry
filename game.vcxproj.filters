@@ -77,5 +77,6 @@
     <None Include="RES\loading.bmp" />
     <None Include="RES\ntutcsie.bmp" />
     <None Include="res\Toolbar.bmp" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

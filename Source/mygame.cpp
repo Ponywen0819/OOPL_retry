@@ -67,9 +67,8 @@ namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
-int player1 = -1, player2 = -1, v = 1, chose_stage = 0;//test
+int player1 = -1, player2 = -1, chose_stage = 0;//test
 int count = 0;
-boolean a = FALSE;
 
 std::string Info = "";
 
