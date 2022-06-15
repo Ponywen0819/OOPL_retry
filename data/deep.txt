@@ -466,7 +466,7 @@
 <frame_end>
 
 <frame> 51 heavy_weapon_thw
-   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 93  y: 37  weaponact: 10  attacking: 0  cover: 0  dvx: 15  dvy: -4  dvz: 2 
    wpoint_end:
@@ -490,7 +490,7 @@
 <frame_end>
 
 <frame> 61 punch
-   pic: 18  state: 3  wait: 1  next: 62  dvx: 0  dvy: 0  dvz: 0  centerx: 23  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 18  state: 3  wait: 1  next: 62  dvx: 0  dvy: 0  dvz: 0  centerx: 23  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 8  y: 47  w: 43  h: 17  dvx: 2  fall: 25  bdefend: 30  injury: 35  
       effect: 1  
@@ -529,7 +529,7 @@
 <frame_end>
 
 <frame> 66 punch
-   pic: 19  state: 3  wait: 1  next: 67  dvx: 0  dvy: 0  dvz: 0  centerx: 25  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 19  state: 3  wait: 1  next: 67  dvx: 0  dvy: 0  dvz: 0  centerx: 25  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 24  y: 32  w: 48  h: 23  fall: 25  bdefend: 30  injury: 35  
       effect: 1  
@@ -575,7 +575,7 @@
 <frame_end>
 
 <frame> 72 super_punch
-   pic: 38  state: 3  wait: 2  next: 73  dvx: 0  dvy: 0  dvz: 0  centerx: 15  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 38  state: 3  wait: 2  next: 73  dvx: 0  dvy: 0  dvz: 0  centerx: 15  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 21  y: 42  w: 57  h: 35  dvx: 5  fall: 70  vrest: 15  bdefend: 60  injury: 10  
       effect: 1  
@@ -593,7 +593,7 @@
 <frame_end>
 
 <frame> 80 jump_attack
-   pic: 14  state: 3  wait: 1  next: 81  dvx: 0  dvy: 0  dvz: 0  centerx: 28  centery: 80  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 14  state: 3  wait: 1  next: 81  dvx: 0  dvy: 0  dvz: 0  centerx: 28  centery: 80  hit_a: 0  hit_d: 0  hit_j: 0   
    bdy:
       kind: 0  x: 12  y: 12  w: 30  h: 63
    bdy_end:
@@ -625,7 +625,7 @@
 <frame_end>
 
 <frame> 86 run_attack
-   pic: 103  state: 3  wait: 2  next: 87  dvx: 4  dvy: 0  dvz: 0  centerx: 19  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 103  state: 3  wait: 2  next: 87  dvx: 4  dvy: 0  dvz: 0  centerx: 19  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 41  y: 4  w: 36  h: 50  dvx: -3  dvy: 12  bdefend: 65  injury: 60  
       effect: 1  
@@ -663,7 +663,7 @@
 <frame_end>
 
 <frame> 90 dash_attack
-   pic: 106  state: 15  wait: 1  next: 91  dvx: 0  dvy: 0  dvz: 0  centerx: 40  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 106  state: 15  wait: 1  next: 91  dvx: 0  dvy: 0  dvz: 0  centerx: 40  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0   
    bdy:
       kind: 0  x: 22  y: 7  w: 44  h: 62
    bdy_end:
@@ -1602,7 +1602,7 @@
 <frame_end>
 
 <frame> 236 blast
-   pic: 136  state: 3  wait: 2  next: 237  dvx: 0  dvy: 0  dvz: 0  centerx: 15  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 136  state: 3  wait: 2  next: 237  dvx: 0  dvy: 0  dvz: 0  centerx: 15  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 49  y: 45  weaponact: 20  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1674,7 +1674,7 @@
 <frame_end>
 
 <frame> 241 blast2
-   pic: 79  state: 3  wait: 1  next: 242  dvx: 0  dvy: 0  dvz: 0  centerx: 48  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 79  state: 3  wait: 1  next: 242  dvx: 0  dvy: 0  dvz: 0  centerx: 48  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 63  y: 40  weaponact: 35  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1736,7 +1736,7 @@
 <frame_end>
 
 <frame> 246 blast3
-   pic: 101  state: 3  wait: 1  next: 247  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 101  state: 3  wait: 1  next: 247  dvx: 0  dvy: 0  dvz: 0  centerx: 45  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 35  y: 51  weaponact: 35  attacking: 0  cover: 0  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1805,7 +1805,7 @@
 <frame_end>
 
 <frame> 261 jump_sword
-   pic: 141  state: 3  wait: 1  next: 262  dvx: 0  dvy: 0  dvz: 0  centerx: 26  centery: 68  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54
+   pic: 141  state: 3  wait: 1  next: 262  dvx: 0  dvy: 0  dvz: 0  centerx: 26  centery: 68  hit_a: 0  hit_d: 0  hit_j: 0  
    wpoint:
       kind: 1  x: 35  y: 40  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1900,7 +1900,7 @@
 <frame_end>
 
 <frame> 269 jump_sword
-   pic: 148  state: 3  wait: 1  next: 270  dvx: 0  dvy: 0  dvz: 0  centerx: 51  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 148  state: 3  wait: 1  next: 270  dvx: 0  dvy: 0  dvz: 0  centerx: 51  centery: 77  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 57  y: 42  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -1985,8 +1985,7 @@
 <frame_end>
 
 <frame> 278 jump_sword2
-   pic: 150  state: 3  wait: 1  next: 279  dvx: 0  dvy: 0  dvz: 0  centerx: 12  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0
-  sound: data\054.wav 
+   pic: 150  state: 3  wait: 1  next: 279  dvx: 0  dvy: 0  dvz: 0  centerx: 12  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 22  y: 49  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -2065,7 +2064,7 @@
 <frame_end>
 
 <frame> 291 dash_sword
-   pic: 161  state: 301  wait: 1  next: 292  dvx: 6  dvy: 0  dvz: 0  centerx: 18  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 161  state: 301  wait: 1  next: 292  dvx: 6  dvy: 0  dvz: 0  centerx: 18  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 22  y: 52  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -2125,7 +2124,7 @@
 <frame_end>
 
 <frame> 295 dash_sword
-   pic: 165  state: 301  wait: 1  next: 296  dvx: 12  dvy: 0  dvz: 0  centerx: 44  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 165  state: 301  wait: 1  next: 296  dvx: 12  dvy: 0  dvz: 0  centerx: 44  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 43  y: 52  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -2181,7 +2180,7 @@
 <frame_end>
 
 <frame> 299 dash_sword
-   pic: 169  state: 301  wait: 1  next: 300  dvx: 12  dvy: 0  dvz: 0  centerx: 19  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 169  state: 301  wait: 1  next: 300  dvx: 12  dvy: 0  dvz: 0  centerx: 19  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 31  y: 52  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -2233,7 +2232,7 @@
 <frame_end>
 
 <frame> 303 dash_sword
-   pic: 176  state: 301  wait: 1  next: 304  dvx: 6  dvy: 0  dvz: 0  centerx: 31  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 176  state: 301  wait: 1  next: 304  dvx: 6  dvy: 0  dvz: 0  centerx: 31  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 49  y: 52  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:
@@ -2327,7 +2326,7 @@
 <frame_end>
 
 <frame> 311 dash_sword
-   pic: 169  state: 301  wait: 1  next: 300  dvx: 2  dvy: 0  dvz: 0  centerx: 19  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 54 
+   pic: 169  state: 301  wait: 1  next: 300  dvx: 2  dvy: 0  dvz: 0  centerx: 19  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    wpoint:
       kind: 1  x: 31  y: 52  weaponact: 31  attacking: 0  cover: 1  dvx: 0  dvy: 0  dvz: 0 
    wpoint_end:

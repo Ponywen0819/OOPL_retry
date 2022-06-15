@@ -505,7 +505,7 @@
 <frame_end>
 
 <frame> 51 heavy_weapon_thw
-   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7
+   pic: 28  state: 15  wait: 7  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0  
    wpoint:
       kind: 1  x: 93  y: 37  weaponact: 10  attacking: 0  cover: 0  dvx: 9  dvy: -4  dvz: 2 
    wpoint_end:
@@ -539,7 +539,7 @@
 <frame_end>
 
 <frame> 61 punch
-   pic: 11  state: 3  wait: 3  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 36  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 11  state: 3  wait: 3  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 36  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 33  y: 33  w: 42  h: 16  dvx: 2  bdefend: 16  injury: 20  
    itr_end:
@@ -560,7 +560,7 @@
 <frame_end>
 
 <frame> 66 punch
-   pic: 13  state: 3  wait: 3  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 13  state: 3  wait: 3  next: 999  dvx: 0  dvy: 0  dvz: 0  centerx: 34  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 42  y: 4  w: 33  h: 52  dvx: 2  bdefend: 16  injury: 20  
    itr_end:
@@ -619,7 +619,7 @@
 <frame_end>
 
 <frame> 80 jump_attack
-   pic: 14  state: 3  wait: 2  next: 81  dvx: 0  dvy: 0  dvz: 0  centerx: 32  centery: 75  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 14  state: 3  wait: 2  next: 81  dvx: 0  dvy: 0  dvz: 0  centerx: 32  centery: 75  hit_a: 0  hit_d: 0  hit_j: 0   
    bdy:
       kind: 0  x: 15  y: 10  w: 39  h: 63
    bdy_end:
@@ -656,7 +656,7 @@
 <frame_end>
 
 <frame> 86 run_attack
-   pic: 103  state: 3  wait: 1  next: 87  dvx: 4  dvy: 0  dvz: 0  centerx: 30  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7
+   pic: 103  state: 3  wait: 1  next: 87  dvx: 4  dvy: 0  dvz: 0  centerx: 30  centery: 79  hit_a: 0  hit_d: 0  hit_j: 0  
    bdy:
       kind: 0  x: 8  y: 51  w: 38  h: 27
    bdy_end:
@@ -705,7 +705,7 @@
 <frame_end>
 
 <frame> 91 dash_attack
-   pic: 107  state: 15  wait: 1  next: 92  dvx: 0  dvy: 0  dvz: 0  centerx: 31  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0 sound: 7 
+   pic: 107  state: 15  wait: 1  next: 92  dvx: 0  dvy: 0  dvz: 0  centerx: 31  centery: 78  hit_a: 0  hit_d: 0  hit_j: 0   
    itr:
       kind: 0  x: 27  y: 38  w: 53  h: 23  dvx: 12  fall: 70  arest: 20  bdefend: 60  injury: 70  
    itr_end:
@@ -1854,7 +1854,7 @@
 <frame_end>
 
 <frame> 259 burn_run
-   pic: 161  state: 19  wait: 2  next: 260  dvx: 10  dvy: 0  dvz: 0  centerx: 37  centery: 79  hit_a: 0  hit_d: 218  hit_j: 218 mp: -10 sound: 7 
+   pic: 161  state: 19  wait: 2  next: 260  dvx: 10  dvy: 0  dvz: 0  centerx: 37  centery: 79  hit_a: 0  hit_d: 218  hit_j: 218 mp: -10   
    opoint:
       kind: 1  x: 18  y: 81  action: 50  dvx: 0  dvy: 0  oid: 211  facing: 1
    opoint_end:
