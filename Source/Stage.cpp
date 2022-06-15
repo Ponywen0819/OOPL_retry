@@ -441,7 +441,9 @@ namespace game_framework {
 				trans_index++;
 				if (cheatover) {
 					obj->kill();
-					audio = FALSE;
+					CAudio::Instance()->Stop(3);
+					CAudio::Instance()->Stop(4);
+					CAudio::Instance()->Stop(5);
 				}
 			}
 		}
