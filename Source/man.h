@@ -30,6 +30,9 @@ namespace game_framework {
 			hit = holdinglt = holdingheavy = false;
 
 			maxx = map_pos = upbond = underbond = 0;
+
+			_a = nullptr;
+			numOFobj = 0;
 		}
 		obj(const obj& o) {
 			Frams = o.Frams; _mode = o._mode; _x = o._x; _y = o._y; _z = o._z; Face_to_Left = o.Face_to_Left;
@@ -72,9 +75,12 @@ namespace game_framework {
 			underbond = data[3];
 			mapdata = data;
 		}
+		void update(obj** all,int n);
 
 		int  getArest();
-		
+		int	 gettype();
+
+
 		bool touch(obj * o) {
 			if (o->id == 213 || o->id == 215) {
 				if (abs(o->_z - this->_z) > 40) {
@@ -93,7 +99,7 @@ namespace game_framework {
 			att.init(o->_x, o->_y, (*(o->Frams))[o->_mode]._i.getX(), (*(o->Frams))[o->_mode]._i.getY(),
 				(*(o->Frams))[o->_mode]._i.getW(), (*(o->Frams))[o->_mode]._i.getH(), o->Face_to_Left, o->maxW);
 			for (int i = 0; i < (*Frams)[_mode]._Num_of_hitbox; i++) {
-				hitbox hit = *((*Frams)[_mode]._hitbox + i);
+				hitbox hit = (*Frams)[_mode]._hitbox[i];
 				area n;
 				n.init(_x, _y, hit.getX(), hit.getY(), hit.getW(), hit.getH(), this->Face_to_Left, this->maxW);
 				if (n.touch(att)) {
@@ -152,48 +158,9 @@ namespace game_framework {
 		bool	holdingheavy;
 		
 		double	_x, _y, _z;			// 現在的位置
-	};
 
-	class allobj {
-	public:
-		allobj() {
-			num = 0;
-			all = s = nullptr;
-		}
-		~allobj() {
-			for (int i = 0; i < num; i++)
-				delete *(all + i);
-			delete[] all;
-			if (s != nullptr) delete s;
-		}
-
-		void init();
-
-		void reset() {
-			for (int i = 0; i < num; i++)
-				delete *(all + i);
-			delete all;
-
-			num = 0;
-			all = s = nullptr;
-		}
-
-		void add(obj *);
-		void del(int n);
-
-		obj* getSortObj(int n);
-
-		void so();
-		
-		obj* getobj(int n);
-
-		obj** getall() { return all; }
-
-		int getN() { return num; }
-	private:
-		int num;
-		obj** all;
-		obj** s;
+		obj** _a;
+		int	  numOFobj;
 	};
 
 	class man :public obj {
@@ -257,9 +224,8 @@ namespace game_framework {
 
 			total_hpcost = total_mpcost = total_damage = 0;
 		}
-		man(int ch,allobj* al) :man() {
+		man(int ch) :man() {
 			id = ch;
-			_a = al;
 			switch (ch) {
 			case 0: {
 				SkillsMotion[2] = 235;
@@ -287,7 +253,7 @@ namespace game_framework {
 			}
 			Frams = Framelib::Instance()->getFrame(id);
 		}
-		~man() {}
+		
 		void	setComm(UINT comm);					// 設定指令
 		void	cComm(UINT comm);					// 取消指令					
 		void	checkbeenatt();						// 被攻擊偵測
@@ -434,7 +400,6 @@ namespace game_framework {
 		void	hurt(int d,bool f);
 		
 		bool	isTime() { return time == 0; }
-		
 		int		getX() { return int(_x); }
 		int		getZ() { return int(_z); }
 		int		getID() { return id; }
@@ -463,9 +428,6 @@ namespace game_framework {
 			}
 			return Walk_Ani_num;
 		}
-		
-		
-
 
 		obj*	usingSkills() {
 			obj* a = skills;
@@ -521,7 +483,8 @@ namespace game_framework {
 		obj*	holding;			
 		obj*	who;								// 被打的那個
 		obj*	skills;								// 出技能
-		allobj* _a;				//場上所有人
+		//allobj* _a;								//場上所有人
+		
 		CStateBar*	bar;
 		std::string commandBuffer;					// input command buffer
 	};
@@ -537,7 +500,7 @@ namespace game_framework {
 			kind = 2;
 		}
 		
-		weapon(int n, int mode, obj* ow,allobj * all) :weapon() {
+		weapon(int n, int mode, obj* ow) :weapon() {
 			id = n;
 			_mode = mode;
 			switch (id){
@@ -561,8 +524,6 @@ namespace game_framework {
 			}
 			Frams = Framelib::Instance()->getFrame(id);
 			holding = ow;
-
-			_a = all;
 
 			stepx = stepz = initG = 0;
 			JumpFront = JumpBack = JumpUp = JumpDown = false;
@@ -653,7 +614,6 @@ namespace game_framework {
 		double	stepx, stepz, initG;
 		
 		obj*	holding;		//誰再拿他
-		allobj* _a;				//場上所有人
 	};
 
 	class wp :public obj {
@@ -668,10 +628,9 @@ namespace game_framework {
 		
 		}
 
-		wp(int n,int mode,obj* ow, allobj * all):wp(){
+		wp(int n,int mode,obj* ow):wp(){
 			id = n;
 			owner = ow;
-			this->_a = all;
 			switch (id) {
 			case 203: {
 				maxW = 81;
@@ -723,12 +682,7 @@ namespace game_framework {
 			_mode = mode;
 			setTimmer((*Frams)[_mode]._wait);
 		}
-		
-		~wp() {
-			if (skills != nullptr) {
-				delete skills;
-			}
-		}
+	
 
 		void init( int x, int y,int z,bool fa) {
 			_x = x;
@@ -768,7 +722,6 @@ namespace game_framework {
 		bool isTime() { return time <= 0; }
 
 		int		stand;			// 持續的時間
-		allobj* _a;				//場上所有人
 		obj*	skills;			// 心放的技能
 		obj*	owner;			// 誰放的		
 	};
@@ -786,8 +739,6 @@ namespace game_framework {
 		~AI() {
 			if (self != nullptr)
 				delete self;
-			if (Target != nullptr)
-				//delete Target;
 			if(commandType != nullptr)
 				delete commandType;
 			if (commandFinish != nullptr)
@@ -839,6 +790,69 @@ namespace game_framework {
 		man**	Target;			// 攻擊目標
 	};
 
+	class allobj {
+	public:
+		allobj() {
+			num = 0;
+			all = s = nullptr;
+		}
+
+		~allobj() {
+			for (int i = 0; i < num; i++){
+				int t = all[i]->gettype();
+				if (t == 0) {
+					delete (man*)all[i];
+				}
+				else if (t == 0) {
+					delete (weapon*)all[i];
+				}
+				else {
+					delete (wp*)all[i];
+				}
+			}	
+			delete[] all;
+			if (s != nullptr) delete s;
+		}
+
+		void init();
+
+		void reset() {
+			for (int i = 0; i < num; i++) {
+				int t = all[i]->gettype();
+				if (t == 0) {
+					delete (man*)all[i];
+				}
+				else if (t == 0) {
+					delete (weapon*)all[i];
+				}
+				else {
+					delete (wp*)all[i];
+				}
+			}
+			delete[] all;
+			if (s != nullptr) delete s;
+			num = 0;
+			all = s = nullptr;
+		}
+
+		void add(obj *);
+		void del(int n);
+
+		obj* getSortObj(int n);
+
+		void so();
+
+		obj* getobj(int n);
+
+		obj** getall() { return all; }
+
+		int getN() { return num; }
+	private:
+		int num;
+		obj** all;
+		obj** s;
+	};
+	
 	class ObjContainer {
 	public:
 		ObjContainer() {

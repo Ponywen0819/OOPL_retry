@@ -327,7 +327,7 @@ namespace game_framework {
 		}
 		~Frame() {
 			if (_hitbox != nullptr) {
-				delete _hitbox;
+				delete[] _hitbox;
 			}
 		}
 

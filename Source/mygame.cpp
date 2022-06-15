@@ -446,7 +446,8 @@ void CGameStateOver::OnShow(){
 
 CGameStateRun::CGameStateRun(CGame *g): CGameState(g){}
 
-CGameStateRun::~CGameStateRun(){}
+CGameStateRun::~CGameStateRun(){
+}
 
 void CGameStateRun::OnBeginState(){
 	count = 0;

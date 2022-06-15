@@ -27,8 +27,8 @@ namespace game_framework {
 	void obj::addBeaten(obj *who) {
 		numOfBeaten++;
 		if (beatenList == nullptr) {
-			beatenList = new obj*;
-			beatenCount = new int;
+			beatenList = new obj*[1];
+			beatenCount = new int[1];
 			*(beatenList) = who;
 			int vrest = (*Frams)[_mode]._i.getVrest();
 			if (vrest == 0) { *beatenCount = 4; }
@@ -128,6 +128,22 @@ namespace game_framework {
 		Bitmaplib::Instance()->showShadow(x - mapdata[1],z);
 	}
 
+	void obj::update(obj** all,int n) {
+		_a = all;
+		numOFobj = n;
+	}
+	
+	int  obj::gettype() {
+		if (id < 5) {
+			return 0;
+		}
+		else if(id<202){
+			return 1;
+		}
+		else {
+			return 2;
+		}
+	}
 	//
 	//------------------------------武器的部分------------------------------------------
 	//
@@ -219,8 +235,8 @@ namespace game_framework {
 
 	void weapon::checkbeenatt() {
 		Frame myF = (*Frams)[_mode];
-		for (int i = 0; i < _a->getN(); i++) {
-			obj* temp_obj = _a->getobj(i);
+		for (int i = 0; i < numOFobj; i++) {
+			obj* temp_obj = _a[i];
 			if (temp_obj == this || holding == temp_obj) { continue; }
 			int mode = temp_obj->_mode;
 			Frame tempf = (*(temp_obj->Frams))[mode];
@@ -394,7 +410,7 @@ namespace game_framework {
 		setTimmer((*Frams)[_mode]._wait);
 		if ((*Frams)[_mode]._have_opiont) {
 			int i = (*Frams)[_mode]._op.getOid();
-			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),getOwner(),_a);
+			wp* temp = new wp(i, (*Frams)[_mode]._op.getAction(),getOwner());
 			bool ftl;
 			if ((*Frams)[_mode]._op.getFacing() == 1) ftl = !Face_to_Left;
 			else ftl = Face_to_Left;
@@ -521,7 +537,7 @@ namespace game_framework {
 		if (tempF._have_opiont) {
 			int oid = tempF._op.getOid();
 			if (oid == 12) {
-				weapon* temp = new weapon(oid, 0, nullptr, _a);
+				weapon* temp = new weapon(oid, 0, nullptr);
 				temp->holdingSth(this);
 				holding = temp;
 				holdinglt = true;
@@ -530,7 +546,7 @@ namespace game_framework {
 				skills = temp;
 			}
 			else if (oid == 201) {
-				weapon* temp = new weapon(oid, 0, nullptr, _a);
+				weapon* temp = new weapon(oid, 0, nullptr);
 				temp->holdingSth(nullptr);
 
 				bool ftl;
@@ -552,7 +568,7 @@ namespace game_framework {
 				skills = temp;
 			}
 			else {
-				wp* temp = new wp(oid, tempF._op.getAction(), getOwner(),_a);
+				wp* temp = new wp(oid, tempF._op.getAction(), getOwner());
 				bool ftl;
 				if (tempF._op.getFacing() == 1) ftl = !Face_to_Left;
 				else ftl = Face_to_Left;
@@ -1074,8 +1090,8 @@ namespace game_framework {
 	void man::checkbeenatt() {
 		Frame myF = (*Frams)[_mode];
 		if (cantBeTouch) return;
-		for (int i = 0; i < _a->getN(); i++) {
-			obj* temp_obj = _a->getobj(i);
+		for (int i = 0; i < numOFobj; i++) {
+			obj* temp_obj = _a[i];
 			if (temp_obj == this || temp_obj == holding || this == temp_obj->getOwner()) {
 				continue;
 			}
@@ -1420,8 +1436,6 @@ namespace game_framework {
 		Count();
 		int stateNow = (*Frams)[_mode]._state;
 		moveY();
-		//TRACE("------\n");
-		//TRACE("%d\n",jumping);
 		// 負責位置的調整
 		switch (stateNow) {
 		// 走路狀態
@@ -1635,7 +1649,6 @@ namespace game_framework {
 			bar->setHP(player, hp, HpRecover);
 			bar->setMP(player, mp);
 		}
-		//TRACE("\t%.1f\n", _y);
 	}
 
 	void man::setCountDwon()	//處理指令輸入時間間隔
@@ -1643,11 +1656,13 @@ namespace game_framework {
 		_Double_Tap_Gap = 75;
 	}
 
-	void man::resetCountDown() {
+	void man::resetCountDown() 
+	{
 		_Double_Tap_Gap = -1;
 	}
 
-	void man::hurt(int d,bool f) {
+	void man::hurt(int d,bool f) 
+	{
 		HpRecover -= (d / 3);
 		hp -= d;
 		total_hpcost += d;
@@ -1669,9 +1684,17 @@ namespace game_framework {
 	void allobj::init() {
 		if (all != nullptr) {
 			for (int i = 0; i < num; i++) {
-				delete all[i];
+				int t = all[i]->gettype();
+				if (t == 0) {
+					delete (man*)all[i];
+				}
+				else if (t == 0) {
+					delete (weapon*)all[i];
+				}
+				else {
+					delete (wp*)all[i];
+				}
 			}
-			delete[] all;
 		}
 		all = nullptr;
 		num = 0;
@@ -1686,9 +1709,9 @@ namespace game_framework {
 			obj** temp = new obj*[num + 1];
 			int i;
 			for (i = 0; i < num; i++) {
-				*(temp + i) = *(all + i);
+				temp[i] = all[i];
 			}
-			*(temp + i) = a;
+			temp[i] = a;
 
 			delete all;
 			all = temp;
@@ -1708,7 +1731,16 @@ namespace game_framework {
 			}
 		}
 		num--;
-		delete *(all + n);
+		int t = all[n]->gettype();
+		if (t == 0) {
+			delete (man*)all[n];
+		}
+		else if (t == 0) {
+			delete (weapon*)all[n];
+		}
+		else {
+			delete (wp*)all[n];
+		}
 		delete all;
 		all = temp;
 	}
@@ -1723,17 +1755,19 @@ namespace game_framework {
 		std::sort(s, s + num, [](obj* a, obj* b) {return (a)->_z < (b)->_z; });
 	}
 	
-	obj* allobj::getobj(int n) { return (*(all + n)); }
+	obj* allobj::getobj(int n) { return all[n]; }
 
-	obj* allobj::getSortObj(int n) { return (*(s + n)); }
+	obj* allobj::getSortObj(int n) { return s[n]; }
 
 
 	//
 	//------------------------------主控的部分------------------------------------------
 	//
 	void ObjContainer::init(int p1,int p2) {
+
 		//------------------------- 物品初始化
 		a.init();
+		
 		//-------------------------人物初始化
 		if (mans != nullptr) delete[] mans;
 		mans = nullptr;
@@ -1741,7 +1775,7 @@ namespace game_framework {
 		if ((p1 != -1) && (p2 != -1)) {
 			state = 0;
 			mans = new man*[2];
-			mans[0] = new man(p1, &a);
+			mans[0] = new man(p1);
 			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 0;
 			mans[0]->_z = 400;
@@ -1749,7 +1783,7 @@ namespace game_framework {
 
 			a.add(mans[0]);
 
-			mans[1] = new man(p2, &a);
+			mans[1] = new man(p2);
 			mans[1]->mapSetting(map_data);
 			mans[1]->_x = 0;
 			mans[1]->_z = 450;
@@ -1760,7 +1794,7 @@ namespace game_framework {
 		else if ((p1 != -1) && (p2 == -1)) {
 			state = 1;
 			mans = new man*[1];
-			mans[0] = new man(p1, &a);
+			mans[0] = new man(p1);
 			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 0;
 			mans[0]->_z = 425;
@@ -1771,7 +1805,7 @@ namespace game_framework {
 		else if ((p1 == -1) && (p2 != -1)) {
 			state = 2;
 			mans = new man*[1];
-			mans[0] = new man(p2, &a);
+			mans[0] = new man(p2);
 			mans[0]->mapSetting(map_data);
 			mans[0]->_x = 0;
 			mans[0]->_z = 425;
@@ -2080,14 +2114,13 @@ namespace game_framework {
 	}
 
 	void ObjContainer::OnMove() {
-		if (mans == nullptr) return;
 		if (state == 0) {
 			com->updateEnemy(2, mans);
 		}
 		else {
 			com->updateEnemy(1, mans);
 		}
-
+		for (int i = 0; i < a.getN(); i++) a.getobj(i)->update(a.getall(), a.getN());
 		for (int i = 0; i < a.getN(); i++) {
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
@@ -2133,7 +2166,8 @@ namespace game_framework {
 	}
 
 	void ObjContainer::creatWeapon(int n,int x,int z) {
-		weapon* temp = new weapon(n,0,nullptr,&a);
+		weapon* temp = new weapon(n,0,nullptr);
+		temp->update(a.getall(), a.getN());
 		temp->init(x, 800 - z,z,false);
 		
 		temp->mapSetting(map_data);
@@ -2143,14 +2177,16 @@ namespace game_framework {
 	void ObjContainer::creatEnemy(int type, int x, int z) {
 		man* enemy;
 		if (type) {
-			enemy = new man(4, &a);
+			enemy = new man(4);
 		}
 		else {
-			enemy = new man(3, &a);
+			enemy = new man(3);
 		}
+		enemy->update(a.getall(), a.getN());
 		enemy->_x = x;
 		enemy->_z = z;
 		enemy->mapSetting(map_data);
+
 		com->add(enemy);
 		a.add(enemy);
 	}
