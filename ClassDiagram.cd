@@ -70,27 +70,6 @@
       <FileName>Source\audio.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="game_framework::CBall" Collapsed="true">
-    <Position X="9.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AwQAAAAAQIACAAIAAACIAAwAAAEAACAAAABgAAUFBAA=</HashCode>
-      <FileName>Source\CBall.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="game_framework::CBouncingBall" Collapsed="true">
-    <Position X="11" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAIAQAAAAAIAIRAAAAAAAAAAARgAAAEAAA=</HashCode>
-      <FileName>Source\CBouncingBall.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="game_framework::CEraser" Collapsed="true">
-    <Position X="16.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>BAQAAAAABAAAARAAAAAAAISAAQAAACgQAQBwAAAEMUA=</HashCode>
-      <FileName>Source\CEraser.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="game_framework::CStateBar" Collapsed="true">
     <Position X="12.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
@@ -143,35 +122,35 @@
   <Class Name="game_framework::obj">
     <Position X="32.25" Y="8.25" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>OgYBlEIIQIQAIgRGQgAAwYAAAAAgDQQAEQBxAkkEOgA=</HashCode>
+      <HashCode>OgYBlEIIQIQAYgRGQgAAwYAAAAAgDQUAEUBxAkkEOgA=</HashCode>
       <FileName>Source\man.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game_framework::allobj" Collapsed="true">
     <Position X="9.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAACAEAAAAAJAAAAAAgACBAAAAAAIAAoAAAACCEAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Source\man.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game_framework::man">
     <Position X="36.75" Y="8.25" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>8KUxXBgRRIEIeHzBALBxAJQQEYHMCAgFDBnzIkABQUA=</HashCode>
+      <HashCode>8KUxXBgRRIEIOHzBALBxAJQQEYHMCAgFDBnzIkABQUA=</HashCode>
       <FileName>Source\man.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game_framework::weapon">
     <Position X="41.5" Y="9.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>gCUBhABAQIEKSAAAAhBAAAQQCAAICAIAAAAwAgAAAAA=</HashCode>
+      <HashCode>gCUBhABAQIEKCAAAAhBAAAQQCAAICAIAAAAwAgAAAAA=</HashCode>
       <FileName>Source\man.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="game_framework::wp">
     <Position X="41.5" Y="18.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAQBhBAAAIAAyAAAAABAAAQAAAAACCIAAgARCAAAAAA=</HashCode>
+      <HashCode>AAQBhBAAAIAAiAAAAABAAAQAAAAACAIAAgARCAAAAAA=</HashCode>
       <FileName>Source\man.h</FileName>
     </TypeIdentifier>
   </Class>

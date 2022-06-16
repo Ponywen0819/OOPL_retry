@@ -273,7 +273,7 @@ namespace game_framework {
 		lf1->init();
 		gw1->init();
 		ex1->init();
-		
+	
 		CAudio::Instance()->Load(3, "Sounds\\stage1.wav");
 		CAudio::Instance()->Load(4, "Sounds\\stage2.wav");
 		CAudio::Instance()->Load(5, "Sounds\\stage3.wav");
@@ -284,13 +284,10 @@ namespace game_framework {
 			}
 			else {
 				trans[i].LoadBitmap((char *)path.c_str(),RGB(0,0,0));
-			}
-			
+			}	
 		}
-
-		
 	}
-
+	//關卡換關資訊
 	void stage::info() {
 		data[4] = trans_index;
 		if (now_stage == 1) {
@@ -407,7 +404,7 @@ namespace game_framework {
 		}
 
 	}
-
+	//檢查敵人是否全滅
 	void stage::check(int enemyhp) {
 	if ((!obj->enemystate()) && map != 0) {
 			if ( (trans_index == 6 || trans_index == 11) && man_pos>map_width + 750) {
@@ -429,7 +426,7 @@ namespace game_framework {
 		}
 	
 	}
-
+	//過場動畫
 	void stage::show_trans() {
 		if (trans_index < 16) {
 			trans[trans_index].SetTopLeft(0, 140);
@@ -448,7 +445,7 @@ namespace game_framework {
 			}
 		}
 	}
-
+	//判斷結束
 	boolean stage::overgame() {
 		overdelay();
 		if (tempover > 25) {
@@ -464,7 +461,7 @@ namespace game_framework {
 		}
 		return over;
 	}
-
+	//作弊
 	void stage::cheat() {
 		obj->kill();
 		now_stage = 3;
@@ -472,8 +469,7 @@ namespace game_framework {
 		show_trans();
 		cheatover = TRUE;
 	}
-
-
+	//該關該顯示的資訊
 	void stage::OnShow(int _man_pos) {
 		man_pos = _man_pos;
 		
@@ -531,7 +527,7 @@ namespace game_framework {
 		else if (man_pos >= (data[0] + 400)) data[1] = data[0];
 		else data[1] = man_pos - 400;
 	}
-
+	//隨機生成敵人
 	void stage::randObj(int chooseObj,int index,int type, int width, int lower_bound, int upper_bound) {
 		if (chooseObj == 0) {
 			for (int i = 0; i < index; i++) {
@@ -549,9 +545,8 @@ namespace game_framework {
 		}
 
 	}
-
+	//取得關卡資訊
 	int* stage::getdata() { return data; }
-
 	void stage::delay() {
 		for (int i = 0; i < 2; i++) {
 			if (--delay1 < 0) {
@@ -560,7 +555,6 @@ namespace game_framework {
 			}
 		}
 	}
-	
 	void stage::overdelay() {
 		for (int i = 0; i < 2; i++) {
 			if (--delay2 < 0) {

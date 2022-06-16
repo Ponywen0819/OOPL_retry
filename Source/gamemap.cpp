@@ -83,7 +83,6 @@ namespace game_framework {
 			}
 			last_pos = total_pos / 2;
 		}
-		//TRACE("%d %1.f %1.f\n", temp2, move_pixel_right, temp * (layer_dis - 1));
 
 		if (_cc) {
 			back_ground_ani.SetTopLeft(_x , _y);
@@ -112,27 +111,6 @@ namespace game_framework {
 				temp_loop += _loop;
 			}
 		}
-		//delay(_man_pos1, _man_pos2);
-	}
-
-	void gamemap::delay(int _man_pos1, int _man_pos2) {
-		int total_pos = _man_pos1 + _man_pos2;
-		if (total_pos % 2 == 1)total_pos += 1;
-		if (total_pos / 2 > last_pos) {
-			for (temp2; temp2<= last_pos; temp2++) {
-				
-			}
-			last_pos = total_pos / 2;
-			
-		}
-		else if (total_pos / 2 < last_pos) {
-			for (temp2; temp2 >= last_pos; temp2--) {
-				
-			}
-			last_pos = total_pos / 2;
-		}
-		//TRACE("last_pos: %d \n",last_pos);
-		//TRACE("%d %d %1.f\n", _man_pos1 ,_man_pos2, temp * (layer_dis - 1));
 	}
 
 	int gamemap::map_pos() {

@@ -262,9 +262,6 @@
     <ClCompile Include="Source\Bitmaplib.cpp" />
     <ClCompile Include="Source\Cchose.cpp" />
     <ClCompile Include="Source\audio.cpp" />
-    <ClCompile Include="Source\CBall.cpp" />
-    <ClCompile Include="Source\CBouncingBall.cpp" />
-    <ClCompile Include="Source\CEraser.cpp" />
     <ClCompile Include="Source\CStateBar.cpp" />
     <ClCompile Include="Source\game.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -315,9 +312,6 @@
     <ClInclude Include="Source\Bitmaplib.h" />
     <ClInclude Include="Source\Cchose.h" />
     <ClInclude Include="Source\audio.h" />
-    <ClInclude Include="Source\CBall.h" />
-    <ClInclude Include="Source\CBouncingBall.h" />
-    <ClInclude Include="Source\CEraser.h" />
     <ClInclude Include="Source\CStateBar.h" />
     <ClInclude Include="Source\Frame.h" />
     <ClInclude Include="Source\game.h" />
