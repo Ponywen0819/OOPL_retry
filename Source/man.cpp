@@ -2120,8 +2120,9 @@ namespace game_framework {
 		else {
 			com->updateEnemy(1, mans);
 		}
-		for (int i = 0; i < a.getN(); i++) a.getobj(i)->update(a.getall(), a.getN());
+
 		for (int i = 0; i < a.getN(); i++) {
+			for (int i = 0; i < a.getN(); i++) a.getobj(i)->update(a.getall(), a.getN());
 			(a.getobj(i))->OnMove();
 			obj* temp = (a.getobj(i))->usingSkills();
 			if (temp != nullptr) {
