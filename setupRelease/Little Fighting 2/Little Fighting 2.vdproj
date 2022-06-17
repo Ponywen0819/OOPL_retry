@@ -16816,6 +16816,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -73501,17 +73509,6 @@
             "Property" = "8:DesktopFolder"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_141933F72E42429C8E1C83F408563351"
-                    {
-                    "Name" = "8:2022 games"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_DF675B33B9C44265B8D172FF4DF3E52F"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
         }
@@ -73531,7 +73528,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Little Fighting 2"
         "ProductCode" = "8:{34CDD95D-E245-49BB-9D5A-FA8B11E3106E}"
-        "PackageCode" = "8:{9A5441D1-1149-4AC3-A73C-FB4628B89188}"
+        "PackageCode" = "8:{8F2ED9B5-9705-4321-BF07-3E406241E258}"
         "UpgradeCode" = "8:{72747814-2C39-40C1-8EF1-37960603B67B}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -73660,7 +73657,7 @@
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_578CE79B57384E009AA692035C8FF256"
-            "Folder" = "8:_141933F72E42429C8E1C83F408563351"
+            "Folder" = "8:_93DAEB60B61041239E20469B84074736"
             "WorkingFolder" = "8:_9296B41A81144AED9154344130FB6CE2"
             "Icon" = "8:_ACE80D9F76464473BFD4A9729A2B4791"
             "Feature" = "8:"
