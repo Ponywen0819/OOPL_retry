@@ -416,7 +416,7 @@ namespace game_framework {
 				}
 			}
 
-			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width) {
+			else if ((trans_index == 6 || trans_index == 11 || trans_index == 16) && man_pos < map_width+800) {
 				clean = TRUE;
 			}
 
@@ -448,7 +448,7 @@ namespace game_framework {
 	//§PÂ_µ²§ô
 	boolean stage::overgame() {
 		overdelay();
-		if (tempover > 25) {
+		if (tempover > 23) {
 			if (!obj->end()) {
 				over = TRUE;
 			}	
