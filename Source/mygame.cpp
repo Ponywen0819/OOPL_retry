@@ -460,7 +460,7 @@ namespace game_framework {
 	void CGameStateRun::OnMove(){
 		count++;
 		allobj.OnMove();
-	
+
 		Info = allobj.getendInfo();
 		//TRACE("%s\n",Info.c_str());
 		stage.check(allobj.getEnemyHP());
