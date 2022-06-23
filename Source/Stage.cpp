@@ -452,11 +452,6 @@ namespace game_framework {
 			if (!obj->end()) {
 				over = TRUE;
 			}	
-			if (over) {
-				CAudio::Instance()->Stop(3);
-				CAudio::Instance()->Stop(4);
-				CAudio::Instance()->Stop(5);
-			}
 			tempover = 0;
 		}
 		return over;
@@ -518,6 +513,7 @@ namespace game_framework {
 				clean = FALSE;
 				delay();
 				if (temp > 10) {
+					CAudio::Instance()->Stop(5);
 					over = TRUE;
 					temp = 0;
 				}
